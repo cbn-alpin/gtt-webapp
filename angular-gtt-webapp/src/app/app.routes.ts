@@ -18,7 +18,16 @@ export const routes: Routes = [
         path: '',
         component: HomeComponent
       },
-      // Other routes will go here
+      {
+        path: 'time-entries',
+        loadChildren: () => import('./features/time-entries/time-entries.routes')
+          .then(m => m.TIME_ENTRIES_ROUTES)
+      }
+      //{
+      //  path: '',
+      //  redirectTo: 'time-entries',
+      //  pathMatch: 'full'
+      //}
     ]
   }
 ];

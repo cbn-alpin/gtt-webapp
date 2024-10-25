@@ -1,21 +1,10 @@
-import { Routes } from '@angular/router';
-import { TimeEntriesComponent } from './time-entries.component';
-
-export const TIME_ENTRIES_ROUTES: Routes = [
-  {
-    path: '',
-    component: TimeEntriesComponent
-  }
-];
-
-// src/app/features/time-entries/time-entries.component.ts
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { WeekSelectorComponent } from './components/week-selector/week-selector.component';
 import { TimeSheetComponent } from './components/time-sheet/time-sheet.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
+import { TimeStateService } from './services/time-state.service';
 
 @Component({
   selector: 'app-time-entries',
@@ -27,6 +16,7 @@ import { CalendarComponent } from './components/calendar/calendar.component';
     TimeSheetComponent,
     CalendarComponent
   ],
+  providers: [TimeStateService],
   template: `
     <div class="time-entries-container">
       <div class="header">

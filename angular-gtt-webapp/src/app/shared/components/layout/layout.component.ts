@@ -71,6 +71,8 @@ import { AuthService } from '../../../core/services/auth.service';
     .toolbar {
       position: relative;
       z-index: 2;
+      background-color: var(--primary);
+      height: var(--height-menu-lg);
     }
 
     .logo {
@@ -87,20 +89,29 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .sidenav {
-      width: 60px;
-      background-color: #f5f5f5;
+      width: var(--sidebar-width);
+      background-color: var(--light-grey);
+      border-right: 1px solid var(--grey);
     }
 
     .sidenav-content {
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      padding: 16px 8px;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md) var(--spacing-sm);
     }
 
     .main-content {
-      padding: 20px;
-      background-color: #fafafa;
+      padding: var(--spacing-md);
+      background-color: var(--light-grey);
+    }
+
+    :host ::ng-deep .mat-mdc-icon-button {
+      color: var(--primary);
+    }
+
+    :host ::ng-deep .mat-mdc-icon-button:hover {
+      background-color: var(--light-color);
     }
   `]
 })

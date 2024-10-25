@@ -61,14 +61,14 @@ import { AuthService } from '../../core/services/auth.service';
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #f5f5f5;
+      background-color: var(--light-grey);
     }
 
     .login-box {
       padding: 2.5rem;
-      background: white;
+      background: var(--white);
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--box-shadow);
       width: 100%;
       max-width: 400px;
       text-align: center;
@@ -81,7 +81,7 @@ import { AuthService } from '../../core/services/auth.service';
 
     h1 {
       margin-bottom: 2rem;
-      color: #333;
+      color: var(--primary);
       font-size: 1.5rem;
     }
 
