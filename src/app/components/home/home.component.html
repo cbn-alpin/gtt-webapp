@@ -1,0 +1,36 @@
+<mat-toolbar class="header">
+    <span class="title">{{ currentTitle }}</span>
+</mat-toolbar>
+  
+<div class="main-container">
+    <div class="menus">
+      <mat-toolbar class="vertical-toolbar">
+  
+        <button mat-button routerLink="/home" class="icon-button" (click)="updateTitle('Saisie du temps')">
+          <mat-icon>hourglass_empty</mat-icon>
+          <span class="icon-text">Saisie du temps</span>
+        </button>
+  
+        <button mat-button routerLink="/about" class="icon-button" (click)="updateTitle('Liste des projets')">
+          <mat-icon>description</mat-icon>
+          <span class="icon-text">Liste des projets</span>
+        </button>
+  
+        <button mat-button routerLink="/contact" class="icon-button" (click)="updateTitle('Liste Frais de déplacement')">
+          <mat-icon>euro</mat-icon>
+          <span class="icon-text">Liste Frais de déplacement</span>
+        </button>
+  
+        <button mat-button routerLink="/download" class="icon-button" (click)="updateTitle('Téléchargement')">
+          <mat-icon>exit_to_app</mat-icon>
+          <span class="icon-text">Téléchargement</span>
+        </button>
+  
+      </mat-toolbar>
+    </div>
+  
+    <div class="content">
+      <app-list-projects></app-list-projects>
+    </div>
+</div>
+  
