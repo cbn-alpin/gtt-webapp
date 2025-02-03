@@ -22,6 +22,9 @@ import { ProjectActionsComponent } from './components/project-actions/project-ac
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ActionComponent } from './components/action/action.component';
 import { ProjectComponent } from './components/project/project.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.component';
+import { TimeSheetComponent } from './time-sheet/time-sheet.component';
 
 
 @NgModule({
@@ -34,6 +37,8 @@ import { ProjectComponent } from './components/project/project.component';
     ConfirmationDialogComponent,
     ActionComponent,
     ProjectComponent,
+    GestiontempsComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -49,8 +54,10 @@ import { ProjectComponent } from './components/project/project.component';
     MatInputModule,
     MatMenuModule,
     MatDialogModule,
-    ReactiveFormsModule    
-  ],
+    ReactiveFormsModule,
+    CalendarComponent,
+    TimeSheetComponent
+],
   providers: [],
   bootstrap: [AppComponent]
 })
