@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CalendarService } from '../services/calendar.service';
 import { TimeStateService } from '../services/time-state-service.service';
-import { DateTime } from 'luxon';
+
 @Component({
   selector: 'app-time-sheet',
   standalone: true,
@@ -54,6 +54,14 @@ export class TimeSheetComponent {
     private calendarService: CalendarService
   ) { }
 
+  ngOnInit() {
+    this.timeStateService.selectedDateSignal().subscribe(date => {
+      this.weekDays = this.timeStateService.currentWeek;
+    });
+  }
+  onWeekChanged(newWeekStartDate: Date) {
+    this.timeStateService.updateSelectedDate(newWeekStartDate);
+  }
   formatDate(date: Date): string {
     return new Date(date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' });
   }

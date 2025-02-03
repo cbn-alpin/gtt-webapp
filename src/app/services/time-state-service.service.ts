@@ -6,12 +6,11 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class TimeStateService {
 
-  // BehaviorSubject to manage the selected date, which will be used to calculate the current week
-  private selectedDate = new BehaviorSubject<Date>(new Date());
+  public selectedDate = new BehaviorSubject<Date>(new Date());
 
   constructor() { }
 
-  // Get the currently selected date as an observable
+  // Observable to provide the selected date
   selectedDateSignal() {
     return this.selectedDate.asObservable();
   }
@@ -21,16 +20,32 @@ export class TimeStateService {
     this.selectedDate.next(date);
   }
 
-  // Get the start of the current week (Sunday)
+  // Get the start of the current week (Monday)
   getStartOfWeek(date: Date): Date {
     const start = new Date(date);
     const day = start.getDay();
-    const diff = start.getDate() - day + (day === 0 ? -6 : 1);
+    const diff = start.getDate() - day + (day === 0 ? -6 : 1); // Adjust if Sunday (0)
     start.setDate(diff);
     return start;
   }
 
-  // Get an array of the days in the current week
+  // Navigate to the previous week
+  goToPreviousWeek(currentDate: Date): Date {
+    const previousWeek = new Date(currentDate);
+    previousWeek.setDate(currentDate.getDate() - 7);
+    this.updateSelectedDate(previousWeek);  // Update selected date for both components
+    return previousWeek;
+  }
+
+  // Navigate to the next week
+  goToNextWeek(currentDate: Date): Date {
+    const nextWeek = new Date(currentDate);
+    nextWeek.setDate(currentDate.getDate() + 7);
+    this.updateSelectedDate(nextWeek);  // Update selected date for both components
+    return nextWeek;
+  }
+
+  // Get the current week
   get currentWeek() {
     const startOfWeek = this.getStartOfWeek(this.selectedDate.value);
     const days = [];
@@ -48,9 +63,9 @@ export class TimeStateService {
     return days;
   }
 
-  // Helper function to get the name of the day (e.g., "Lun", "Mar", etc.)
+  // Helper function to get the name of the day
   getDayName(date: Date): string {
-    const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+    const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];  // Starts with Monday
     return days[date.getDay()];
   }
 
@@ -60,19 +75,5 @@ export class TimeStateService {
     return date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear();
-  }
-
-  // Navigate to the previous week
-  goToPreviousWeek(currentDate: Date): Date {
-    const previousWeek = new Date(currentDate);
-    previousWeek.setDate(currentDate.getDate() - 7);
-    return previousWeek;
-  }
-
-  // Navigate to the next week
-  goToNextWeek(currentDate: Date): Date {
-    const nextWeek = new Date(currentDate);
-    nextWeek.setDate(currentDate.getDate() + 7);
-    return nextWeek;
   }
 }

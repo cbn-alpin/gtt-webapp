@@ -25,7 +25,8 @@ import { ProjectComponent } from './components/project/project.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.component';
 import { TimeSheetComponent } from './time-sheet/time-sheet.component';
-
+import { WeekNavigationComponent } from './week-navigation/week-navigation.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { TimeSheetComponent } from './time-sheet/time-sheet.component';
     ActionComponent,
     ProjectComponent,
     GestiontempsComponent,
+    WeekNavigationComponent
 
   ],
   imports: [
@@ -56,7 +58,8 @@ import { TimeSheetComponent } from './time-sheet/time-sheet.component';
     MatDialogModule,
     ReactiveFormsModule,
     CalendarComponent,
-    TimeSheetComponent
+    TimeSheetComponent,
+    FormsModule
 ],
   providers: [],
   bootstrap: [AppComponent]
