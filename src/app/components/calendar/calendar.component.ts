@@ -6,6 +6,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { TimeStateService } from 'src/app/services/time-state-service.service';
+import { PopupMessageComponent } from 'src/app/popup-message/popup-message.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-calendar',
@@ -46,7 +48,9 @@ export class CalendarComponent implements OnInit {
   ];
 
   private timeEntries: Map<string, number> = new Map();
-  constructor(private calendarService: CalendarService, private http: HttpClient,  private timeStateService: TimeStateService) {
+  constructor(private calendarService: CalendarService, private http: HttpClient,  private timeStateService: TimeStateService,
+    private dialog: MatDialog
+  ) {
 
   }
 
@@ -192,6 +196,26 @@ export class CalendarComponent implements OnInit {
   }
 
   updateTimeEntry(hours: number, projectId: number | string, actionId: number, date: Date) {
+
+    if (hours > 10.00) {
+      this.dialog.open(PopupMessageComponent, {
+        data: {
+          title: 'Erreur',
+          message: 'Quota horaire journalier maximum atteint'
+        }
+      });
+      return; // Block further execution
+    }
+
+    // Show warning if hours are between 7.50 and 10.00
+    if (hours >= 7.50 && hours <= 10.00) {
+      this.dialog.open(PopupMessageComponent, {
+        data: {
+          title: 'Avertissement',
+          message: 'Attention : saisie supérieure à 7,50h uniquement si déplacement'
+        }
+      });
+    }
     const key = `${projectId}-${actionId}-${date.toISOString()}`;
     this.timeEntries.set(key, hours);
     this.autoSave(projectId, actionId, date, hours);

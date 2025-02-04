@@ -27,6 +27,7 @@ import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.co
 import { TimeSheetComponent } from './time-sheet/time-sheet.component';
 import { WeekNavigationComponent } from './week-navigation/week-navigation.component';
 import { FormsModule } from '@angular/forms';
+import { PopupMessageComponent } from './popup-message/popup-message.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { FormsModule } from '@angular/forms';
     ActionComponent,
     ProjectComponent,
     GestiontempsComponent,
-    WeekNavigationComponent
+    WeekNavigationComponent,
+    PopupMessageComponent
 
   ],
   imports: [

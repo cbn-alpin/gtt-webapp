@@ -94,6 +94,8 @@
                   (ngModelChange)="updateTimeEntry($event, project.id, action.id, day.date)"
                   [id]="getInputId(project.id, action.id, day.date)"
                   step="0.25"
+                  max="10"
+                  min="0"
                 >
               </td>
               <td class="total-week">
