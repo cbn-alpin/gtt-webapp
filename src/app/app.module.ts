@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -49,7 +50,8 @@ import { ProjectComponent } from './components/project/project.component';
     MatInputModule,
     MatMenuModule,
     MatDialogModule,
-    ReactiveFormsModule    
+    ReactiveFormsModule,
+    MatSidenavModule    
   ],
   providers: [],
   bootstrap: [AppComponent]

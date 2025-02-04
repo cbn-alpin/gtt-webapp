@@ -1,53 +1,62 @@
+.actions-container{
+  margin-bottom: 6em;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .mat-mdc-form-field {
-    font-size: 14px;
-    width: 100%;
+  font-size: 14px;
+  width: 100%;
+}
+
+.table-container {
+  min-height: 200px;
+  max-height: 500px;
+  overflow: auto;
 }
 
 .add-project{
-  position: absolute;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #333;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
 }
   
 .sticky-paginator {
-    position: sticky;
-    bottom: 0;
-    background: white; 
-    z-index: 2; 
-    border-top: 1px solid #e0e0e0; 
+  position: sticky;
+  bottom: 0;
+  background: white; 
+  z-index: 2; 
+  border-top: 1px solid #e0e0e0; 
 }
+
 
 table {
     width: 100%;
   }
   
-  tr.example-detail-row {
+  tr.detail-row {
     height: 0;
   }
   
-  tr.example-element-row:not(.example-expanded-row):hover {
+  tr.element-row:not(.expanded-row):hover {
     background: whitesmoke;
   }
   
-  tr.example-element-row:not(.example-expanded-row):active {
+  tr.element-row:not(.expanded-row):active {
     background: #efefef;
   }
   
-  .example-element-row td {
+  .element-row td {
     border-bottom-width: 0;
   }
   
-  .example-element-diagram {
+  .element-diagram {
     border: 2px solid black;
     font-weight: lighter;
   }
   
-  .example-element-description-attribution {
+  .element-description-attribution {
     opacity: 0.5;
   }
   
