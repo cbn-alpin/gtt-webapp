@@ -24,7 +24,7 @@ export class TimeStateService {
   getStartOfWeek(date: Date): Date {
     const start = new Date(date);
     const day = start.getDay();
-    const diff = start.getDate() - day + (day === 0 ? -6 : 1); // Adjust if Sunday (0)
+    const diff = start.getDate() - day + (day === 0 ? -5 : 1); // Adjust if Sunday (0)
     start.setDate(diff);
     return start;
   }
@@ -65,7 +65,7 @@ export class TimeStateService {
 
   // Helper function to get the name of the day
   getDayName(date: Date): string {
-    const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];  // Starts with Monday
+    const days = ['Dim','Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];  // Starts with Monday
     return days[date.getDay()];
   }
 
