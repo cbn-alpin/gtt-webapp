@@ -58,7 +58,13 @@ export class CalendarComponent implements OnInit {
       },
       (error) => console.error('Error fetching holidays:', error)
     );
-    this.timeStateService.selectedDateSignal().subscribe(date => {
+    const today = this.calendarService.today();
+    this.selectedWeek = today.weekNumber;
+    this.selectedMonth = today.month;
+    this.selectedYear = today.year;
+    this.currentWeek = this.calendarService.getCurrentWeek(today);
+    this.timeStateService.updateSelectedDate(today.toJSDate());
+    this.timeStateService.selectedDateSignal().subscribe(() => {
       this.weekDays = this.timeStateService.currentWeek;
     });
   }
@@ -90,10 +96,12 @@ export class CalendarComponent implements OnInit {
     { name: 'Novembre', index: 11 },
     { name: 'Décembre', index: 12 }
   ];
+  weeksNumbers: number[]= Array.from({length: 52}, (_, i) => 1+i);
 
   years: number[] = Array.from({ length: 30 }, (_, i) => 2000 + i);
   selectedMonth: number = this.firstDayOfActiveMonth.getValue().month;
   selectedYear: number = this.firstDayOfActiveMonth.getValue().year;
+  selectedWeek: number = this.firstDayOfActiveMonth.getValue().weekNumber;
 
   setActiveDay(day: DateTime): void {
     this.activeDay.next(day);
@@ -113,6 +121,7 @@ export class CalendarComponent implements OnInit {
     const today = this.calendarService.today();
     this.firstDayOfActiveMonth.next(today.startOf('month'));
     this.currentWeek = Interval.fromDateTimes(today.startOf('week'), today.endOf('week'));
+    this.selectedWeek = today.weekNumber;
     this.timeStateService.updateSelectedDate(today.toJSDate());
   }
 
@@ -130,6 +139,22 @@ export class CalendarComponent implements OnInit {
     const newDate = this.firstDayOfActiveMonth.getValue().set({ year: this.selectedYear });
     this.firstDayOfActiveMonth.next(newDate);
     this.updateToFirstWeekOfMonth(newDate);
+  }
+  onWeekChange(): void {
+    const selectedWeekNumber = this.selectedWeek;
+    const firstDayOfYear = DateTime.local(this.selectedYear, 1, 1);
+    const startOfSelectedWeek = firstDayOfYear.plus({ weeks: selectedWeekNumber - 1 }).startOf('week');
+
+
+    this.currentWeek = this.calendarService.getCurrentWeek(startOfSelectedWeek);
+    this.timeStateService.updateSelectedDate(startOfSelectedWeek.toJSDate());
+
+
+    if (startOfSelectedWeek.month !== this.firstDayOfActiveMonth.getValue().month) {
+      this.firstDayOfActiveMonth.next(startOfSelectedWeek.startOf('month'));
+      this.selectedMonth = startOfSelectedWeek.month;
+      this.selectedYear = startOfSelectedWeek.year;
+    }
   }
   updateToFirstWeekOfMonth(date: DateTime): void {
     const firstDayOfMonth = date.startOf('month');
