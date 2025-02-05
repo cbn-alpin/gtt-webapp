@@ -23,6 +23,8 @@ import { ProjectActionsComponent } from './components/project-actions/project-ac
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ActionComponent } from './components/action/action.component';
 import { ProjectComponent } from './components/project/project.component';
+import { DownloadPageComponent } from './components/download-page/download-page.component';
+import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
 
 
 @NgModule({
@@ -35,6 +37,8 @@ import { ProjectComponent } from './components/project/project.component';
     ConfirmationDialogComponent,
     ActionComponent,
     ProjectComponent,
+    DownloadPageComponent,
+    DownloadProjectsComponent
   ],
   imports: [
     BrowserModule,
