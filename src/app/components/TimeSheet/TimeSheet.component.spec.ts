@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GestiontempsComponent } from './gestiontemps.component';
+import { TimeSheetComponent } from './TimeSheet.component';
 
-describe('GestiontempsComponent', () => {
-  let component: GestiontempsComponent;
-  let fixture: ComponentFixture<GestiontempsComponent>;
+describe('TimeSheetComponent', () => {
+  let component: TimeSheetComponent;
+  let fixture: ComponentFixture<TimeSheetComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GestiontempsComponent ]
+      declarations: [ TimeSheetComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GestiontempsComponent);
+    fixture = TestBed.createComponent(TimeSheetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

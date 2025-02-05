@@ -24,7 +24,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import { ActionComponent } from './components/action/action.component';
 import { ProjectComponent } from './components/project/project.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
-import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.component';
+import { TimeSheetComponent } from './components/TimeSheet/TimeSheet.component';
 import { FormsModule } from '@angular/forms';
 import { PopupMessageComponent } from './popup-message/popup-message.component';
 import { DownloadPageComponent } from './components/download-page/download-page.component';
@@ -44,7 +44,7 @@ import { DownloadProjectsComponent } from './components/download-projects/downlo
     DownloadPageComponent,
     DownloadProjectsComponent,
     PopupMessageComponent,
-    GestiontempsComponent
+    TimeSheetComponent
   ],
   imports: [
     BrowserModule,
