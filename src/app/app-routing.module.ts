@@ -4,6 +4,7 @@ import { ConnectionPageComponent } from './components/connection-page/connection
 import { HomeComponent } from './components/home/home.component';
 import { ListProjectsComponent } from './components/list-projects/list-projects.component';
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
+import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.component';
 
 const routes: Routes = [
   { path: 'connexion', component: ConnectionPageComponent },
@@ -11,7 +12,7 @@ const routes: Routes = [
     path: 'accueil',
     component: HomeComponent,
     children: [
-      { path: 'time-entries', component: ListProjectsComponent },
+      { path: 'gestiontemps', component: GestiontempsComponent },
       { path: 'liste-des-projets', component: ListProjectsComponent },
       { path: 'expenses', component: ListProjectsComponent },
       { path: 'telechargement', component: DownloadProjectsComponent },

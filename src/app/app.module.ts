@@ -42,7 +42,9 @@ import { DownloadProjectsComponent } from './components/download-projects/downlo
     ActionComponent,
     ProjectComponent,
     DownloadPageComponent,
-    DownloadProjectsComponent
+    DownloadProjectsComponent,
+    PopupMessageComponent,
+    GestiontempsComponent
   ],
   imports: [
     BrowserModule,
@@ -59,8 +61,9 @@ import { DownloadProjectsComponent } from './components/download-projects/downlo
     MatMenuModule,
     MatDialogModule,
     ReactiveFormsModule,
-    MatSidenavModule
-  ],
+    MatSidenavModule,
+    CalendarComponent
+],
   providers: [],
   bootstrap: [AppComponent]
 })
