@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +27,9 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.component';
 import { FormsModule } from '@angular/forms';
 import { PopupMessageComponent } from './popup-message/popup-message.component';
+import { DownloadPageComponent } from './components/download-page/download-page.component';
+import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
+
 
 @NgModule({
   declarations: [
@@ -37,9 +41,8 @@ import { PopupMessageComponent } from './popup-message/popup-message.component';
     ConfirmationDialogComponent,
     ActionComponent,
     ProjectComponent,
-    GestiontempsComponent,
-    PopupMessageComponent
-
+    DownloadPageComponent,
+    DownloadProjectsComponent
   ],
   imports: [
     BrowserModule,
@@ -56,9 +59,8 @@ import { PopupMessageComponent } from './popup-message/popup-message.component';
     MatMenuModule,
     MatDialogModule,
     ReactiveFormsModule,
-    CalendarComponent,
-    FormsModule
-],
+    MatSidenavModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

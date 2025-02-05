@@ -1,5 +1,5 @@
 <div class="form-container">
-    <button class="close-btn" (click)="onClose()">X</button>
+    <button class="close-btn" (click)="onClose()">✖</button>
     <h3>Ajouter un projet</h3>
     <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
 
@@ -35,7 +35,9 @@
         </small>
       </div>
   
-      <button type="submit" [disabled]="!projectForm.valid">Valider</button>
+      <div class="form-actions">
+        <button class="validate-btn" type="submit" [disabled]="!projectForm.valid">Valider</button>
+      </div>
     </form>
 </div>
   
