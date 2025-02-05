@@ -8,8 +8,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class HomeComponent {
   currentTitle: string = 'Saisie des temps';
+  activePage: string = 'saisie';
 
-  
 constructor(
   private readonly route: ActivatedRoute,
   private readonly router: Router  ) {}

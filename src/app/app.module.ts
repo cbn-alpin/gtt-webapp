@@ -23,6 +23,10 @@ import { ProjectActionsComponent } from './components/project-actions/project-ac
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ActionComponent } from './components/action/action.component';
 import { ProjectComponent } from './components/project/project.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.component';
+import { FormsModule } from '@angular/forms';
+import { PopupMessageComponent } from './popup-message/popup-message.component';
 import { DownloadPageComponent } from './components/download-page/download-page.component';
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
 
@@ -38,7 +42,9 @@ import { DownloadProjectsComponent } from './components/download-projects/downlo
     ActionComponent,
     ProjectComponent,
     DownloadPageComponent,
-    DownloadProjectsComponent
+    DownloadProjectsComponent,
+    PopupMessageComponent,
+    GestiontempsComponent
   ],
   imports: [
     BrowserModule,
@@ -55,8 +61,9 @@ import { DownloadProjectsComponent } from './components/download-projects/downlo
     MatMenuModule,
     MatDialogModule,
     ReactiveFormsModule,
-    MatSidenavModule    
-  ],
+    MatSidenavModule,
+    CalendarComponent
+],
   providers: [],
   bootstrap: [AppComponent]
 })
