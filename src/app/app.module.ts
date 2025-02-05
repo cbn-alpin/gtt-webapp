@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +23,8 @@ import { ProjectActionsComponent } from './components/project-actions/project-ac
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { ActionComponent } from './components/action/action.component';
 import { ProjectComponent } from './components/project/project.component';
+import { DownloadPageComponent } from './components/download-page/download-page.component';
+import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
 
 
 @NgModule({
@@ -34,6 +37,8 @@ import { ProjectComponent } from './components/project/project.component';
     ConfirmationDialogComponent,
     ActionComponent,
     ProjectComponent,
+    DownloadPageComponent,
+    DownloadProjectsComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +54,8 @@ import { ProjectComponent } from './components/project/project.component';
     MatInputModule,
     MatMenuModule,
     MatDialogModule,
-    ReactiveFormsModule    
+    ReactiveFormsModule,
+    MatSidenavModule    
   ],
   providers: [],
   bootstrap: [AppComponent]
