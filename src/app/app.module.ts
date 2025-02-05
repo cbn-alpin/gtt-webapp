@@ -24,8 +24,6 @@ import { ActionComponent } from './components/action/action.component';
 import { ProjectComponent } from './components/project/project.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.component';
-import { TimeSheetComponent } from './time-sheet/time-sheet.component';
-import { WeekNavigationComponent } from './week-navigation/week-navigation.component';
 import { FormsModule } from '@angular/forms';
 import { PopupMessageComponent } from './popup-message/popup-message.component';
 
@@ -40,7 +38,6 @@ import { PopupMessageComponent } from './popup-message/popup-message.component';
     ActionComponent,
     ProjectComponent,
     GestiontempsComponent,
-    WeekNavigationComponent,
     PopupMessageComponent
 
   ],
@@ -60,7 +57,6 @@ import { PopupMessageComponent } from './popup-message/popup-message.component';
     MatDialogModule,
     ReactiveFormsModule,
     CalendarComponent,
-    TimeSheetComponent,
     FormsModule
 ],
   providers: [],
