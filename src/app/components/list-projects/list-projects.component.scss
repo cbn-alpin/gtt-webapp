@@ -1,7 +1,7 @@
 .actions-container{
-  margin-bottom: 6em;
   display: flex;
   justify-content: flex-end;
+  margin: 0.5em 0 9em;
 }
 
 .mat-mdc-form-field {
@@ -10,16 +10,22 @@
 }
 
 .table-container {
-  min-height: 200px;
+  min-height: 500px;
   max-height: 500px;
   overflow: auto;
 }
 
 .add-project{
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  color: #333;
+  color: #2f4050;
+  background-color: white;
+}
+
+.project-action{
+  cursor: pointer;
+  color: #2f4050;
 }
   
 .sticky-paginator {
@@ -32,7 +38,22 @@
 
 
 table {
+    min-height: 500px;
+    max-height: 500px;
     width: 100%;
+  }
+
+  .loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: -80px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   tr.detail-row {
@@ -52,12 +73,23 @@ table {
   }
   
   .element-diagram {
-    border: 2px solid black;
+    border: 2px solid #2f4050;
     font-weight: lighter;
   }
   
   .element-description-attribution {
     opacity: 0.5;
   }
-  
+
+  .empty-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 500px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2f4050;
+  }
+
+  .mat-mdc-progress-spinner { --mdc-circular-progress-active-indicator-color: #2f4050; }
 

@@ -1,25 +1,33 @@
-<div class="add-action-container mat-elevation-z8">
-    <h2>Ajouter une action</h2>
-  
+<div class="form-container">
+    <button class="close-btn" (click)="onClose()">✖</button>
+    <h2 class="form-title">Ajouter une action</h2>
     <form [formGroup]="actionForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="actionNumber">Numéro action :</label>
-        <input id="actionNumber" matInput formControlName="actionNumber" />
+      <div class="form-field">
+        <label class="form-label" for="actionNum">N° action :</label>
+        <input class="form-input" id="actionNum" type="number" formControlName="actionNum" placeholder="(uniquement des chiffres)" />
+        <!-- <small *ngIf="actionForm.get('actionNum')?.invalid && actionForm.get('actionNum')?.touched">
+          Veuillez saisir un numéro d'action valide.
+        </small> -->
       </div>
   
-      <div class="form-group">
-        <label for="actionName">Nom action :</label>
-        <input id="actionName" matInput formControlName="actionName" placeholder="Saisir le nom de l'action" />
+      <div class="form-field">
+        <label class="form-label" for="name">Nom action :</label>
+        <input class="form-input" id="name" type="text" formControlName="name" />
+        <small *ngIf="actionForm.get('name')?.invalid && actionForm.get('name')?.touched">
+          Le nom de l'action est requis.
+        </small>
       </div>
   
-      <div class="form-group">
-        <label for="actionDescription">Description action :</label>
-        <textarea id="actionDescription" matInput formControlName="actionDescription" placeholder="Saisir la description"></textarea>
+      <div class="form-field">
+        <label class="form-label" for="description">Description de l'action :</label>
+        <input class="form-input" id="description" type="text" formControlName="description" />
       </div>
-  
-      <button mat-raised-button color="primary" type="submit" [disabled]="!actionForm.valid">
-        <mat-icon>check</mat-icon> Valider
-      </button>
+    
+      <div class="form-actions">
+        <button class="validate-btn" type="submit" [disabled]="!actionForm.valid || isSubmitting">
+          {{ isSubmitting ? 'Création...' : 'Valider' }}
+        </button>
+      </div>
     </form>
 </div>
   

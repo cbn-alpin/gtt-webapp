@@ -1,1 +1,94 @@
 /* You can add global styles to this file, and also import other style files */
+.mat-mdc-tooltip {
+    background-color: #2f4050 !important;
+    color: white !important;
+    font-size: 14px !important;
+    border-radius: 5px !important;
+}
+
+::ng-deep .mdc-tooltip__surface {
+    background-color: #2f4050 !important; /* Enlève tout fond interne */
+}
+
+.form-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    margin: 0 auto;
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+}  
+
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2f4050;
+    font-weight: bold;
+} 
+
+.form-field {
+    margin-bottom: 15px;
+  }
+  
+  .form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #2f4050;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto; 
+}
+  
+.validate-btn {
+    background-color: #2f4050;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+  
+.validate-btn[disabled] {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    width: 32px; 
+    height: 32px;
+    background-color: #e4e7eb; 
+    border: none;
+    border-radius: 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #5a5a5a; 
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.2s;
+}
+  
+.close-btn:hover {
+    background-color: #d6dade; 
+    transform: scale(1.1); 
+}

@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./connection-page.component.scss']
 })
 export class ConnectionPageComponent {
-  title = 'GESTEMPL';
+  title = 'GESTEMPS';
 }
