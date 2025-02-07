@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { CalendarService } from './calendar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ export class TimeStateService {
 
   public selectedDate = new BehaviorSubject<Date>(new Date());
 
-  constructor() { }
+  constructor(private calendarService: CalendarService) { }
 
   // Observable to provide the selected date
   selectedDateSignal() {
@@ -52,12 +53,14 @@ export class TimeStateService {
 
     for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
+
       day.setDate(startOfWeek.getDate() + i);
       days.push({
         date: day,
         name: this.getDayName(day),
         isWeekend: day.getDay() === 0 || day.getDay() === 6,
-        isToday: this.isToday(day)
+        isToday: this.isToday(day),
+
       });
     }
     return days;

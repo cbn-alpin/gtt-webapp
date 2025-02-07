@@ -58,10 +58,12 @@
     </div>
   </div>
 
-  <div class="time-sheet">
-    <table>
-      <thead>
-        <tr>
+
+  <div class="time-sheet mat-elevation-z8">
+    <div class="table-container">
+    <table mat-table class="mat-elevation-z8">
+      <thead >
+        <tr >
           <th class="project-col">Projets/Actions</th>
           <th *ngFor="let day of weekDays; trackBy: trackByDate" [class.weekend]="day.isWeekend" [class.today]="day.isToday">
             {{ day.name }}<br>
@@ -81,22 +83,25 @@
           </tr>
 
 
-          <ng-container *ngFor="let action of project.actions; trackBy: trackById">
+          <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
             <tr>
               <td class="action-name" >
                 {{ action.name }}
               </td>
-              <!-- Saisie des heures par jour pour chaque action -->
+
               <td *ngFor="let day of weekDays; trackBy: trackByDate">
                 <input
-                  type="number"
-                  [ngModel]="getTimeEntry(project.id, action.id, day.date).hours"
-                  (ngModelChange)="updateTimeEntry($event, project.id, action.id, day.date)"
-                  [id]="getInputId(project.id, action.id, day.date)"
-                  step="0.25"
-                  max="10"
-                  min="0"
-                >
+                type="number"
+                [ngModel]="getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours"
+                (ngModelChange)="updateTimeEntry($event, project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date)))"
+                [id]="getInputId(project.id_project, action.id_action, day.date)"
+                step="0.25"
+                max="10"
+                min="0"
+                [ngClass]="{ 'weekend-input': day.isWeekend || isHoliday(day.date)}"
+              >
+
+
               </td>
               <td class="total-week">
                 {{ calculateWeekTotal(project.id, action.id) }}
@@ -109,23 +114,40 @@
         </ng-container>
 
         <!-- Fixed rows (e.g., Absence, Service, Formation) -->
-        <tr *ngFor="let fixedRow of fixedRows; trackBy: trackById">
-          <td class="fixed-name">{{ fixedRow.name }}</td>
-          <td *ngFor="let day of weekDays; trackBy: trackByDate" [class.weekend]="day.isWeekend" [class.today]="day.isToday">
-            <input
-              type="number"
-              [ngModel]="getTimeEntry(fixedRow.id, 0, day.date).hours"
-              (ngModelChange)="updateTimeEntry($event, fixedRow.id, 0, day.date)"
-              step="0.25"
-            >
-          </td>
-          <td class="total-week">
-            {{ calculateWeekTotal(fixedRow.id, 0) }}
-          </td>
-          <td class="total-year">
-            {{ calculateYearTotal(fixedRow.id, 0) }}
-          </td>
-        </tr>
+
+        <ng-container *ngFor="let project of fixedRows; trackBy: trackById">
+
+
+          <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
+            <tr>
+              <td class="action-name" >
+                {{ action.name }}
+              </td>
+
+              <td *ngFor="let day of weekDays; trackBy: trackByDate">
+                <input
+                type="number"
+                [ngModel]="getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours"
+                (ngModelChange)="updateTimeEntry($event, project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date)))"
+                [id]="getInputId(project.id_project, action.id_action, day.date)"
+                step="0.25"
+                max="10"
+                min="0"
+                [ngClass]="{ 'weekend-input': day.isWeekend || isHoliday(day.date)}"
+              >
+
+
+              </td>
+              <td class="total-week">
+                {{ calculateWeekTotal(project.id, action.id) }}
+              </td>
+              <td class="total-year">
+                {{ calculateYearTotal(project.id, action.id) }}
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+
 
         <!-- Totaux quotidiens -->
         <tr class="daily-total-row">
@@ -137,5 +159,6 @@
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 </div>

@@ -30,7 +30,6 @@ import { PopupMessageComponent } from './popup-message/popup-message.component';
 import { DownloadPageComponent } from './components/download-page/download-page.component';
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,6 +61,7 @@ import { DownloadProjectsComponent } from './components/download-projects/downlo
     MatDialogModule,
     ReactiveFormsModule,
     MatSidenavModule,
+    FormsModule,
     CalendarComponent
 ],
   providers: [],
