@@ -104,10 +104,10 @@
 
               </td>
               <td class="total-week">
-                {{ calculateWeekTotal(project.id, action.id) }}
+                {{ calculateWeekTotal(project.id_project, action.id_action) }}
               </td>
               <td class="total-year">
-                {{ calculateYearTotal(project.id, action.id) }}
+                {{ calculateYearTotal(project.id_project, action.id_action) }}
               </td>
             </tr>
           </ng-container>
@@ -120,7 +120,7 @@
 
           <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
             <tr>
-              <td class="action-name" >
+              <td class="fixed-action-name" >
                 {{ action.name }}
               </td>
 
@@ -139,10 +139,10 @@
 
               </td>
               <td class="total-week">
-                {{ calculateWeekTotal(project.id, action.id) }}
+                {{ calculateWeekTotal(project.id_project, action.id_action) }}
               </td>
               <td class="total-year">
-                {{ calculateYearTotal(project.id, action.id) }}
+                {{ calculateYearTotal(project.id_project, action.id_action) }}
               </td>
             </tr>
           </ng-container>

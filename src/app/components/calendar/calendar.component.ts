@@ -275,34 +275,50 @@ updateTimeEntry(value: number, projectId: number, actionId: number, date: string
 }
 
 
-  calculateWeekTotal(projectId: number | string, actionId: number): number {
-    let total = 0;
-    /*
-    this.weekDays.forEach(day => {
-      total += this.getTimeEntry(projectId, actionId, day.date).hours;
-    });
-    */
-    return total;
-  }
+calculateWeekTotal(projectId: number, actionId: number): number {
+  let total = 0;
 
-  calculateYearTotal(projectId: number | string, actionId: number): number {
+  this.weekDays.forEach(day => {
+      const dateStr = this.formatApiDate(this.toLuxonDate(day.date));
+      const timeEntry = this.getTimeEntry(projectId, actionId, dateStr);
+
+      if (timeEntry && timeEntry.hours) {
+          total += timeEntry.hours;
+      }
+  });
+  return total;
+}
+
+  calculateYearTotal(projectId: number , actionId: number): number {
     return this.calculateWeekTotal(projectId, actionId) ;
   }
 
-  calculateDayTotal(date: Date)  {
-    /*
+  calculateDayTotal(date: Date): number {
     let total = 0;
-    this.projects.forEach(project => {
-      project.actions.forEach(action => {
-        total += this.getTimeEntry(project.id, action.id, date).hours;
-      });
+    const formattedDate = this.formatApiDate(this.toLuxonDate(date)); // Ensure same format
+
+    if (!this.projects || !Array.isArray(this.projects)) {
+        console.warn('calculateDayTotal: this.projects est undefined ou n\'est pas un tableau');
+        return total;
+    }
+
+    this.projects.forEach((project: { id_project: number; list_action: { id_action: number }[] }) => {
+        if (!project.list_action || !Array.isArray(project.list_action)) {
+            console.warn(`calculateDayTotal: project.list_action est undefined ou n'est pas un tableau pour project ${project.id_project}`);
+            return;
+        }
+
+        project.list_action.forEach((action: { id_action: number }) => {
+            const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
+            if (entry && typeof entry.hours === 'number') {
+                total += entry.hours;
+            }
+        });
     });
-    this.fixedRows.forEach(row => {
-      total += this.getTimeEntry(row.id, 0, date).hours;
-    });
+
+
     return total;
-    */
-  }
+}
 
 
   getInputId(projectId: number | string, actionId: number, date: Date): string {
