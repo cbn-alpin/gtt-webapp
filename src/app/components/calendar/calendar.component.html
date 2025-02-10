@@ -56,6 +56,9 @@
       </div>
       <div class="calendar-headline-control" (click)="goToNextWeek()">»</div>
     </div>
+    <div>
+      <mat-slide-toggle></mat-slide-toggle>
+    </div>
   </div>
 
 
@@ -107,7 +110,7 @@
                 {{ calculateWeekTotal(project.id_project, action.id_action) }}
               </td>
               <td class="total-year">
-                {{ calculateYearTotal(project.id_project, action.id_action) }}
+                {{  action.total_duration }}
               </td>
             </tr>
           </ng-container>
@@ -142,7 +145,7 @@
                 {{ calculateWeekTotal(project.id_project, action.id_action) }}
               </td>
               <td class="total-year">
-                {{ calculateYearTotal(project.id_project, action.id_action) }}
+               {{  action.total_duration }}
               </td>
             </tr>
           </ng-container>

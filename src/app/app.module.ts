@@ -29,6 +29,8 @@ import { FormsModule } from '@angular/forms';
 import { PopupMessageComponent } from './popup-message/popup-message.component';
 import { DownloadPageComponent } from './components/download-page/download-page.component';
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
 
 @NgModule({
   declarations: [
@@ -62,7 +64,8 @@ import { DownloadProjectsComponent } from './components/download-projects/downlo
     ReactiveFormsModule,
     MatSidenavModule,
     FormsModule,
-    CalendarComponent
+    CalendarComponent,
+    MatSlideToggleModule
 ],
   providers: [],
   bootstrap: [AppComponent]

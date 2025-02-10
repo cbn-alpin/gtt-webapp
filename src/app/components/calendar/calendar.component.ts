@@ -9,11 +9,15 @@ import { TimeStateService } from 'src/app/services/time-state-service.service';
 import { PopupMessageComponent } from 'src/app/popup-message/popup-message.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TimeSheetService } from 'src/app/services/TimeSheet.service';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+
+
+
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, MatSlideToggleModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
@@ -235,6 +239,10 @@ export class CalendarComponent implements OnInit {
     const action = project.list_action.find((a: any) => a.id_action === actionId);
     if (!action) return { hours: 0 };
 
+    if (!project.list_action || !Array.isArray(project.list_action)) {
+      return { hours: 0 };
+    }
+
     const timeEntry = action.list_time.find((t: any) =>
       new Date(t.date).toISOString().split('T')[0] === formattedDate
     );
@@ -242,109 +250,105 @@ export class CalendarComponent implements OnInit {
     return timeEntry ? { hours: Number(timeEntry.duration) } : { hours: 0 };
 }
 
-updateTimeEntry(value: number, projectId: number, actionId: number, date: string) {
-  if (value > 10.25) {
-    this.dialog.open(PopupMessageComponent, {
-      data: {
-        title: 'Erreur',
-        message: 'Quota horaire journalier maximum atteint'
-      }
-    });
-    return;
-  }
-
-  if (value >= 7.50 && value <= 10.00) {
-    this.dialog.open(PopupMessageComponent, {
-      data: {
-        title: 'Avertissement',
-        message: 'Attention : saisie supérieure à 7,50h uniquement si déplacement'
-      }
-    });
-  }
-  if (isNaN(value) || value < 0 || value > 10) {
-    console.warn("Valeur invalide :", value);
-    return;
-  }
-
-  const formattedDate = new Date(date).toISOString().split('T')[0];
-
-  let source;
-  if (projectId === 0) {
-    source = this.fixedRows;
-  } else {
-    source = this.projects;
-  }
-
-  const project = source.find(p => p.id_project === projectId);
-  if (!project) return;
-
-  const action = project.list_action.find((a: any) => a.id_action === actionId);
-  if (!action) return;
-
-  let timeEntry = action.list_time.find((t: any) =>
-    new Date(t.date).toISOString().split('T')[0] === formattedDate
-  );
-
-  if (timeEntry) {
-    timeEntry.duration = value.toString();
-  } else {
-    action.list_time.push({ date: formattedDate, duration: value.toString() });
-  }
-   // Call the saveUserTime method to save the time in the database
-   this.timeSheetService.saveUserTime(this.userId, actionId, formattedDate, value).subscribe(
-    (response) => {
-      console.log('Time saved successfully:', response);
-    },
-    (error) => {
-      console.error('Error saving time:', error);
-    }
-  );
-}
-
-
-calculateWeekTotal(projectId: number, actionId: number): number {
-  let total = 0;
-
-  this.weekDays.forEach(day => {
-      const dateStr = this.formatApiDate(this.toLuxonDate(day.date));
-      const timeEntry = this.getTimeEntry(projectId, actionId, dateStr);
-
-      if (timeEntry && timeEntry.hours) {
-          total += timeEntry.hours;
-      }
-  });
-  return total;
-}
-
-  calculateYearTotal(projectId: number , actionId: number): number {
-    return this.calculateWeekTotal(projectId, actionId) ;
-  }
-
-  calculateDayTotal(date: Date): number {
-    let total = 0;
-    const formattedDate = this.formatApiDate(this.toLuxonDate(date));
-
-    if (!this.projects || !Array.isArray(this.projects)) {
-        console.warn('calculateDayTotal: this.projects est undefined ou n\'est pas un tableau');
-        return total;
-    }
-
-    this.projects.forEach((project: { id_project: number; list_action: { id_action: number }[] }) => {
-        if (!project.list_action || !Array.isArray(project.list_action)) {
-            console.warn(`calculateDayTotal: project.list_action est undefined ou n'est pas un tableau pour project ${project.id_project}`);
-            return;
+  updateTimeEntry(value: number, projectId: number, actionId: number, date: string) {
+    if (value > 10.25) {
+      this.dialog.open(PopupMessageComponent, {
+        data: {
+          title: 'Erreur',
+          message: 'Quota horaire journalier maximum atteint'
         }
+      });
+      return;
+    }
 
-        project.list_action.forEach((action: { id_action: number }) => {
-            const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
-            if (entry && typeof entry.hours === 'number') {
-                total += entry.hours;
-            }
-        });
+    if (value >= 7.50 && value <= 10.00) {
+      this.dialog.open(PopupMessageComponent, {
+        data: {
+          title: 'Avertissement',
+          message: 'Attention : saisie supérieure à 7,50h uniquement si déplacement'
+        }
+      });
+    }
+    if (isNaN(value) || value < 0 || value > 10) {
+      console.warn("Valeur invalide :", value);
+      return;
+    }
+
+    const formattedDate = new Date(date).toISOString().split('T')[0];
+
+    let source;
+    if (projectId === 0) {
+      source = this.fixedRows;
+    } else {
+      source = this.projects;
+    }
+
+    const project = source.find(p => p.id_project === projectId);
+    if (!project) return;
+
+    const action = project.list_action.find((a: any) => a.id_action === actionId);
+    if (!action) return;
+
+    let timeEntry = action.list_time.find((t: any) =>
+      new Date(t.date).toISOString().split('T')[0] === formattedDate
+    );
+
+    if (timeEntry) {
+      timeEntry.duration = value.toString();
+    } else {
+      action.list_time.push({ date: formattedDate, duration: value.toString() });
+    }
+    this.timeSheetService.saveUserTime(this.userId, actionId, formattedDate, value).subscribe(
+      (response) => {
+        this.updateYearTotalForAction(projectId, actionId);
+        console.log('Time saved successfully:', response);
+      },
+      (error) => {
+        console.error('Error saving time:', error);
+      }
+    );
+  }
+
+
+  calculateWeekTotal(projectId: number, actionId: number): number {
+    let total = 0;
+
+    this.weekDays.forEach(day => {
+        const dateStr = this.formatApiDate(this.toLuxonDate(day.date));
+        const timeEntry = this.getTimeEntry(projectId, actionId, dateStr);
+
+        if (timeEntry && timeEntry.hours) {
+            total += timeEntry.hours;
+        }
     });
-
     return total;
-}
+  }
+
+    calculateDayTotal(date: Date): number {
+      let total = 0;
+      const formattedDate = this.formatApiDate(this.toLuxonDate(date));
+
+      if (!this.projects || !Array.isArray(this.projects)) {
+          console.warn('calculateDayTotal: this.projects est undefined ou n\'est pas un tableau');
+          return total;
+      }
+
+      this.projects.forEach((project: { id_project: number; list_action: { id_action: number }[] }) => {
+          if (!project.list_action || !Array.isArray(project.list_action)) {
+              console.warn(`calculateDayTotal: project.list_action est undefined ou n'est pas un tableau pour project ${project.id_project}`);
+              return;
+          }
+
+          project.list_action.forEach((action: { id_action: number }) => {
+              const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
+              if (entry && typeof entry.hours === 'number') {
+                  total += entry.hours;
+              }
+          });
+      });
+
+      return total;
+  }
 
 
   getInputId(projectId: number | string, actionId: number, date: Date): string {
@@ -365,6 +369,7 @@ calculateWeekTotal(projectId: number, actionId: number): number {
 
 
   loadProjects(): void {
+
     const formattedStartDate = this.startDate.toISODate() ;
     const formattedEndDate = this.endDate.toISODate();
     console.log("Formatted Start Date: ", formattedStartDate);
@@ -390,6 +395,24 @@ calculateWeekTotal(projectId: number, actionId: number): number {
   }
   toLuxonDate(date: Date): DateTime {
     return DateTime.fromJSDate(date);
+  }
+
+  updateYearTotalForAction(projectId: number, actionId: number): void {
+
+    const project = this.projects.find(p => p.id_project === projectId);
+    if (!project || !project.list_action) {
+      return;
+    }
+    const action = project.list_action.find((act: any) => act.id_action === actionId);
+    if (!action || !action.list_time || !Array.isArray(action.list_time)) {
+      return;
+    }
+
+    let total = 0;
+    action.list_time.forEach((timeEntry: any) => {
+      total += parseFloat(timeEntry.duration);
+    });
+    action.total_duration = total.toFixed(2);
   }
 
 
