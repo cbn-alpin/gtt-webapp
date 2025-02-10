@@ -1,4 +1,18 @@
+.project-action-container{
+    max-height: 300px;
+}
+
+.add-action{
+    display: flex;
+    justify-content: flex-end;
+    padding: 6px 2em 0 0;
+}
+ 
+.action-table {
+    overflow-y: auto;
+}
   
+
 tr.element-row:not(.expanded-row):hover {
 background: whitesmoke;
 }
@@ -13,4 +27,29 @@ background: whitesmoke;
 ::ng-deep .mat-mdc-checkbox.mat-accent .mdc-checkbox--selected~.mdc-checkbox__ripple {
     background-color: rgba(47, 64, 80, 0.3) !important;
 }
+
+.project-action{
+    cursor: pointer;
+    color: #2f4050;
+}
+
+// .description-cell {
+//     max-width: 150px;  /* Ajuste la largeur maximale */
+//     white-space: nowrap;
+//     overflow: hidden;
+// }
+  
+// .description-cell:hover {
+//     white-space: normal;
+//     overflow: visible;
+//     background: rgba(0, 0, 0, 0.8);  /* Fond sombre */
+//     color: white;
+//     padding: 5px;
+//     position: absolute;
+//     z-index: 10;
+//     max-width: 300px; /* Largeur max de l'info bulle */
+//     word-wrap: break-word;
+// }
+
+
   

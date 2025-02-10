@@ -1,21 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-
-
-export interface PeriodicElement {
-  position: number;
-  name: string;
-  description: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', description: 'Hhghfgdhfgfrdh'},
-  {position: 2, name: 'Helium', description: 'Hehjgdqhfhdhjfhjds'},
-  {position: 3, name: 'Lithium',description: 'Lidbfhsbhfdbhsb'},
-  {position: 4, name: 'Beryllium', description: 'Bedsfdgfhgfjhjyg'},
-];
-
+import { ActionComponent } from '../action/action.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Action } from 'src/app/models/Action';
 
 @Component({
   selector: 'app-project-actions',
@@ -23,11 +11,20 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./project-actions.component.scss']
 })
 export class ProjectActionsComponent {
-  @Input() project: any;
+  displayedColumns: string[] = ['position', 'name', 'description', 'actions'];
+  dataSource = new MatTableDataSource<Action>([]);
+  selection = new SelectionModel<Action>(true, []);
 
-  displayedColumns: string[] = ['select', 'position', 'name', 'description', 'edit', 'save'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-  selection = new SelectionModel<PeriodicElement>(true, []);
+  @Input() id_project!: number;
+  private _list_action: Action[] = [];
+
+  @Input()
+  set list_action(actions: Action[]) {
+    this._list_action = actions || []; 
+    this.dataSource.data = this._list_action;
+  }
+
+  constructor(private readonly dialog: MatDialog){}
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -43,11 +40,25 @@ export class ProjectActionsComponent {
     this.selection.select(...this.dataSource.data);
   }
 
-  checkboxLabel(row?: PeriodicElement): string {
+  checkboxLabel(row?: Action): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id_action + 1}`;
   }
 
+  createAction() {
+    const dialogRef = this.dialog.open(ActionComponent, {
+      data: { id_project: this.id_project }
+    });
+    
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        console.log(`Action confirmée pour le projet ${this.id_project}`);
+        this.dataSource.data = this._list_action;
+      } else {
+        console.log(`Action annulée pour le projet ${this.id_project}`);
+      }
+    });
+  }
 }

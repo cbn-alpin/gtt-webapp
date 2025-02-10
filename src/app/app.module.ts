@@ -12,6 +12,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -62,7 +65,10 @@ import { DownloadProjectsComponent } from './components/download-projects/downlo
     MatDialogModule,
     ReactiveFormsModule,
     MatSidenavModule,
-    CalendarComponent
+    CalendarComponent,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatTooltipModule
 ],
   providers: [],
   bootstrap: [AppComponent]

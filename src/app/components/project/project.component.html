@@ -1,42 +1,47 @@
 <div class="form-container">
     <button class="close-btn" (click)="onClose()">✖</button>
-    <h3>Ajouter un projet</h3>
+    <h2 class="form-title">Ajouter un projet</h2>
     <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
 
       <div class="form-field">
-        <label for="projectId">N° projet :</label>
-        <input id="projectId" type="text" formControlName="projectId" placeholder="(uniquement des chiffres)" />
+        <label class="form-label" for="projectId">N° projet :</label>
+        <input class="form-input" id="projectId" type="number" formControlName="projectId" placeholder="(uniquement des chiffres)" />
         <small *ngIf="projectForm.get('projectId')?.invalid && projectForm.get('projectId')?.touched">
           Veuillez saisir un numéro de projet valide.
         </small>
       </div>
   
       <div class="form-field">
-        <label for="projectName">Nom projet :</label>
-        <input id="projectName" type="text" formControlName="projectName" />
+        <label class="form-label" for="projectName">Nom projet :</label>
+        <input class="form-input" id="projectName" type="text" formControlName="projectName" />
         <small *ngIf="projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched">
           Le nom du projet est requis.
         </small>
       </div>
   
       <div class="form-field">
-        <label for="startDate">Date début projet :</label>
-        <input id="startDate" type="date" formControlName="startDate" />
+        <label class="form-label" for="startDate">Date début projet :</label>
+        <input class="form-input" id="startDate" type="date" formControlName="startDate" />
         <small *ngIf="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched">
           La date de début est requise.
         </small>
       </div>
   
       <div class="form-field">
-        <label for="endDate">Date fin projet :</label>
-        <input id="endDate" type="date" formControlName="endDate" />
+        <label class="form-label" for="endDate">Date fin projet :</label>
+        <input class="form-input" id="endDate" type="date" formControlName="endDate" />
         <small *ngIf="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched">
           La date de fin est requise.
+        </small>
+        <small *ngIf="projectForm.get('endDate')?.errors?.['dateInvalid']">
+          La date de fin doit être supérieure ou égale à la date de début.
         </small>
       </div>
   
       <div class="form-actions">
-        <button class="validate-btn" type="submit" [disabled]="!projectForm.valid">Valider</button>
+        <button class="validate-btn" type="submit" [disabled]="!projectForm.valid || isSubmitting">
+          {{ isSubmitting ? 'Création...' : 'Valider' }}
+        </button>
       </div>
     </form>
 </div>
