@@ -1,49 +1,48 @@
-// connection-page.component.ts
-import { Component, AfterViewInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
-declare const google: any;
+import { AuthService } from 'src/app/services/auth/auth.service';
+
 
 @Component({
   selector: 'app-connection-page',
   templateUrl: './connection-page.component.html',
   styleUrls: ['./connection-page.component.scss']
 })
-export class ConnectionPageComponent implements AfterViewInit {
-  loggedIn = false;
-  title = 'GESTEMPL';
+export class ConnectionPageComponent {
+  title = 'GESTEMPS';
+  credentials = { login: '', password: '' };
+  isLoading = false;
+  errorMessage = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  ngAfterViewInit(): void {
-    // Initialize the Google Identity Services
-    google.accounts.id.initialize({
-      client_id: '800152835915-atf9657e73dip71f7velahqvn3rhf1k0.apps.googleusercontent.com',                   
-      callback: this.handleCredentialResponse.bind(this),
-      auto_select: false,
+  nativeLogin() {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.authService.nativeAuthenticate(this.credentials).subscribe({
+      next: (userInfo: any) => {
+        console.log('Authentification réussie ✅', userInfo);
+        
+        // Stocker le token et autres infos si nécessaire
+        localStorage.setItem('access_token', userInfo.access_token);
+        localStorage.setItem('user_email', userInfo.email);
+        localStorage.setItem('user_name', `${userInfo.first_name} ${userInfo.last_name}`);
+        localStorage.setItem('is_admin', `${userInfo.is_admin}`);
+        localStorage.setItem('id_user', `${userInfo.id_user}`);
+
+        console.error('user id stocké dans localstorage', userInfo.id_user);
+
+        this.isLoading = false;
+        // TODO: Rediriger l'utilisateur vers la page d'accueil ou tableau de bord
+        this.router.navigate(['/accueil/saisie-des-temps']);
+      },
+      error: (error) => {
+        console.error('Erreur lors de l’authentification ❌', error);
+        this.errorMessage = 'Échec de connexion. Vérifiez vos identifiants.';
+        this.isLoading = false;
+      }
     });
-
-    // Render the Google sign-in button into a container element
-    google.accounts.id.renderButton(
-      document.getElementById("google-signin-button"),
-      { theme: "outline", size: "large" }
-    );
-  }
-
-  handleCredentialResponse(response: any): void {
-    console.log("Encoded JWT ID token:", response.credential);
-
-    // Use the AuthService to handle login
-    this.authService.loginWithGoogle(response.credential)
-      .subscribe({
-        next: () => {
-          // On successful authentication, navigate to the protected home route
-          this.router.navigate(['/accueil']);
-        },
-        error: err => {
-          console.error('Google login failed:', err);
-          // Handle errors (show a message, etc.)
-        }
-      });
   }
 }
+

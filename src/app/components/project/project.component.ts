@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Project } from 'src/app/models/Project';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 @Component({
   selector: 'app-project',
@@ -41,7 +40,7 @@ export class ProjectComponent {
   onSubmit() {
     if (this.projectForm.valid) {
       this.isSubmitting = true;
-      const projectData : Project = {
+      const projectData : any = {
         code: this.projectForm.value.projectId,
         name: this.projectForm.value.projectName,
         start_date: this.projectForm.value.startDate,
@@ -66,7 +65,7 @@ export class ProjectComponent {
 
   showToast(message: string, isError: boolean = false) {
       this.snackBar.open(message, '', {
-        duration: 4000, 
+        duration: 5000, 
         panelClass: [isError ? 'error-toast' : 'success-toast'], 
         verticalPosition: 'top', 
         horizontalPosition: 'center', 

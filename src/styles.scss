@@ -7,8 +7,10 @@
 }
 
 ::ng-deep .mdc-tooltip__surface {
-    background-color: #2f4050 !important; /* Enlève tout fond interne */
+    background-color: #2f4050 !important;
 }
+
+.mat-mdc-progress-spinner { --mdc-circular-progress-active-indicator-color: #2f4050; }
 
 .form-container {
     background-color: white;

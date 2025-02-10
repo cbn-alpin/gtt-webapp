@@ -1,5 +1,6 @@
 .project-action-container{
     max-height: 300px;
+    min-height: 80px;
 }
 
 .add-action{
@@ -10,11 +11,42 @@
  
 .action-table {
     overflow-y: auto;
-}
-  
+    border-collapse: collapse; 
+    border-spacing: 0; 
 
-tr.element-row:not(.expanded-row):hover {
-background: whitesmoke;
+    th, td {
+        padding: 8px; 
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.description-cell{
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.name-cell {
+    width: 389px; 
+    max-width: 389px;
+}
+
+.description-cell {
+    width: 400px; 
+    max-width: 400px;
+}
+
+.truncate {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 ::ng-deep .mat-mdc-checkbox.mat-accent {
@@ -28,28 +60,25 @@ background: whitesmoke;
     background-color: rgba(47, 64, 80, 0.3) !important;
 }
 
+tr.element-row:not(.expanded-row):hover {
+background: whitesmoke;
+}
+
 .project-action{
     cursor: pointer;
     color: #2f4050;
+    margin-right: 5px;
 }
 
-// .description-cell {
-//     max-width: 150px;  /* Ajuste la largeur maximale */
-//     white-space: nowrap;
-//     overflow: hidden;
-// }
-  
-// .description-cell:hover {
-//     white-space: normal;
-//     overflow: visible;
-//     background: rgba(0, 0, 0, 0.8);  /* Fond sombre */
-//     color: white;
-//     padding: 5px;
-//     position: absolute;
-//     z-index: 10;
-//     max-width: 300px; /* Largeur max de l'info bulle */
-//     word-wrap: break-word;
-// }
+.empty-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #2f4050;
+}
+
 
 
   
