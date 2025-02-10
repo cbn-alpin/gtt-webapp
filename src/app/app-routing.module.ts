@@ -5,12 +5,14 @@ import { HomeComponent } from './components/home/home.component';
 import { ListProjectsComponent } from './components/list-projects/list-projects.component';
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
 import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: 'connexion', component: ConnectionPageComponent },
   {
     path: 'accueil',
     component: HomeComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: 'gestiontemps', component: GestiontempsComponent },
       { path: 'liste-des-projets', component: ListProjectsComponent },

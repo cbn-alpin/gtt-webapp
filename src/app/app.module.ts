@@ -13,6 +13,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSidenavModule} from '@angular/material/sidenav';
 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConnectionPageComponent } from './components/connection-page/connection-page.component';
@@ -29,6 +31,8 @@ import { FormsModule } from '@angular/forms';
 import { PopupMessageComponent } from './popup-message/popup-message.component';
 import { DownloadPageComponent } from './components/download-page/download-page.component';
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
+import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { TokenInterceptor } from './components/connection-page/token.interceptor';
 
 
 @NgModule({
@@ -62,9 +66,28 @@ import { DownloadProjectsComponent } from './components/download-projects/downlo
     MatDialogModule,
     ReactiveFormsModule,
     MatSidenavModule,
-    CalendarComponent
+    CalendarComponent,
+    SocialLoginModule
 ],
-  providers: [],
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false, // Set to true for automatic sign in
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '800152835915-atf9657e73dip71f7velahqvn3rhf1k0.apps.googleusercontent.com' // <-- Replace with your client ID
+            )
+          }
+        ],
+        onError: (err: any) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+    }, { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
