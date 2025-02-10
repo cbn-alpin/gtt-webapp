@@ -243,6 +243,24 @@ export class CalendarComponent implements OnInit {
 }
 
 updateTimeEntry(value: number, projectId: number, actionId: number, date: string) {
+  if (value > 10.25) {
+    this.dialog.open(PopupMessageComponent, {
+      data: {
+        title: 'Erreur',
+        message: 'Quota horaire journalier maximum atteint'
+      }
+    });
+    return;
+  }
+
+  if (value >= 7.50 && value <= 10.00) {
+    this.dialog.open(PopupMessageComponent, {
+      data: {
+        title: 'Avertissement',
+        message: 'Attention : saisie supérieure à 7,50h uniquement si déplacement'
+      }
+    });
+  }
   if (isNaN(value) || value < 0 || value > 10) {
     console.warn("Valeur invalide :", value);
     return;
@@ -272,6 +290,15 @@ updateTimeEntry(value: number, projectId: number, actionId: number, date: string
   } else {
     action.list_time.push({ date: formattedDate, duration: value.toString() });
   }
+   // Call the saveUserTime method to save the time in the database
+   this.timeSheetService.saveUserTime(this.userId, actionId, formattedDate, value).subscribe(
+    (response) => {
+      console.log('Time saved successfully:', response);
+    },
+    (error) => {
+      console.error('Error saving time:', error);
+    }
+  );
 }
 
 
@@ -295,7 +322,7 @@ calculateWeekTotal(projectId: number, actionId: number): number {
 
   calculateDayTotal(date: Date): number {
     let total = 0;
-    const formattedDate = this.formatApiDate(this.toLuxonDate(date)); // Ensure same format
+    const formattedDate = this.formatApiDate(this.toLuxonDate(date));
 
     if (!this.projects || !Array.isArray(this.projects)) {
         console.warn('calculateDayTotal: this.projects est undefined ou n\'est pas un tableau');
@@ -315,7 +342,6 @@ calculateWeekTotal(projectId: number, actionId: number): number {
             }
         });
     });
-
 
     return total;
 }

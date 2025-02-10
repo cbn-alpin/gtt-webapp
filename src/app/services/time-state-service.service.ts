@@ -21,11 +21,10 @@ export class TimeStateService {
     this.selectedDate.next(date);
   }
 
-  // Get the start of the current week (Monday)
   getStartOfWeek(date: Date): Date {
     const start = new Date(date);
     const day = start.getDay();
-    const diff = start.getDate() - day + (day === 0 ? -5 : 1); // Adjust if Sunday (0)
+    const diff = start.getDate() - day + (day === 0 ? -5 : 1);
     start.setDate(diff);
     return start;
   }
@@ -34,7 +33,7 @@ export class TimeStateService {
   goToPreviousWeek(currentDate: Date): Date {
     const previousWeek = new Date(currentDate);
     previousWeek.setDate(currentDate.getDate() - 7);
-    this.updateSelectedDate(previousWeek);  // Update selected date for both components
+    this.updateSelectedDate(previousWeek);
     return previousWeek;
   }
 
@@ -42,7 +41,7 @@ export class TimeStateService {
   goToNextWeek(currentDate: Date): Date {
     const nextWeek = new Date(currentDate);
     nextWeek.setDate(currentDate.getDate() + 7);
-    this.updateSelectedDate(nextWeek);  // Update selected date for both components
+    this.updateSelectedDate(nextWeek);
     return nextWeek;
   }
 
@@ -68,7 +67,7 @@ export class TimeStateService {
 
   // Helper function to get the name of the day
   getDayName(date: Date): string {
-    const days = ['Dim','Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];  // Starts with Monday
+    const days = ['Dim','Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
     return days[date.getDay()];
   }
 

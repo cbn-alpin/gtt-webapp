@@ -13,4 +13,15 @@ export class TimeSheetService  {
     const url = `${this.apiUrl}/${userId}/projects/times?date_start=${dateStart}&date_end=${dateEnd}`;
     return this.http.get<any[]>(url);
   }
+  saveUserTime(userId: number, actionId: number, date: string, duration: number): Observable<any> {
+    const url = `${this.apiUrl}/${userId}/projects/times`;
+
+    const body = {
+      date: date,
+      duration: duration,
+      id_action: actionId
+    };
+
+    return this.http.post<any>(url, body);
+  }
 }
