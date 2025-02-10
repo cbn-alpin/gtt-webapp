@@ -29,11 +29,12 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import { ActionComponent } from './components/action/action.component';
 import { ProjectComponent } from './components/project/project.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
-import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.component';
+import { TimeSheetComponent } from './components/TimeSheet/TimeSheet.component';
 import { FormsModule } from '@angular/forms';
 import { PopupMessageComponent } from './popup-message/popup-message.component';
 import { DownloadPageComponent } from './components/download-page/download-page.component';
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TokenInterceptor } from './components/connection-page/token.interceptor';
 
 
@@ -50,7 +51,7 @@ import { TokenInterceptor } from './components/connection-page/token.interceptor
     DownloadPageComponent,
     DownloadProjectsComponent,
     PopupMessageComponent,
-    GestiontempsComponent
+    TimeSheetComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +69,9 @@ import { TokenInterceptor } from './components/connection-page/token.interceptor
     MatDialogModule,
     ReactiveFormsModule,
     MatSidenavModule,
+    FormsModule,
     CalendarComponent,
+    MatSlideToggleModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTooltipModule

@@ -3,9 +3,8 @@
   padding: 10px;
   margin-bottom: 10px;
   justify-content: space-between;
-  width: 60%;
+  width: 70%;
 }
-
 
 
 .calendar-headline {
@@ -85,7 +84,7 @@
   margin-bottom: 30px;
 }
 
-/* Style for the calendar grid cells */
+
 .calendar-grid-cell {
   padding: 5px;
   display: flex;
@@ -96,45 +95,41 @@
   cursor: pointer;
 }
 
-/* Hover effect */
+
 .calendar-grid-cell:hover {
   background: #9ba3bf;
 }
 
-/* Active day highlight */
 .calendar-grid-cell-active {
   background: #9ba3bf;
 }
 
-/* Style for all weekend columns (Saturday and Sunday) */
-.calendar-grid .calendar-grid-cell:nth-child(7n-1), /* Every 6th cell, Saturday */
-.calendar-grid .calendar-grid-cell:nth-child(7n) { /* Every 7th cell, Sunday */
-  background-color: #f2f2f2; /* Light gray background */
+.calendar-grid .calendar-grid-cell:nth-child(7n-1),
+.calendar-grid .calendar-grid-cell:nth-child(7n) {
+  background-color: #f2f2f2;
   color: #0015ff;
   font-weight: bold;
 }
 
-/* Optional: Hover effect for weekends */
 .calendar-grid .calendar-grid-cell:nth-child(7n-1):hover,
 .calendar-grid .calendar-grid-cell:nth-child(7n):hover {
-  background-color: #dcdcdc; /* Darker gray on hover */
+  background-color: #dcdcdc;
 }
 
-/* Optional: Style for weekend inactive days */
+
 .calendar-grid .calendar-grid-cell:nth-child(7n-1).calendar-grid-cell-inactive,
 .calendar-grid .calendar-grid-cell:nth-child(7n).calendar-grid-cell-inactive {
-  color: #b0b0b0; /* Lighter text for inactive weekend days */
+  color: #b0b0b0;
 }
-/* Style pour la cellule du jour actuel */
+
 .calendar-grid-cell-today {
 
-  font-weight: bold; /* Met le texte en gras */
-  color: #154a16; /* Couleur du texte */
+  font-weight: bold;
+  color: #359939;
 }
-
 .calendar-grid-cell-current-week {
-  background-color: #a5d6a7;  /* Couleur de surbrillance pour la semaine actuelle */
-  font-weight: bold;  /* Met le texte en gras */
+  background-color: #faff6b;
+  font-weight: bold;
 }
 
 .calendar-grid-cell-is-holiday {
@@ -168,7 +163,21 @@
   background-color: #f5f5f5;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 450px;
 }
+.select-months {
+  min-width: 110px;
+  width: 100%;
+}
+.select-years {
+  min-width: 80px;
+  width: 100%;
+}
+ .select-weeks {
+  min-width: 130px;
+  width: 100%;
+}
+
 
 .calendar-headline-control:hover {
   background-color: #e0e0e0;
@@ -179,77 +188,84 @@
   padding: 0.25rem 0.5rem;
 }
 .selectors .calendar-headline-control {
+  margin: 5px;
   padding-right: 10px;
   padding-left: 10px;
 }
 
 
+.table-container {
+  max-height: 390px;
+  overflow-y: auto;
+  position: relative;
+}
+
+  thead tr {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 2;
+    border: 1px solid #ddd;
+  }
+
+  tbody .daily-total-row {
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+    z-index: 1;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+
 .time-sheet {
+  position: relative;
   table {
     width: 100%;
-    border-collapse: collapse; /* Ensures borders between cells */
+    border-collapse: collapse;
   }
 
-  th, td {
-    padding: 8px;
-    border: 1px solid #ddd; /* Light gray border for columns and rows */
-  }
-
-  /* Style for the project rows (e.g., Project names) */
   .project-name {
-    background-color: #175394; /* Blue background */
-    color: white; /* White text for contrast */
+    background-color: #175394;
+    color: white;
     font-weight: bold;
   }
 
-  /* Style for action rows (to make them visually distinct) */
+
   .action-name {
     font-weight: bold;
-    background-color: #f0f8ff; /* Light blue background */
+    background-color: #f0f8ff;
   }
 
-  /* Style for input fields in the table */
   input[type="number"] {
-    width: 100%; /* Ensures the input takes full width of the cell */
+    width: 100%;
     padding: 5px;
     box-sizing: border-box;
-    text-align: center; /* Centers the input text */
+    text-align: center;
   }
 
-  /* Highlight weekend days (optional) */
-  .weekend {
-    background-color: #f8d7da; /* Light red background for weekends */
+
+  .weekend-input {
+    background-color: #f8d7da;
   }
 
-  /* Highlight today's date (optional) */
   .today {
-    background-color: #d4edda; /* Light green background for today */
+    background-color: #d4edda;
   }
 
-  /* Style for the total row */
-  .daily-total-row {
-    font-weight: bold;
-    background-color: #f8f9fa; /* Light gray background */
-  }
-
-  /* Style for the fixed rows (Absence, Service, etc.) */
   .fixed-name {
     font-style: italic;
   }
 
-  /* Borders between columns and rows */
   th, td {
-    border-left: 1px solid #ddd; /* Light border between columns */
-    border-top: 1px solid #ddd;  /* Light border between rows */
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    padding: 8px;
+    border: 1px solid #ddd;
   }
-
-  /* Remove the left border from the first column */
-  th:first-child, td:first-child {
-    border-left: none;
-  }
-
-  /* Remove the top border from the first row */
-  tr:first-child th, tr:first-child td {
-    border-top: none;
-  }
+}
+thead th, .total-year, .total-week {
+  text-align: center;
+  vertical-align: middle;
 }

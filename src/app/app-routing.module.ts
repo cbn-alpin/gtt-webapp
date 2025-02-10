@@ -4,8 +4,8 @@ import { ConnectionPageComponent } from './components/connection-page/connection
 import { HomeComponent } from './components/home/home.component';
 import { ListProjectsComponent } from './components/list-projects/list-projects.component';
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
-import { GestiontempsComponent } from './components/gestiontemps/gestiontemps.component';
 import { AuthGuard } from './guards/auth.guard';
+import { TimeSheetComponent } from './components/TimeSheet/TimeSheet.component';
 
 const routes: Routes = [
   { path: 'connexion', component: ConnectionPageComponent },
@@ -14,7 +14,7 @@ const routes: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'gestiontemps', component: GestiontempsComponent },
+      { path: 'TimeSheet', component: TimeSheetComponent },
       { path: 'liste-des-projets', component: ListProjectsComponent },
       { path: 'expenses', component: ListProjectsComponent },
       { path: 'telechargement', component: DownloadProjectsComponent },

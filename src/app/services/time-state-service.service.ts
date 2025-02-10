@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { CalendarService } from './calendar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ export class TimeStateService {
 
   public selectedDate = new BehaviorSubject<Date>(new Date());
 
-  constructor() { }
+  constructor(private calendarService: CalendarService) { }
 
   // Observable to provide the selected date
   selectedDateSignal() {
@@ -20,11 +21,10 @@ export class TimeStateService {
     this.selectedDate.next(date);
   }
 
-  // Get the start of the current week (Monday)
   getStartOfWeek(date: Date): Date {
     const start = new Date(date);
     const day = start.getDay();
-    const diff = start.getDate() - day + (day === 0 ? -5 : 1); // Adjust if Sunday (0)
+    const diff = start.getDate() - day + (day === 0 ? -5 : 1);
     start.setDate(diff);
     return start;
   }
@@ -33,7 +33,7 @@ export class TimeStateService {
   goToPreviousWeek(currentDate: Date): Date {
     const previousWeek = new Date(currentDate);
     previousWeek.setDate(currentDate.getDate() - 7);
-    this.updateSelectedDate(previousWeek);  // Update selected date for both components
+    this.updateSelectedDate(previousWeek);
     return previousWeek;
   }
 
@@ -41,7 +41,7 @@ export class TimeStateService {
   goToNextWeek(currentDate: Date): Date {
     const nextWeek = new Date(currentDate);
     nextWeek.setDate(currentDate.getDate() + 7);
-    this.updateSelectedDate(nextWeek);  // Update selected date for both components
+    this.updateSelectedDate(nextWeek);
     return nextWeek;
   }
 
@@ -52,12 +52,14 @@ export class TimeStateService {
 
     for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
+
       day.setDate(startOfWeek.getDate() + i);
       days.push({
         date: day,
         name: this.getDayName(day),
         isWeekend: day.getDay() === 0 || day.getDay() === 6,
-        isToday: this.isToday(day)
+        isToday: this.isToday(day),
+
       });
     }
     return days;
@@ -65,7 +67,7 @@ export class TimeStateService {
 
   // Helper function to get the name of the day
   getDayName(date: Date): string {
-    const days = ['Dim','Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];  // Starts with Monday
+    const days = ['Dim','Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
     return days[date.getDay()];
   }
 

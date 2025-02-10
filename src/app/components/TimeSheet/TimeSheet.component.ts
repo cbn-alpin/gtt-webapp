@@ -3,10 +3,10 @@ import { DateTime, Interval } from 'luxon';
 import { CalendarService } from 'src/app/services/calendar.service';
 
 @Component({
-  selector: 'app-gestiontemps',
-  templateUrl: './gestiontemps.component.html',
-  styleUrls: ['./gestiontemps.component.scss']
+  selector: 'app-TimeSheet',
+  templateUrl: './TimeSheet.component.html',
+  styleUrls: ['./TimeSheet.component.scss']
 })
-export class GestiontempsComponent {
+export class TimeSheetComponent {
 
 }
