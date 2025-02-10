@@ -39,26 +39,24 @@
       <div class="calendar-headline-control" (click)="goToPreviousWeek()">«</div>
       <div class="selectors">
         <div class="calendar-headline-control">
-          <select [(ngModel)]="selectedMonth" (change)="onMonthChange()">
-            <option *ngFor="let month of months" [value]="month.index">{{ month.name }}</option>
-          </select>
+          <mat-select class="select-months" [(ngModel)]="selectedMonth" (change)="onMonthChange()">
+            <mat-option  *ngFor="let month of months" [value]="month.index">{{ month.name }}</mat-option>
+          </mat-select>
         </div>
         <div class="calendar-headline-control">
-          <select [(ngModel)]="selectedYear" (change)="onYearChange()">
-            <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-          </select>
+          <mat-select class="select-years" [(ngModel)]="selectedYear" (change)="onYearChange()">
+            <mat-option  *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+          </mat-select>
         </div>
         <div class="calendar-headline-control">
-          <select [(ngModel)]="selectedWeek" (change)="onWeekChange()">
-            <option *ngFor="let weekNumber of weeksNumbers" [value]="weekNumber"> Semaine {{ weekNumber }}</option>
-          </select>
+          <mat-select class="select-weeks" [(ngModel)]="selectedWeek" (change)="onWeekChange()">
+            <mat-option  *ngFor="let weekNumber of weeksNumbers" [value]="weekNumber"> Semaine {{ weekNumber }}</mat-option>
+          </mat-select>
         </div>
       </div>
       <div class="calendar-headline-control" (click)="goToNextWeek()">»</div>
     </div>
-    <div>
-      <mat-slide-toggle></mat-slide-toggle>
-    </div>
+
   </div>
 
 

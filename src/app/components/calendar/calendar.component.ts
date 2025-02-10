@@ -10,6 +10,7 @@ import { PopupMessageComponent } from 'src/app/popup-message/popup-message.compo
 import { MatDialog } from '@angular/material/dialog';
 import { TimeSheetService } from 'src/app/services/TimeSheet.service';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatSelectModule} from '@angular/material/select';
 
 
 
@@ -17,7 +18,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, MatSlideToggleModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, MatSlideToggleModule, MatSelectModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
@@ -46,6 +47,31 @@ export class CalendarComponent implements OnInit {
 
     this.updateStartEndDate();
   }
+  today = this.calendarService.today();
+  activeDay = new BehaviorSubject<DateTime | null>(null);
+  weekDaysNames = Info.weekdays('short');
+  currentWeek = this.calendarService.getCurrentWeek(this.today);
+  DATE_MED = DateTime.DATE_MED;
+
+  months = [
+    { name: 'Janvier', index: 1 },
+    { name: 'Février', index: 2 },
+    { name: 'Mars', index: 3 },
+    { name: 'Avril', index: 4 },
+    { name: 'Mai', index: 5 },
+    { name: 'Juin', index: 6 },
+    { name: 'Juillet', index: 7 },
+    { name: 'août', index: 8 },
+    { name: 'Septembre', index: 9 },
+    { name: 'Octobre', index: 10 },
+    { name: 'Novembre', index: 11 },
+    { name: 'Décembre', index: 12 }
+  ];
+  weeksNumbers: number[]= Array.from({length: 52}, (_, i) => 1+i);
+  years: number[] = Array.from({ length: 30 }, (_, i) => 2000 + i);
+  selectedMonth: number = this.firstDayOfActiveMonth.getValue().month;
+  selectedYear: number = this.firstDayOfActiveMonth.getValue().year;
+  selectedWeek: number = this.firstDayOfActiveMonth.getValue().weekNumber;
 
   ngOnInit(): void {
     this.loadProjects();
@@ -74,39 +100,9 @@ export class CalendarComponent implements OnInit {
     this.endDate = activeWeek.endOf('month');
   }
 
-  today = this.calendarService.today();
-
-
-  activeDay = new BehaviorSubject<DateTime | null>(null);
-  weekDaysNames = Info.weekdays('short');
-  currentWeek = this.calendarService.getCurrentWeek(this.today);
-
   get daysOfMonth() {
     return this.calendarService.getDaysOfMonth(this.firstDayOfActiveMonth.getValue());
   }
-
-  DATE_MED = DateTime.DATE_MED;
-
-  months = [
-    { name: 'Janvier', index: 1 },
-    { name: 'Février', index: 2 },
-    { name: 'Mars', index: 3 },
-    { name: 'Avril', index: 4 },
-    { name: 'Mai', index: 5 },
-    { name: 'Juin', index: 6 },
-    { name: 'Juillet', index: 7 },
-    { name: 'août', index: 8 },
-    { name: 'Septembre', index: 9 },
-    { name: 'Octobre', index: 10 },
-    { name: 'Novembre', index: 11 },
-    { name: 'Décembre', index: 12 }
-  ];
-  weeksNumbers: number[]= Array.from({length: 52}, (_, i) => 1+i);
-  years: number[] = Array.from({ length: 30 }, (_, i) => 2000 + i);
-  selectedMonth: number = this.firstDayOfActiveMonth.getValue().month;
-  selectedYear: number = this.firstDayOfActiveMonth.getValue().year;
-  selectedWeek: number = this.firstDayOfActiveMonth.getValue().weekNumber;
-
 
   setActiveDay(day: DateTime): void {
     this.activeDay.next(day);
@@ -127,7 +123,10 @@ export class CalendarComponent implements OnInit {
     this.firstDayOfActiveMonth.next(today.startOf('month'));
     this.currentWeek = Interval.fromDateTimes(today.startOf('week'), today.endOf('week'));
     this.selectedWeek = today.weekNumber;
+    this.selectedMonth = today.month;
+    this.selectedYear = today.year;
     this.timeStateService.updateSelectedDate(today.toJSDate());
+
     this.updateStartEndDate();
     this.loadProjects();
   }
@@ -139,9 +138,10 @@ export class CalendarComponent implements OnInit {
   onMonthChange(): void {
     const newDate = this.firstDayOfActiveMonth.getValue().set({ month: this.selectedMonth });
     this.firstDayOfActiveMonth.next(newDate);
+
+    this.selectedWeek = newDate.weekNumber;
+    this.selectedYear = newDate.year;
     this.updateToFirstWeekOfMonth(newDate);
-    const activeMonth = DateTime.local(this.selectedYear, this.selectedMonth, 1);
-    this.firstDayOfActiveMonth.next(activeMonth);
     this.updateStartEndDate();
     this.loadProjects();
   }
@@ -149,9 +149,9 @@ export class CalendarComponent implements OnInit {
   onYearChange(): void {
     const newDate = this.firstDayOfActiveMonth.getValue().set({ year: this.selectedYear });
     this.firstDayOfActiveMonth.next(newDate);
+    this.selectedMonth = newDate.month;
+    this.selectedWeek = newDate.weekNumber;
     this.updateToFirstWeekOfMonth(newDate);
-    const activeMonth = DateTime.local(this.selectedYear, this.selectedMonth, 1);
-    this.firstDayOfActiveMonth.next(activeMonth);
     this.updateStartEndDate();
     this.loadProjects();
   }
@@ -258,6 +258,7 @@ export class CalendarComponent implements OnInit {
           message: 'Quota horaire journalier maximum atteint'
         }
       });
+      value = 0;
       return;
     }
 
@@ -292,7 +293,7 @@ export class CalendarComponent implements OnInit {
     let timeEntry = action.list_time.find((t: any) =>
       new Date(t.date).toISOString().split('T')[0] === formattedDate
     );
-
+    console.log(formattedDate);
     if (timeEntry) {
       timeEntry.duration = value.toString();
     } else {
@@ -308,7 +309,6 @@ export class CalendarComponent implements OnInit {
       }
     );
   }
-
 
   calculateWeekTotal(projectId: number, actionId: number): number {
     let total = 0;
@@ -353,10 +353,6 @@ export class CalendarComponent implements OnInit {
 
   getInputId(projectId: number | string, actionId: number, date: Date): string {
     return `input-${projectId}-${actionId}-${date.toISOString()}`;
-  }
-
-  autoSave(projectId: number | string, actionId: number, date: Date, hours: number) {
-    console.log('Auto-saving:', { projectId, actionId, date, hours });
   }
 
   trackByDate(index: number, item: any): string {
