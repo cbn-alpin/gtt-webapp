@@ -12,6 +12,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -68,6 +71,9 @@ import { TokenInterceptor } from './components/connection-page/token.interceptor
     MatSidenavModule,
     CalendarComponent,
     SocialLoginModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatTooltipModule
 ],
   providers: [
     {
