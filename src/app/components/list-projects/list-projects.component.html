@@ -1,13 +1,16 @@
-<div class="actions-container" *ngIf="isAdmin">
-  <button mat-icon-button class="add-project" (click)="createProject()">
-   Ajouter un projet
-  </button>
-
-  <div class="toggle-container">
-    <mat-slide-toggle [(ngModel)]="showArchived" (change)="fetchProjects()">
-      <span class="archivedProjects">Archives</span></mat-slide-toggle>
+<div class="actions-space">
+  <div class="actions-container" *ngIf="isAdmin">
+    <button mat-icon-button class="add-project" (click)="createProject()">
+     Ajouter un projet
+    </button>
+  
+    <div class="toggle-container">
+      <mat-slide-toggle [(ngModel)]="showArchived" (change)="fetchProjects()">
+        <span class="archivedProjects">Archives</span></mat-slide-toggle>
+    </div>
   </div>
 </div>
+
 
 <div class="table-container mat-elevation-z8">
   <div class="loading-shade" *ngIf="isLoadingResults">
