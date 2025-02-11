@@ -12,7 +12,6 @@ import { TimeSheetService } from 'src/app/services/TimeSheet.service';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSelectModule} from '@angular/material/select';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import { ResourceLoader } from '@angular/compiler';
 
 
 @Component({
@@ -344,6 +343,7 @@ export class CalendarComponent implements OnInit {
   calculateDayTotal(date: Date): number {
       let total = 0;
       const formattedDate = this.formatApiDate(this.toLuxonDate(date));
+      console.log("Calcul du total pour la date :", formattedDate);
 
       if (!this.projects || !Array.isArray(this.projects)) {
           console.warn('calculateDayTotal: this.projects est undefined ou n\'est pas un tableau');
@@ -363,6 +363,7 @@ export class CalendarComponent implements OnInit {
               }
           });
       });
+      console.log("Calcul du total pour la date :", total);
 
       return total;
   }
@@ -377,7 +378,7 @@ export class CalendarComponent implements OnInit {
   }
 
   trackById(index: number, item: any): number {
-    return item.id;
+    return item?.id || item?.id_project || item?.id_action || index;
   }
 
 
@@ -393,6 +394,7 @@ export class CalendarComponent implements OnInit {
 
         this.projects = data.filter((project: any) => project.id_project !== 0);
         this.fixedRows = [data.find((project: any) => project.id_project === 0)];
+        console.log("list of projects", this.projects);
         this.isLoadingResults = false;
       },
       (error) => {
