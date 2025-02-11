@@ -16,7 +16,7 @@
       <mat-divider></mat-divider>
       <button mat-menu-item>
       <mat-icon class="menu-icon">settings</mat-icon>Paramètres</button>
-      <button mat-menu-item>
+      <button mat-menu-item *ngIf="isAdmin">
         <mat-icon class="menu-icon">sync</mat-icon>Changer d'agent
       </button>
       <mat-divider></mat-divider>
@@ -41,7 +41,7 @@
         <a mat-icon-button class="icon-container" routerLink="/accueil/frais-de-deplacement" matTooltip="Frais de déplacement" matTooltipPosition="right" (click)="updateTitle('Frais de déplacement')">
           <mat-icon>euro_symbol</mat-icon>
         </a>
-        <a mat-icon-button class="icon-container" routerLink="/accueil/telechargement" matTooltip="Téléchargement" matTooltipPosition="right" (click)="updateTitle('Téléchargement')">
+        <a mat-icon-button class="icon-container" routerLink="/accueil/telechargement" matTooltip="Téléchargement" matTooltipPosition="right" (click)="updateTitle('Téléchargement')" *ngIf="isAdmin">
           <mat-icon>download</mat-icon>
         </a>
       </div>

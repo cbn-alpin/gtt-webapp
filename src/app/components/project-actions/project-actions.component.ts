@@ -16,15 +16,19 @@ import { UserActionService } from 'src/app/services/UserAction/user-action.servi
   styleUrls: ['./project-actions.component.scss']
 })
 export class ProjectActionsComponent implements OnInit {
+  displayedColumns: string[] = ['name', 'description', 'actions'];
+  dataSource = new MatTableDataSource<Action>([]);
+  selection = new SelectionModel<Action>(true, []);
+  isAdmin: boolean = false;
+
   constructor(private readonly dialog: MatDialog, 
   private projectService: ProjectsService,
   private readonly snackBar: MatSnackBar,
   private readonly projectActionsService: ProjectActionsService,
-  private readonly userActionService: UserActionService){}
+  private readonly userActionService: UserActionService){
+    this.isAdmin = localStorage.getItem('is_admin') === 'true';
+  }
 
-  displayedColumns: string[] = ['name', 'description', 'actions'];
-  dataSource = new MatTableDataSource<Action>([]);
-  selection = new SelectionModel<Action>(true, []);
 
   @Input() id_project!: number;
   private _list_action: Action[] = [];

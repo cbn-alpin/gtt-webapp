@@ -23,10 +23,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   ],
 })
 export class ListProjectsComponent implements OnInit {
-  constructor(private readonly dialog: MatDialog, 
-  private projectService: ProjectsService,
-  private readonly snackBar: MatSnackBar){}
-
+  isAdmin: boolean = false;
   displayedColumns: string[] = ['code', 'name', 'startDate', 'endDate'];
   columnsToDisplayWithExpand = [...this.displayedColumns, 'actions']
   dataSource = new MatTableDataSource<Project>([]);
@@ -35,12 +32,18 @@ export class ListProjectsComponent implements OnInit {
   isError = false;
   showArchived: boolean = false;
 
+  constructor(private readonly dialog: MatDialog, 
+  private projectService: ProjectsService,
+  private readonly snackBar: MatSnackBar){
+    this.isAdmin = localStorage.getItem('is_admin') === 'true';
+  }
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
     this.fetchProjects();
+    console.error('utilisateur courant', this.isAdmin);
   }
 
   ngAfterViewInit() {
