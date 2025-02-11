@@ -11,12 +11,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { TimeSheetService } from 'src/app/services/TimeSheet.service';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSelectModule} from '@angular/material/select';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ResourceLoader } from '@angular/compiler';
 
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, MatSlideToggleModule, MatSelectModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, MatSlideToggleModule, MatSelectModule,MatProgressSpinnerModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
@@ -31,10 +33,9 @@ export class CalendarComponent implements OnInit {
   userId: number = 1;
   fixedRows: any[] = [];
 
-  private timeEntries: Map<string, number> = new Map();
   startDate: DateTime<boolean>= DateTime.local();
   endDate: DateTime<boolean>= DateTime.local();
-
+  isLoadingResults = false;
   constructor(private calendarService: CalendarService, private http: HttpClient,  private timeStateService: TimeStateService,
     private dialog: MatDialog, private timeSheetService: TimeSheetService
   ) {
@@ -255,7 +256,7 @@ export class CalendarComponent implements OnInit {
 }
 
   updateTimeEntry(value: number, projectId: number, actionId: number, date: string,  inputRef: HTMLInputElement, initialValue: number) {
-
+    if (projectId !== 0) {
       if (value > 10.25) {
         this.dialog.open(PopupMessageComponent, {
           data: {
@@ -276,6 +277,7 @@ export class CalendarComponent implements OnInit {
         }
       });
     }
+  }
     if (isNaN(value) || value < 0 || value > 10) {
       console.warn("Valeur invalide :", value);
       return;
@@ -307,8 +309,8 @@ export class CalendarComponent implements OnInit {
 
     this.timeSheetService.saveUserTime(this.userId, actionId, formattedDate, value).subscribe(
       (response) => {
-        this.updateYearTotalForAction(projectId, actionId);
         console.log('Time saved successfully:', response);
+        this.loadProjects();
       },
       (error) => {
         console.error('Error saving time:', error);
@@ -316,14 +318,14 @@ export class CalendarComponent implements OnInit {
     );
   }
   timer: any = null;
-updateTimeEntryDelayed(value: number, projectId: number, actionId: number, date: string, inputRef: HTMLInputElement, initialValue: number) {
-  if (this.timer) {
-    clearTimeout(this.timer);
+  updateTimeEntryDelayed(value: number, projectId: number, actionId: number, date: string, inputRef: HTMLInputElement, initialValue: number) {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    this.timer = setTimeout(() => {
+      this.updateTimeEntry(value, projectId, actionId, date, inputRef, initialValue);
+    }, 900);
   }
-  this.timer = setTimeout(() => {
-    this.updateTimeEntry(value, projectId, actionId, date, inputRef, initialValue);
-  }, 900);
-}
 
   calculateWeekTotal(projectId: number, actionId: number): number {
     let total = 0;
@@ -380,25 +382,26 @@ updateTimeEntryDelayed(value: number, projectId: number, actionId: number, date:
 
 
   loadProjects(): void {
-
+    this.isLoadingResults = true;
     const formattedStartDate = this.startDate.toISODate() ;
     const formattedEndDate = this.endDate.toISODate();
-    console.log("Formatted Start Date: ", formattedStartDate);
-    console.log("Formatted End Date: ", formattedEndDate);
+
     if (formattedStartDate && formattedEndDate) {
     this.timeSheetService.getUserProjects(this.userId, formattedStartDate, formattedEndDate).subscribe(
 
       (data) => {
+
         this.projects = data.filter((project: any) => project.id_project !== 0);
         this.fixedRows = [data.find((project: any) => project.id_project === 0)];
-
-        console.log("Projets chargés :", this.projects);
-        console.log("Actions fixes chargées (fixedRows) :", this.fixedRows);
+        this.isLoadingResults = false;
       },
       (error) => {
         console.error('Erreur lors du chargement des projets', error);
+        this.isLoadingResults = false;
       }
     );
+
+
   }
   }
   formatApiDate(date: DateTime): string {
@@ -408,23 +411,6 @@ updateTimeEntryDelayed(value: number, projectId: number, actionId: number, date:
     return DateTime.fromJSDate(date);
   }
 
-  updateYearTotalForAction(projectId: number, actionId: number): void {
-
-    const project = this.projects.find(p => p.id_project === projectId);
-    if (!project || !project.list_action) {
-      return;
-    }
-    const action = project.list_action.find((act: any) => act.id_action === actionId);
-    if (!action || !action.list_time || !Array.isArray(action.list_time)) {
-      return;
-    }
-
-    let total = 0;
-    action.list_time.forEach((timeEntry: any) => {
-      total += parseFloat(timeEntry.duration);
-    });
-    action.total_duration = total.toFixed(2);
-  }
 
 
 }

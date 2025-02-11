@@ -1,5 +1,8 @@
 
 <div class="container">
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner></mat-spinner>
+  </div>
   <div class="calendar-container">
     <div class="full-calendar">
       <div class="headline">
@@ -36,7 +39,7 @@
     </div>
 
     <div class="calendar-headline-controls">
-      <div class="calendar-headline-control" (click)="goToPreviousWeek()">«</div>
+      <div class="calendar-headline-control week-scroll" (click)="goToPreviousWeek()">«</div>
       <div class="selectors">
         <div class="calendar-headline-control">
           <mat-select class="select-months" [(ngModel)]="selectedMonth" (ngModelChange)="onMonthChange()">
@@ -54,13 +57,15 @@
           </mat-select>
         </div>
       </div>
-      <div class="calendar-headline-control" (click)="goToNextWeek()">»</div>
+      <div class="calendar-headline-control week-scroll" (click)="goToNextWeek()">»</div>
     </div>
 
   </div>
 
 
+
   <div class="time-sheet mat-elevation-z8">
+
     <div class="table-container">
     <table mat-table class="mat-elevation-z8">
       <thead >
@@ -75,6 +80,7 @@
         </tr>
       </thead>
       <tbody>
+
         <ng-container *ngFor="let project of projects; trackBy: trackById">
           <!-- Project Row -->
           <tr>
@@ -135,7 +141,7 @@
                          inputRef2, getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours)"
                 [id]="getInputId(project.id_project, action.id_action, day.date)"
                 step="0.25"
-                max="10"
+                max="24"
                 min="0"
                 [ngClass]="{ 'weekend-input': day.isWeekend || isHoliday(day.date)}"
                 #inputRef2
