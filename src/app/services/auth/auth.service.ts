@@ -20,7 +20,7 @@ export class AuthService {
   // Service pour la connexion native à gtt
   nativeAuthenticate(credentials: { login: string, password: string }): Observable<any> {
     const url = `${this.baseUrl}/auth/gtt`;
-   return this.http.post<any>(url, credentials, this.httpOptions);
+   return this.http.post(url, credentials, this.httpOptions);
   }
 
   logout() {

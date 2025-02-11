@@ -8,12 +8,14 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 })
 export class HomeComponent {
   currentTitle: string = 'Saisie des temps';
-  activePage: string = 'saisie';
   // Récupération des infos utilisateur (tu peux les stocker dans `localStorage` après connexion)
   userName = localStorage.getItem('user_name') || 'Utilisateur';
+  isAdmin: boolean = false;
   // userImage = localStorage.getItem('user_photo') || 'assets/images/default-user.png'; // Image par défaut si aucune image
 
-constructor(private authService: AuthService  ) {}
+constructor(private authService: AuthService) {
+  this.isAdmin = localStorage.getItem('is_admin') === 'true';
+}
 
   updateTitle(newTitle: string) {
     this.currentTitle = newTitle;
