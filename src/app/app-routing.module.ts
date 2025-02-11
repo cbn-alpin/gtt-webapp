@@ -14,7 +14,7 @@ const routes: Routes = [
     component: HomeComponent,
    // canActivate: [AuthGuard],
     children: [
-      { path: 'TimeSheet', component: TimeSheetComponent },
+      { path: 'saisie-des-temps', component: TimeSheetComponent },
       { path: 'liste-des-projets', component: ListProjectsComponent },
       { path: 'expenses', component: ListProjectsComponent },
       { path: 'telechargement', component: DownloadProjectsComponent },

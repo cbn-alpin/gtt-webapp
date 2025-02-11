@@ -1,13 +1,13 @@
 <div class="form-container">
     <button class="close-btn" (click)="onClose()">✖</button>
-    <h2 class="form-title">Ajouter une action</h2>
+    <h2 class="form-title">{{ isEditMode ? 'Modifier' : 'Ajouter' }} une action</h2>
     <form [formGroup]="actionForm" (ngSubmit)="onSubmit()">
       <div class="form-field">
         <label class="form-label" for="actionNum">N° action :</label>
-        <input class="form-input" id="actionNum" type="number" formControlName="actionNum" placeholder="(uniquement des chiffres)" />
-        <!-- <small *ngIf="actionForm.get('actionNum')?.invalid && actionForm.get('actionNum')?.touched">
+        <input class="form-input" id="actionNum" type="number" step="0.01" formControlName="actionNum" placeholder="(format 1.11)" />
+        <small *ngIf="actionForm.get('actionNum')?.invalid && actionForm.get('actionNum')?.touched">
           Veuillez saisir un numéro d'action valide.
-        </small> -->
+        </small>
       </div>
   
       <div class="form-field">

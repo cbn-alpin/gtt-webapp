@@ -22,12 +22,12 @@ export class ProjectActionsService {
     return this.http.post(url, actionData, this.httpOptions);
   }
 
-  updateProjectAction(actionId: number, actionData: any): Observable<any> {
+  updateActionById(actionId: number, actionData: any): Observable<any> {
     const url = `${this.baseUrl}/actions/${actionId}`; 
     return this.http.put(url, actionData, this.httpOptions);
   }
 
-  deleteProjectAction(actionId: number): Observable<any> {
+  deleteActionById(actionId: number): Observable<any> {
     const url = `${this.baseUrl}/actions/${actionId}`;
     return this.http.delete(url, this.httpOptions);
   }

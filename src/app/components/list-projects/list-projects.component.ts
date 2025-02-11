@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,7 +22,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     ]),
   ],
 })
-export class ListProjectsComponent {
+export class ListProjectsComponent implements OnInit {
   constructor(private readonly dialog: MatDialog, 
   private projectService: ProjectsService,
   private readonly snackBar: MatSnackBar){}
@@ -33,6 +33,8 @@ export class ListProjectsComponent {
   expandedElement: Project | null = null;
   isLoadingResults = false;
   isError = false;
+  showArchived: boolean = false;
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -57,17 +59,21 @@ export class ListProjectsComponent {
     
     this.projectService.getAllProjects().subscribe({
       next: (projects) => {
-        this.dataSource.data = projects;
-        this.isLoadingResults = false; 
-        
         setTimeout(() => { 
-          this.dataSource.paginator = this.paginator;   
-          this.dataSource.sort = this.sort; 
-          this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-        }, 100);
+          const filteredProjects = projects
+            .filter((p: Project) => p.is_archived === this.showArchived)
+            .sort((a: Project, b: Project) => Number(b.code) - Number(a.code));
+  
+          this.dataSource.data = filteredProjects;
+          this.isLoadingResults = false;
+  
+          setTimeout(() => { 
+            this.dataSource.paginator = this.paginator;   
+            this.dataSource.sort = this.sort;
+          }, 100);
+        }, 1000); 
       },
       error: (error) => {
-        console.error('Erreur lors de la récupération des projets :', error);
         this.isLoadingResults = false; 
         this.isError = true; 
       }
@@ -120,9 +126,43 @@ export class ListProjectsComponent {
     });
   }
 
+  archiveProject(action: string, project: Project): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '300px',
+      data: { message: `${action}?` }
+    });
+  
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        const { list_action, ...projectData } = project;
+
+        const updatedProject = { 
+          ...projectData, 
+          is_archived: true 
+        };
+  
+        this.projectService.updateProjectById(project.id_project, updatedProject).subscribe({
+          next: () => {
+            this.showToast(`Projet "${project.name}" archivé avec succès 🎉`);
+            this.fetchProjects(); 
+          },
+          error: (error) => {
+            console.error('Erreur lors de l\'archivage du projet', error);
+            this.showToast(`Erreur : ${error.message || 'Archivage impossible'} ❌`, true);
+          }
+        });
+      }
+    });
+  }
+
+  toggleArchived(): void {
+    this.showArchived = !this.showArchived;
+    this.fetchProjects();
+  }
+
   showToast(message: string, isError: boolean = false) {
     this.snackBar.open(message, '', {
-      duration: 4000,
+      duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',
       verticalPosition: 'top',
       horizontalPosition: 'center',

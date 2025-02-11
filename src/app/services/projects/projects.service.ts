@@ -32,4 +32,14 @@ export class ProjectsService {
     const url = `${this.baseUrl}/projects/${projectId}`; 
     return this.http.delete(url, this.httpOptions);
   }
+
+  getProjectById(projectId: number): Observable<any> {
+    const url = `${this.baseUrl}/projects/${projectId}`; 
+    return this.http.get(url, this.httpOptions);
+  }
+
+  updateProjectById(projectId: number, projectData: any): Observable<any> {
+    const url = `${this.baseUrl}/projects/${projectId}`;
+    return this.http.put(url, projectData, this.httpOptions);
+  }  
 }
