@@ -36,7 +36,8 @@ import { DownloadPageComponent } from './components/download-page/download-page.
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TokenInterceptor } from './components/connection-page/token.interceptor';
-
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,9 @@ import { TokenInterceptor } from './components/connection-page/token.interceptor
     MatSlideToggleModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatOptionModule,
+    MatSelectModule
 ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

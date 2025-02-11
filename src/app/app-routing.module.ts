@@ -12,7 +12,7 @@ const routes: Routes = [
   {
     path: 'accueil',
     component: HomeComponent,
-    canActivate: [AuthGuard],
+   // canActivate: [AuthGuard],
     children: [
       { path: 'TimeSheet', component: TimeSheetComponent },
       { path: 'liste-des-projets', component: ListProjectsComponent },
@@ -21,7 +21,7 @@ const routes: Routes = [
       { path: '**', redirectTo: 'liste-des-projets', pathMatch: 'full' },
     ]
   },
-  { path: '**', redirectTo: '/connexion', pathMatch: 'full' },
+ { path: '**', redirectTo: '/connexion', pathMatch: 'full' },
 ];
 
 @NgModule({
