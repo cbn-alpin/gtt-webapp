@@ -13,8 +13,6 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSelectModule} from '@angular/material/select';
 
 
-
-
 @Component({
   selector: 'app-calendar',
   standalone: true,
@@ -51,7 +49,6 @@ export class CalendarComponent implements OnInit {
   activeDay = new BehaviorSubject<DateTime | null>(null);
   weekDaysNames = Info.weekdays('short');
   currentWeek = this.calendarService.getCurrentWeek(this.today);
-  DATE_MED = DateTime.DATE_MED;
 
   months = [
     { name: 'Janvier', index: 1 },
@@ -108,6 +105,14 @@ export class CalendarComponent implements OnInit {
     this.activeDay.next(day);
     this.currentWeek = this.calendarService.getCurrentWeek(day);
     this.timeStateService.updateSelectedDate(day.toJSDate());
+    this.timeStateService.updateSelectedDate(day.toJSDate());
+    this.selectedWeek = day.weekNumber;
+    this.selectedMonth = day.month;
+    this.selectedYear = day.year;
+
+    this.updateStartEndDate();
+    this.loadProjects();
+
   }
 
   isToday(day: DateTime): boolean {
@@ -138,7 +143,6 @@ export class CalendarComponent implements OnInit {
   onMonthChange(): void {
     const newDate = this.firstDayOfActiveMonth.getValue().set({ month: this.selectedMonth });
     this.firstDayOfActiveMonth.next(newDate);
-
     this.selectedWeek = newDate.weekNumber;
     this.selectedYear = newDate.year;
     this.updateToFirstWeekOfMonth(newDate);
@@ -197,7 +201,7 @@ export class CalendarComponent implements OnInit {
       if( this.currentWeek.start.month !== this.firstDayOfActiveMonth.getValue().month){
         this.firstDayOfActiveMonth.next(this.currentWeek.start.startOf('month'));
         this.updateStartEndDate();
-    this.loadProjects();
+        this.loadProjects();
       }
     }
 
@@ -250,17 +254,19 @@ export class CalendarComponent implements OnInit {
     return timeEntry ? { hours: Number(timeEntry.duration) } : { hours: 0 };
 }
 
-  updateTimeEntry(value: number, projectId: number, actionId: number, date: string) {
-    if (value > 10.25) {
-      this.dialog.open(PopupMessageComponent, {
-        data: {
-          title: 'Erreur',
-          message: 'Quota horaire journalier maximum atteint'
-        }
-      });
-      value = 0;
-      return;
-    }
+  updateTimeEntry(value: number, projectId: number, actionId: number, date: string,  inputRef: HTMLInputElement, initialValue: number) {
+
+      if (value > 10.25) {
+        this.dialog.open(PopupMessageComponent, {
+          data: {
+            title: 'Erreur',
+            message: 'Quota horaire journalier maximum atteint'
+          }
+        });
+         value = 0;
+         inputRef.value = initialValue.toString();
+        return;
+      }
 
     if (value >= 7.50 && value <= 10.00) {
       this.dialog.open(PopupMessageComponent, {
@@ -293,12 +299,12 @@ export class CalendarComponent implements OnInit {
     let timeEntry = action.list_time.find((t: any) =>
       new Date(t.date).toISOString().split('T')[0] === formattedDate
     );
-    console.log(formattedDate);
     if (timeEntry) {
       timeEntry.duration = value.toString();
     } else {
       action.list_time.push({ date: formattedDate, duration: value.toString() });
     }
+
     this.timeSheetService.saveUserTime(this.userId, actionId, formattedDate, value).subscribe(
       (response) => {
         this.updateYearTotalForAction(projectId, actionId);
@@ -309,6 +315,15 @@ export class CalendarComponent implements OnInit {
       }
     );
   }
+  timer: any = null;
+updateTimeEntryDelayed(value: number, projectId: number, actionId: number, date: string, inputRef: HTMLInputElement, initialValue: number) {
+  if (this.timer) {
+    clearTimeout(this.timer);
+  }
+  this.timer = setTimeout(() => {
+    this.updateTimeEntry(value, projectId, actionId, date, inputRef, initialValue);
+  }, 900);
+}
 
   calculateWeekTotal(projectId: number, actionId: number): number {
     let total = 0;
@@ -324,7 +339,7 @@ export class CalendarComponent implements OnInit {
     return total;
   }
 
-    calculateDayTotal(date: Date): number {
+  calculateDayTotal(date: Date): number {
       let total = 0;
       const formattedDate = this.formatApiDate(this.toLuxonDate(date));
 

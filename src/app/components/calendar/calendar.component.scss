@@ -195,7 +195,7 @@
 
 
 .table-container {
-  max-height: 390px;
+
   overflow-y: auto;
   position: relative;
 }
@@ -221,6 +221,8 @@
 
 .time-sheet {
   position: relative;
+  min-height: 330px;
+  max-height: 330px;
   table {
     width: 100%;
     border-collapse: collapse;

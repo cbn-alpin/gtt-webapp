@@ -39,17 +39,17 @@
       <div class="calendar-headline-control" (click)="goToPreviousWeek()">«</div>
       <div class="selectors">
         <div class="calendar-headline-control">
-          <mat-select class="select-months" [(ngModel)]="selectedMonth" (change)="onMonthChange()">
+          <mat-select class="select-months" [(ngModel)]="selectedMonth" (ngModelChange)="onMonthChange()">
             <mat-option  *ngFor="let month of months" [value]="month.index">{{ month.name }}</mat-option>
           </mat-select>
         </div>
         <div class="calendar-headline-control">
-          <mat-select class="select-years" [(ngModel)]="selectedYear" (change)="onYearChange()">
+          <mat-select class="select-years" [(ngModel)]="selectedYear" (ngModelChange)="onYearChange()">
             <mat-option  *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
           </mat-select>
         </div>
         <div class="calendar-headline-control">
-          <mat-select class="select-weeks" [(ngModel)]="selectedWeek" (change)="onWeekChange()">
+          <mat-select class="select-weeks" [(ngModel)]="selectedWeek" (ngModelChange)="onWeekChange()">
             <mat-option  *ngFor="let weekNumber of weeksNumbers" [value]="weekNumber"> Semaine {{ weekNumber }}</mat-option>
           </mat-select>
         </div>
@@ -94,12 +94,14 @@
                 <input
                 type="number"
                 [ngModel]="getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours"
-                (ngModelChange)="updateTimeEntry($event, project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date)))"
+                (ngModelChange)="updateTimeEntryDelayed($event, project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date)),
+                         inputRef, getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours)"
                 [id]="getInputId(project.id_project, action.id_action, day.date)"
                 step="0.25"
                 max="10"
                 min="0"
                 [ngClass]="{ 'weekend-input': day.isWeekend || isHoliday(day.date)}"
+                #inputRef
               >
 
 
@@ -129,12 +131,14 @@
                 <input
                 type="number"
                 [ngModel]="getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours"
-                (ngModelChange)="updateTimeEntry($event, project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date)))"
+                (ngModelChange)="updateTimeEntryDelayed($event, project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date)),
+                         inputRef2, getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours)"
                 [id]="getInputId(project.id_project, action.id_action, day.date)"
                 step="0.25"
                 max="10"
                 min="0"
                 [ngClass]="{ 'weekend-input': day.isWeekend || isHoliday(day.date)}"
+                #inputRef2
               >
 
 
