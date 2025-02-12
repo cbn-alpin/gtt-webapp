@@ -10,12 +10,13 @@ export class TimeSheetService  {
   constructor(private http: HttpClient) { }
   private apiUrl = 'http://localhost:5000/api/user';
 
-  getUserProjects(userId: number, dateStart: String, dateEnd: String): Observable<any[]> {
+  getUserProjects(userId: string, dateStart: String, dateEnd: String): Observable<any[]> {
     const url = `${this.apiUrl}/${userId}/projects/times?date_start=${dateStart}&date_end=${dateEnd}`;
     return this.http.get<any[]>(url);
   }
 
-  saveUserTime(userId: number, actionId: number, date: string, duration: number): Observable<any> {
+  saveUserTime(userId: string, actionId: number, date: string, duration: number): Observable<any> {
+
     const url = `${this.apiUrl}/${userId}/projects/times`;
 
     const body = {

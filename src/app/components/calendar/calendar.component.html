@@ -80,7 +80,9 @@
         </tr>
       </thead>
       <tbody>
-
+        <tr  *ngIf="!projects || projects.length === 0">
+          <td colspan="10" class="no-projects-message">Aucune action n'a été sélectionnée.</td>
+        </tr>
         <ng-container *ngFor="let project of projects; trackBy: trackById">
           <!-- Project Row -->
           <tr>

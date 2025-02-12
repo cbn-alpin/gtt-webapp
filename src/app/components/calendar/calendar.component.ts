@@ -2,7 +2,7 @@ import { Component, Injectable, OnInit } from '@angular/core';
 import { DateTime, Info, Interval } from 'luxon';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {  HttpClientModule } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { TimeStateService } from 'src/app/services/time-state-service.service';
@@ -29,13 +29,15 @@ export class CalendarComponent implements OnInit {
   holidays: { [date: string]: string } = {};
   weekDays = this.timeStateService.currentWeek;
   projects: any[] = [];
-  userId: number = 1;
+  userId: string = localStorage.getItem('id_user') || '0';
   fixedRows: any[] = [];
+
+
 
   startDate: DateTime<boolean>= DateTime.local();
   endDate: DateTime<boolean>= DateTime.local();
   isLoadingResults = false;
-  constructor(private calendarService: CalendarService, private http: HttpClient,  private timeStateService: TimeStateService,
+  constructor(private calendarService: CalendarService,  private timeStateService: TimeStateService,
     private dialog: MatDialog, private timeSheetService: TimeSheetService
   ) {
     const activeMonth = this.firstDayOfActiveMonth.value;
@@ -343,7 +345,7 @@ export class CalendarComponent implements OnInit {
   calculateDayTotal(date: Date): number {
       let total = 0;
       const formattedDate = this.formatApiDate(this.toLuxonDate(date));
-      console.log("Calcul du total pour la date :", formattedDate);
+
 
       if (!this.projects || !Array.isArray(this.projects)) {
           console.warn('calculateDayTotal: this.projects est undefined ou n\'est pas un tableau');
@@ -363,7 +365,6 @@ export class CalendarComponent implements OnInit {
               }
           });
       });
-      console.log("Calcul du total pour la date :", total);
 
       return total;
   }
@@ -383,6 +384,7 @@ export class CalendarComponent implements OnInit {
 
 
   loadProjects(): void {
+
     this.isLoadingResults = true;
     const formattedStartDate = this.startDate.toISODate() ;
     const formattedEndDate = this.endDate.toISODate();
@@ -394,7 +396,7 @@ export class CalendarComponent implements OnInit {
 
         this.projects = data.filter((project: any) => project.id_project !== 0);
         this.fixedRows = [data.find((project: any) => project.id_project === 0)];
-        console.log("list of projects", this.projects);
+
         this.isLoadingResults = false;
       },
       (error) => {
@@ -402,17 +404,13 @@ export class CalendarComponent implements OnInit {
         this.isLoadingResults = false;
       }
     );
+  }}
 
-
-  }
-  }
   formatApiDate(date: DateTime): string {
     return date.toFormat("yyyy-MM-dd'T'HH:mm:ss");
   }
   toLuxonDate(date: Date): DateTime {
     return DateTime.fromJSDate(date);
   }
-
-
 
 }
