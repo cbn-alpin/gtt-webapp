@@ -98,8 +98,11 @@
   </ng-container> 
 
   <ng-template #emptyState>
-    <div class="empty-container" *ngIf="!isLoadingResults">
+    <div class="empty-container" *ngIf="!isLoadingResults && !isError">
       <p>Aucun projet trouvé.</p>
+    </div>
+    <div class="empty-container" *ngIf="isError && !isLoadingResults">
+      <p>Erreur lors de la récupération des projets.</p>
     </div>
   </ng-template>
 </div>

@@ -3,12 +3,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ActionComponent } from '../action/action.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Action } from 'src/app/models/Action';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { ProjectActionsService } from 'src/app/services/projectActions/project-actions.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserActionService } from 'src/app/services/UserAction/user-action.service';
+import { Action } from 'src/app/models/Action';
 
 @Component({
   selector: 'app-project-actions',
@@ -154,18 +154,39 @@ export class ProjectActionsComponent implements OnInit {
   }
 
   fetchProjectActions(): void {
-    this.projectService.getProjectById(this.id_project).subscribe(
-      (project) => {
+    this.projectService.getProjectById(this.id_project).subscribe({
+      next: (project) => {
         this._list_action = Array.isArray(project.list_action) ? project.list_action : [];
         this.dataSource.data = [...this._list_action];
+  
+        const userId = Number(localStorage.getItem('id_user'));
+  
+        // Récupérer tous les projets où l'utilisateur a sélectionné des actions
+        this.projectActionsService.getUserProjects(userId).subscribe({
+          next: (projects: { id_project: number; list_action: Action[] }[]) => {
+            const selectedActions = new Set<number>();
+  
+            // Chercher si le projet actuel est dans la liste des projets du user
+            const userProject = projects.find(p  => p.id_project === this.id_project);
+            if (userProject && Array.isArray(userProject.list_action)) {
+              userProject.list_action.forEach(action => selectedActions.add(action.id_action));
+            }
+  
+            // Sélectionner seulement les actions correspondant au projet
+            this.selection.clear();
+            this.selection.select(...this.dataSource.data.filter(a => selectedActions.has(a.id_action)));
+          },
+          error: (error) => console.error('Erreur récupération des projets de l’utilisateur', error)
+        });
       },
-      (error) => {
+      error: (error) => { 
         console.error("Erreur lors de la récupération des actions du projet :", error);
         this._list_action = [];
         this.dataSource.data = [];
       }
-    );
+    });
   }
+  
   
   showToast(message: string, isError: boolean = false) {
     this.snackBar.open(message, '', {
