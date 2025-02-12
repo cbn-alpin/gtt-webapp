@@ -31,4 +31,9 @@ export class ProjectActionsService {
     const url = `${this.baseUrl}/actions/${actionId}`;
     return this.http.delete(url, this.httpOptions);
   }
+  
+  getUserProjects(userId: number): Observable<any> {
+    const url = `${this.baseUrl}/user/${userId}/project`;
+    return this.http.get(url, this.httpOptions);
+  }
 }
