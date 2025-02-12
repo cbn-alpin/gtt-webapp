@@ -29,6 +29,7 @@ export class AuthService {
     localStorage.removeItem('user_email');
     localStorage.removeItem('user_name');
     localStorage.removeItem('is_admin');
+    localStorage.removeItem('id_user');
 
     //Redirige vers la page de connexion
     this.router.navigate(['/connexion']);

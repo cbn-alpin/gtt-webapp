@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,7 +22,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     ]),
   ],
 })
-export class ListProjectsComponent implements OnInit {
+export class ListProjectsComponent implements OnInit, AfterViewInit {
   isAdmin: boolean = false;
   displayedColumns: string[] = ['code', 'name', 'startDate', 'endDate'];
   columnsToDisplayWithExpand = [...this.displayedColumns, 'actions']

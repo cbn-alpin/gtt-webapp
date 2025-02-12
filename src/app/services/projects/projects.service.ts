@@ -42,4 +42,9 @@ export class ProjectsService {
     const url = `${this.baseUrl}/projects/${projectId}`;
     return this.http.put(url, projectData, this.httpOptions);
   }  
+  
+  getProjectActionsAndUsersTimesById(projectId: number): Observable<any> {
+    const url = `${this.baseUrl}/project/${projectId}/actions`;
+    return this.http.get(url, this.httpOptions);
+  }
 }
