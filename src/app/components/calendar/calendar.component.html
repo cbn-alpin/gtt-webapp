@@ -95,7 +95,7 @@
           <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
             <tr>
               <td class="action-name" >
-                {{ action.name }}
+              {{  action.numero_action  }}  {{action.name }}
               </td>
 
               <td *ngFor="let day of weekDays; trackBy: trackByDate">
