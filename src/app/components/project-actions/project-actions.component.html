@@ -1,11 +1,12 @@
 <div class="project-action-container mat-elevation-z8">
-  <div class="add-action" *ngIf="isAdmin">
-    <a>
-      <mat-icon class="project-action" matTooltip="Ajouter une action" matTooltipPosition="left" (click)="createAction()">
-      add_circle_outline</mat-icon>
-    </a>  
-  </div>
-  <div class="add-action" *ngIf="!isAdmin">
+  
+  <div class="add-action-space">
+    <div class="add-action" *ngIf="isAdmin">
+      <a>
+        <mat-icon class="project-action" matTooltip="Ajouter une action" matTooltipPosition="left" (click)="createAction()">
+        add_circle_outline</mat-icon>
+      </a>  
+    </div>
   </div>
   
   <table class="action-table" mat-table [dataSource]="dataSource" *ngIf="dataSource.data.length > 0">

@@ -59,6 +59,7 @@ export class ListProjectsComponent implements OnInit {
   fetchProjects(): void {
     this.isLoadingResults = true; 
     this.isError = false;
+    this.expandedElement = null;
     
     this.projectService.getAllProjects().subscribe({
       next: (projects) => {
