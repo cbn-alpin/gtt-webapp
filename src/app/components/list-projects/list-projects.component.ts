@@ -66,7 +66,11 @@ export class ListProjectsComponent implements OnInit {
         setTimeout(() => { 
           const filteredProjects = projects
             .filter((p: Project) => p.is_archived === this.showArchived)
-            .sort((a: Project, b: Project) => Number(b.code) - Number(a.code));
+            .sort((a: Project, b: Project) => {
+              const codeA = Number(a.code) || 0;
+              const codeB = Number(b.code) || 0;
+              return codeB - codeA; 
+            });
   
           this.dataSource.data = filteredProjects;
           this.isLoadingResults = false;

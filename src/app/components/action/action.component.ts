@@ -26,7 +26,7 @@ export class ActionComponent implements OnInit {
     this.id_action = data.action?.id_action;
     this.actionForm = this.fb.group(
       {
-        actionNum: ['', [Validators.pattern('^[0-9]+(\.[0-9]{1,2})?$')]], 
+        actionNum: ['', Validators.required], 
         name: ['', Validators.required],
         description: [''],
       },
@@ -36,7 +36,7 @@ export class ActionComponent implements OnInit {
   ngOnInit(): void {
     if (this.isEditMode && this.data.action) {
       this.actionForm.patchValue({
-        actionNum: this.data.action.id_action|| '',
+        actionNum: this.data.action.numero_action|| '',
         name: this.data.action.name || '',
         description: this.data.action.description || ''
       });
@@ -47,16 +47,19 @@ export class ActionComponent implements OnInit {
     if (this.actionForm.valid) {
       this.isSubmitting = true;
       const actionData = {
+        numero_action: this.actionForm.value.actionNum, 
         name: this.actionForm.value.name,
         description: this.actionForm.value.description,
         id_project: this.id_project
       };
 
+      console.error("actionData", actionData)
+
       if (this.isEditMode && this.id_action) {
         this.projectActionsService.updateActionById(this.id_action, actionData).subscribe({
           next: () => {
             this.dialogRef.close(true);
-            this.showToast(`Action "${actionData.name}" mise à jour ✅`);
+            this.showToast(`Action "${actionData.name}" mise à jour`);
           },
           error: (error) => {
             this.showToast(`Erreur : ${error.message || 'Mise à jour impossible'}`, true);

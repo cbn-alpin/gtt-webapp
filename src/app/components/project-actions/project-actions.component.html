@@ -11,29 +11,36 @@
   
   <table class="action-table" mat-table [dataSource]="dataSource" *ngIf="dataSource.data.length > 0">
     <p>{{dataSource}}</p>
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>
+    <ng-container matColumnDef="numAction">
+      <th mat-header-cell *matHeaderCellDef  class="num-cell">
         <mat-checkbox (change)="$event ? toggleAllRows() : null"
                       [checked]="selection.hasValue() && isAllSelected()"
                       [indeterminate]="selection.hasValue() && !isAllSelected()"
                       [aria-label]="checkboxLabel()">
-        </mat-checkbox>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name 
+        </mat-checkbox> N° action
       </th>
-      <td mat-cell *matCellDef="let element" class="name-cell">
+      <td mat-cell *matCellDef="let element" class="num-cell">
         <mat-checkbox (click)="$event.stopPropagation()"
                       (change)="toggleSelection(element)"
                       [checked]="selection.isSelected(element)"
                       [aria-label]="checkboxLabel(element)">
         </mat-checkbox>
-        {{element.id_action}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{element.name}}
+        {{element.numero_action}} 
       </td>
     </ng-container>
+
+    <ng-container matColumnDef="name" >
+      <th mat-header-cell *matHeaderCellDef class="name-cell">Nom action</th>
+      <td mat-cell *matCellDef="let element" class="name-cell">
+        {{element.name}}
+    </td>
+    </ng-container>
     
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef> Description </th>
+    <ng-container matColumnDef="description" >
+      <th mat-header-cell *matHeaderCellDef class="description-cell"> Description </th>
       <td mat-cell *matCellDef="let element" class="description-cell">
       <span class="truncate" matTooltip="{{element.description}}" matTooltipPosition="above">{{element.description}}</span>
-    </td>
+      </td>
     </ng-container>
      
     <ng-container matColumnDef="actions" *ngIf="isAdmin">

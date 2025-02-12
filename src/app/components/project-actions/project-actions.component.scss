@@ -36,17 +36,18 @@
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
+    width: 42em; 
+    max-width: 42em;
+}
+
+.num-cell {
+    width: 18em; 
+    max-width: 18em;
 }
 
 .name-cell {
-    width: 389px; 
-    max-width: 389px;
-    gap: 20px;
-}
-
-.description-cell {
-    width: 400px; 
-    max-width: 400px;
+    width: 25em; 
+    max-width: 25em;
 }
 
 .truncate {

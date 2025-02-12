@@ -16,7 +16,7 @@ import { UserActionService } from 'src/app/services/UserAction/user-action.servi
   styleUrls: ['./project-actions.component.scss']
 })
 export class ProjectActionsComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'description', 'actions'];
+  displayedColumns: string[] = ['numAction','name', 'description', 'actions'];
   dataSource = new MatTableDataSource<Action>([]);
   selection = new SelectionModel<Action>(true, []);
   isAdmin: boolean = false;
