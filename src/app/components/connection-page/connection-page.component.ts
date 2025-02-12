@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
@@ -15,7 +16,8 @@ export class ConnectionPageComponent {
   errorMessage = '';
   loginForm: FormGroup;
 
-  constructor(private authService: AuthService, private router: Router, private fb: FormBuilder) {
+  constructor(private authService: AuthService, private router: Router, 
+    private fb: FormBuilder, private readonly snackBar: MatSnackBar) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
@@ -42,8 +44,6 @@ export class ConnectionPageComponent {
 
       this.authService.nativeAuthenticate(credentials).subscribe({
         next: (userInfo: any) => {
-
-          console.error('Authentification réussie ', userInfo);
           
           // Stocker le token et autres infos si nécessaire
           localStorage.setItem('access_token', userInfo.access_token);
@@ -52,19 +52,26 @@ export class ConnectionPageComponent {
           localStorage.setItem('is_admin', `${userInfo.is_admin}`);
           localStorage.setItem('id_user', `${userInfo.id_user}`);
 
-          console.error('user id stocké dans localstorage', userInfo.id_user);
-
           this.isLoading = false;
           // Rediriger l'utilisateur vers la page d'accueil ou tableau de bord
           this.router.navigate(['/accueil/saisie-des-temps']);
         },
         error: (error) => {
-          console.error('Erreur lors de l’authentification ❌', error);
           this.errorMessage = 'Échec de connexion. Vérifiez vos identifiants.';
+          this.showToast(`Erreur : ${error.message || this.errorMessage } ❌`, true);
           this.isLoading = false;
         }
       });
     }
+  }
+
+  showToast(message: string, isError: boolean = false) {
+    this.snackBar.open(message, '', {
+      duration: 5000,
+      panelClass: isError ? 'error-toast' : 'success-toast',
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
+    });
   }
 }
 

@@ -17,9 +17,8 @@ export class UserActionService {
   constructor(private http : HttpClient) { }
 
   createUserAction(user_id: number, action_id: number): Observable<any> {
-    const url = `${this.baseUrl}/user/action`; 
-    const body = { user_id: user_id, action_id: action_id };
-    return this.http.post(url, body, this.httpOptions);
+    const url = `${this.baseUrl}/user/${user_id}/action/${action_id}`; 
+    return this.http.post(url, this.httpOptions);
   }
 
    deleteUserAction(user_id: number, action_id: number): Observable<any> {
