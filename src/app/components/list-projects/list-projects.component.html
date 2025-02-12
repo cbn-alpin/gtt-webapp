@@ -1,6 +1,6 @@
 <div class="actions-space">
   <div class="actions-container" *ngIf="isAdmin">
-    <button mat-icon-button class="add-project" (click)="createProject()">
+    <button mat-elevation-z8 class="add-project" (click)="createProject()">
      Ajouter un projet
     </button>
   
@@ -88,7 +88,7 @@
           class="element-row"
           [class.expanded-row]="expandedElement === element">
       </tr>
-      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row" [class.hidden]="expandedElement !== row"></tr>
     </table>
     <mat-paginator [pageSizeOptions]="[10, 20, 30]"
                     showFirstLastButtons
