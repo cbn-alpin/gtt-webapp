@@ -20,12 +20,12 @@
               [class.invalid-input]="isFieldInvalid('email')"
             >
             <div class="error-message" *ngIf="isFieldInvalid('email')">
-              <small *ngIf="loginForm.get('email')?.errors?.['required']">
+              <mat-error *ngIf="loginForm.get('email')?.errors?.['required']">
                 L'email est requis
-              </small>
-              <small *ngIf="loginForm.get('email')?.errors?.['email']">
+              </mat-error>
+              <mat-error *ngIf="loginForm.get('email')?.errors?.['email']">
                 Format d'email invalide
-              </small>
+              </mat-error>
             </div>
           </div>
           
@@ -38,9 +38,9 @@
               placeholder="Entrer votre mot de passe"
               [class.invalid-input]="isFieldInvalid('password')"
             >
-            <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
               Le mot de passe est requis.
-            </small>
+            </mat-error>
           </div>
         </div>
         

@@ -5,17 +5,17 @@
       <div class="form-field">
         <label class="form-label" for="actionNum">N° action :</label>
         <input class="form-input" id="actionNum" type="text" step="0.01" formControlName="actionNum"/>
-        <small *ngIf="actionForm.get('actionNum')?.invalid && actionForm.get('actionNum')?.touched">
+        <mat-error *ngIf="actionForm.get('actionNum')?.invalid && actionForm.get('actionNum')?.touched">
           Veuillez saisir un numéro d'action valide.
-        </small>
+        </mat-error>
       </div>
   
       <div class="form-field">
         <label class="form-label" for="name">Nom action :</label>
         <input class="form-input" id="name" type="text" formControlName="name" />
-        <small *ngIf="actionForm.get('name')?.invalid && actionForm.get('name')?.touched">
+        <mat-error *ngIf="actionForm.get('name')?.invalid && actionForm.get('name')?.touched">
           Le nom de l'action est requis.
-        </small>
+        </mat-error>
       </div>
   
       <div class="form-field">
@@ -25,9 +25,9 @@
     
       <div class="form-actions">
         <button class="validate-btn" type="submit" [disabled]="!actionForm.valid || isSubmitting">
-          {{ isSubmitting ? 'Création...' : 'Valider' }}
+          {{ isSubmitting ? (isEditMode ? 'Mise à jour...' : 'Création...') : (isEditMode ? 'Mettre à jour' : 'Valider') }}
         </button>
-      </div>
+      </div>      
     </form>
 </div>
   

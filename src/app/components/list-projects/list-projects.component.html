@@ -55,6 +55,10 @@
                 <mat-icon class="project-action">archive</mat-icon>
                 <span>Archiver</span>
               </button>
+              <button mat-menu-item (click)="editProject(element)">
+                <mat-icon class="project-action">edit</mat-icon>
+                <span>Modifier</span>
+              </button>
               <button mat-menu-item (click)="deleteProjectById('supprimer ce projet', element.id_project)">
                 <mat-icon class="project-action">delete</mat-icon>
                 <span>Supprimer</span>

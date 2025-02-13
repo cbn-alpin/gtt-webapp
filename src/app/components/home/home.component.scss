@@ -75,7 +75,6 @@
 .menu-icon {
   cursor: pointer;
   color: #2f4050;
-  margin-right: 5px;
 }
 
 .sidenav-container {
@@ -98,7 +97,6 @@
   padding: 2em;
   overflow: hidden;
 }
-
       
 .main-container {
   height: 100vh;
@@ -129,3 +127,44 @@
   background-color: var(--hover-color, #d0d0d0); 
   border-radius: 5px; 
 }
+
+.user-menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-direction: row; 
+}
+
+
+.user-menu-item span {
+  flex: 1;
+  text-align: center;
+}
+
+.user-modify-container{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  flex: 1;
+}
+
+.user-chevron-right{
+  align-items: flex-end;
+
+}
+
+.list-users-container{
+  height: 30em;
+  width: 280px;
+}
+
+.password-container{
+  height: 17em;
+  width: 243px;
+}
+
+
+
+

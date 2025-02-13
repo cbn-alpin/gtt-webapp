@@ -1,0 +1,43 @@
+<div  class="user-container">
+    <h2 class="form-title">Sélectionner un agent</h2>
+    <div class="table-user-container mat-elevation-z8" >
+        <div class="loading-shade-user" *ngIf="isLoadingResults">
+            <mat-spinner></mat-spinner>
+        </div>
+    
+        <ng-container *ngIf="dataSource.data.length > 0; else emptyState">
+        <mat-form-field>
+            <mat-label>Rechercher</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Saisir le nom ou prénom de l'agent">
+        </mat-form-field>
+        
+        <table mat-table [dataSource]="dataSource">    
+            <ng-container matColumnDef="user_first_name">
+            <th mat-header-cell *matHeaderCellDef class="first_name-cell"> Prénom </th>
+            <td mat-cell *matCellDef="let element" class="first_name-cell"> {{element.first_name}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="user_last_name">
+            <th mat-header-cell *matHeaderCellDef> Nom </th>
+            <td mat-cell *matCellDef="let element"> {{element.last_name}} </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+                (click)="selectUser(row)" class="clickable-row">
+            </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 15]" class="sticky-paginator"></mat-paginator>
+        </ng-container> 
+
+        <ng-template #emptyState>
+        <div class="empty-container-user" *ngIf="!isLoadingResults && !isError">
+            <p>Aucun agent trouvé.</p>
+        </div>
+        <div class="empty-container-user" *ngIf="isError && !isLoadingResults">
+            <p>Une erreur est survenue lors de la récupération des agents.</p>
+        </div>
+        </ng-template>
+    </div>
+</div>

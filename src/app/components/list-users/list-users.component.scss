@@ -1,0 +1,39 @@
+.clickable-row {
+cursor: pointer;
+transition: background-color 0.2s;
+}
+
+.clickable-row:hover {
+background-color: #f0f0f0;
+}
+
+.mat-mdc-form-field {
+font-size: 14px;
+width: 100%;
+}
+
+.loading-shade-user {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7); 
+    border-radius: 8px;
+}
+ 
+
+
+.sticky-paginator {
+position: sticky;
+bottom: 0;
+background: white; 
+z-index: 2; 
+border-top: 1px solid #e0e0e0; 
+}
+

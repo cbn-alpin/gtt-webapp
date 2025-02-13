@@ -39,6 +39,8 @@ import { DownloadProjectsComponent } from './components/download-projects/downlo
 import { TokenInterceptor } from './components/connection-page/token.interceptor';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { ListUsersComponent } from './components/list-users/list-users.component';
+import { ModifyPasswordComponent } from './components/modify-password/modify-password.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,9 @@ import { MatOptionModule } from '@angular/material/core';
     DownloadPageComponent,
     DownloadProjectsComponent,
     PopupMessageComponent,
-    TimeSheetComponent
+    TimeSheetComponent,
+    ListUsersComponent,
+    ModifyPasswordComponent
   ],
   imports: [
     BrowserModule,
