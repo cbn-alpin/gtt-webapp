@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { APP_CONFIG } from 'src/main';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserActionService {
-  baseUrl = APP_CONFIG.apiUrl;
+  baseUrl = 'http://127.0.0.1:5000/api';
 
   httpOptions = {
     headers: new HttpHeaders({

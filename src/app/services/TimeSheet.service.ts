@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { APP_CONFIG } from 'src/main';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +8,7 @@ import { APP_CONFIG } from 'src/main';
 export class TimeSheetService  {
 
   constructor(private http: HttpClient) { }
-  private apiUrl = APP_CONFIG.apiUrl;
+  private apiUrl = 'http://localhost:5000/api/user';
 
   getUserProjects(userId: string, dateStart: String, dateEnd: String): Observable<any[]> {
     const url = `${this.apiUrl}/${userId}/projects/times?date_start=${dateStart}&date_end=${dateEnd}`;
