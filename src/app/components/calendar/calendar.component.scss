@@ -161,11 +161,11 @@
   background-color: #f5f5f5;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 50%;
+  width: fit-content;
 }
 
 .select-months {
-  min-width: 110px;
+  min-width: 80px;
   width: 100%;
 }
 .select-years {
@@ -173,8 +173,17 @@
   width: 100%;
 }
  .select-weeks {
-  min-width: 130px;
+  min-width: 80px;
   width: 100%;
+  min-width: fit-content;
+}
+.option-weeks, .option-months, .option-years{
+  font-size: 12px;
+  padding: 0%;
+  padding-left: 3px;
+  margin: 0px;
+  height: 0px;
+  min-width: fit-content;
 }
 
 
@@ -192,6 +201,7 @@
   padding-right: 10px;
   padding-left: 10px;
 }
+
 /* CSS time Table */
 
 .table-container {
@@ -295,8 +305,21 @@ thead th, .total-year, .total-week {
   justify-content: center;
   z-index: 3;
 }
+.project-col,
+.project-name,
+.action-name,
+.fixed-action-name {
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 10;
+
+}
+
+
 /* Media Queries for Mobile Devices */
 @media (max-width: 768px) {
+
   .calendar-container {
     width: 100%;
     flex-direction: column;
@@ -339,6 +362,11 @@ thead th, .total-year, .total-week {
 }
 
 @media (max-width: 480px) {
+  .project-name, .action-name{
+    position: sticky;
+    z-index: 2;
+  }
+
   .calendar-headline-controls {
     font-size: 1.6rem;
     width: 100%;
