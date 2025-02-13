@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, HostListener} from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
@@ -8,6 +8,9 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 })
 export class HomeComponent {
   currentTitle: string = 'Saisie des temps';
+  isMobile: boolean = false;
+  isSidenavOpened: boolean = true;
+
   // Récupération des infos utilisateur (tu peux les stocker dans `localStorage` après connexion)
   userName = localStorage.getItem('user_name') || 'Utilisateur';
   isAdmin: boolean = false;
@@ -22,7 +25,22 @@ constructor(private authService: AuthService) {
   }
 
   logout() {
-    this.authService.logout(); 
+    this.authService.logout();
+  }
+  @HostListener('window:resize', [])
+  checkScreenSize() {
+    this.isMobile = window.innerWidth < 768;
+    this.isSidenavOpened = !this.isMobile; // Fermer le menu si mobile
+  }
+
+  toggleSidenav() {
+    this.isSidenavOpened = !this.isSidenavOpened;
+  }
+
+  closeSidenavOnMobile() {
+    if (this.isMobile) {
+      this.isSidenavOpened = false;
+    }
   }
 
 }

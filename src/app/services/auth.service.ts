@@ -13,7 +13,7 @@ interface AuthResponse {
 })
 export class AuthService {
   // Private token variable
-  private _token: string | null = localStorage.getItem('app_token');
+  private _token: string | null = localStorage.getItem('access_token');
 
   // BehaviorSubject to track authentication state
   private authSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
