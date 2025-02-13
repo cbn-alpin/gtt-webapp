@@ -4,28 +4,49 @@
   </div>
   <span class="title">{{ currentTitle }}</span>
   <div class="user-infos">
-    <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+    <button mat-button [matMenuTriggerFor]="beforeMenu" class="user-button">
       <img src="assets/images/defaultProfil.png" alt="User Image" class="user-avatar" />
     </button>
+  
+    <mat-menu #beforeMenu="matMenu" [overlapTrigger]="false">
+      <ng-container *ngIf="!showUsers && !showPasswordChange">
+        <div class="user-profile">
+          <img src="assets/images/defaultProfil.png" alt="User Image" class="user-avatar-large" />
+          <p class="user-name">{{ userName }}</p>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="togglePasswordChange($event)">
+          <mat-icon class="menu-icon">settings</mat-icon> Modifier le mot de passe
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item *ngIf="isAdmin" (click)="toggleUserList($event)">
+          <mat-icon class="menu-icon">sync</mat-icon>Changer d'agent
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon class="menu-icon">exit_to_app</mat-icon>Déconnexion 
+        </button>
+      </ng-container>
 
-    <mat-menu #userMenu="matMenu">
-      <div class="user-profile">
-        <img src="assets/images/defaultProfil.png" alt="User Image" class="user-avatar-large" />
-        <p class="user-name">{{ userName }}</p>
-      </div>
-      <mat-divider></mat-divider>
-      <button mat-menu-item>
-      <mat-icon class="menu-icon">settings</mat-icon>Paramètres</button>
-      <button mat-menu-item *ngIf="isAdmin">
-        <mat-icon class="menu-icon">sync</mat-icon>Changer d'agent
-      </button>
-      <mat-divider></mat-divider>
-      <button mat-menu-item (click)="logout()">
-        <mat-icon class="menu-icon">exit_to_app</mat-icon>Déconnexion
-      </button>
+      <ng-container *ngIf="showPasswordChange">
+        <div class="password-container" (click)="$event.stopPropagation()">
+          <mat-icon class="menu-icon" (click)="togglePasswordChange($event)">chevron_left</mat-icon>
+          <mat-divider></mat-divider>
+    
+          <app-modify-password></app-modify-password>
+        </div>
+      </ng-container>
+      
+
+      <ng-container *ngIf="showUsers">
+        <div class="list-users-container" (click)="$event.stopPropagation()">
+           <mat-icon class="menu-icon" (click)="toggleUserList($event)">chevron_left</mat-icon>
+           <mat-divider></mat-divider>
+          <app-list-users></app-list-users>
+        </div>
+      </ng-container>
     </mat-menu>
-  </div>
-
+  </div> 
 </mat-toolbar>
 
 <div class="main-container">
@@ -36,7 +57,7 @@
           <mat-icon>schedule</mat-icon>
         </a>
         <a mat-icon-button class="icon-container" routerLink="/accueil/liste-des-projets" matTooltip="Liste des projets" matTooltipPosition="right" (click)="updateTitle('Liste des projets')">
-          <mat-icon>description</mat-icon>
+          <mat-icon>list_alt</mat-icon>
         </a>
         <a mat-icon-button class="icon-container" routerLink="/accueil/frais-de-deplacement" matTooltip="Frais de déplacement" matTooltipPosition="right" (click)="updateTitle('Frais de déplacement')">
           <mat-icon>euro_symbol</mat-icon>

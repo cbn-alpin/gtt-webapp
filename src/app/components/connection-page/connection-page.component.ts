@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { UserInfos } from 'src/app/models/UserInfos';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 
@@ -43,7 +44,7 @@ export class ConnectionPageComponent {
         };
 
       this.authService.nativeAuthenticate(credentials).subscribe({
-        next: (userInfo: any) => {
+        next: (userInfo: UserInfos) => {
           
           // Stocker le token et autres infos si nécessaire
           localStorage.setItem('access_token', userInfo.access_token);
@@ -51,6 +52,8 @@ export class ConnectionPageComponent {
           localStorage.setItem('user_name', `${userInfo.first_name} ${userInfo.last_name}`);
           localStorage.setItem('is_admin', `${userInfo.is_admin}`);
           localStorage.setItem('id_user', `${userInfo.id_user}`);
+          localStorage.setItem('newTitle', `saisie-des-temps`)
+      
 
           this.isLoading = false;
           // Rediriger l'utilisateur vers la page d'accueil ou tableau de bord

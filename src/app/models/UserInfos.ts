@@ -1,4 +1,4 @@
-export interface UserInfo {
+export interface UserInfos {
   access_token: string;
   email: string;
   first_name: string;

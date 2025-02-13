@@ -1,13 +1,14 @@
 import { Component, HostListener} from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  currentTitle: string = 'Saisie des temps';
+  currentTitle: string = localStorage.getItem('newTitle') || '' ;
   isMobile: boolean = false;
   isSidenavOpened: boolean = true;
 
@@ -22,6 +23,7 @@ constructor(private authService: AuthService) {
 
   updateTitle(newTitle: string) {
     this.currentTitle = newTitle;
+    localStorage.setItem('newTitle', `${newTitle}`);
   }
 
   logout() {
@@ -41,6 +43,25 @@ constructor(private authService: AuthService) {
     if (this.isMobile) {
       this.isSidenavOpened = false;
     }
+  }
+
+  showUsers = false;
+
+  toggleUserList(event: MouseEvent) {
+    event.stopPropagation(); // Empêche la fermeture du menu
+    this.showUsers = !this.showUsers;
+  }
+
+  selectUser(user: any) {
+    console.log('Selected user:', user);
+    // Ajoutez votre logique de sélection d'utilisateur ici
+  }
+
+  showPasswordChange = false;
+
+  togglePasswordChange(event: MouseEvent) {
+    event.stopPropagation();
+    this.showPasswordChange = !this.showPasswordChange;
   }
 
 }

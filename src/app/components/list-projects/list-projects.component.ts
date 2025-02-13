@@ -168,6 +168,18 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
     this.fetchProjects();
   }
 
+  editProject(project: Project) {
+    const dialogRef = this.dialog.open(ProjectComponent, {
+      data: { project } 
+    });
+  
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.fetchProjects(); // Rafraîchir la liste après la modification
+      }
+    });
+  }
+
   showToast(message: string, isError: boolean = false) {
     this.snackBar.open(message, '', {
       duration: 5000,

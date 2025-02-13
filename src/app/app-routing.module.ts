@@ -12,7 +12,7 @@ const routes: Routes = [
   {
     path: 'accueil',
     component: HomeComponent,
-   // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     children: [
       { path: 'saisie-des-temps', component: TimeSheetComponent },
       { path: 'liste-des-projets', component: ListProjectsComponent },

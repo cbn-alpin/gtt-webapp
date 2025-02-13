@@ -99,10 +99,10 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
 
   formatProjectActionsForCSV(data: any[]): any[] {
     return data.map(row => ({
-      'NOM': row.user_name, 
+      'PRENOM NOM': row.user_name, 
       'Date de début': row.date_start, 
       'Date de fin': row.date_end, 
-      'Actions': `${row.numero_action}—${row.name_action}`, 
+      'Actions': `${row.numero_action}———${row.name_action}`, 
       'Nombre d’heures réalisés': row.total_hours.toFixed(2) 
     }));
   }
