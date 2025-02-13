@@ -32,7 +32,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
   isError = false;
   showArchived: boolean = false;
 
-  constructor(private readonly dialog: MatDialog, 
+  constructor(private readonly dialog: MatDialog,
   private projectService: ProjectsService,
   private readonly snackBar: MatSnackBar){
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
@@ -50,40 +50,40 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-  
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   fetchProjects(): void {
-    this.isLoadingResults = true; 
+    this.isLoadingResults = true;
     this.isError = false;
     this.expandedElement = null;
-    
+
     this.projectService.getAllProjects().subscribe({
       next: (projects) => {
-        setTimeout(() => { 
+        setTimeout(() => {
           const filteredProjects = projects
             .filter((p: Project) => p.is_archived === this.showArchived)
             .sort((a: Project, b: Project) => {
               const codeA = Number(a.code) || 0;
               const codeB = Number(b.code) || 0;
-              return codeB - codeA; 
+              return codeB - codeA;
             });
-  
+
           this.dataSource.data = filteredProjects;
           this.isLoadingResults = false;
-  
-          setTimeout(() => { 
-            this.dataSource.paginator = this.paginator;   
+
+          setTimeout(() => {
+            this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
           }, 100);
-        }, 1000); 
+        }, 1000);
       },
       error: (error) => {
-        this.isLoadingResults = false; 
-        this.isError = true; 
+        this.isLoadingResults = false;
+        this.isError = true;
       }
     });
 
@@ -91,8 +91,8 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       switch (property) {
         case 'code':
           return Number(item.code) || 0;
-        case 'name': 
-          return item.name?.toLowerCase().trim() || ''; 
+        case 'name':
+          return item.name?.toLowerCase().trim() || '';
         case 'startDate':
           return new Date(item.start_date).getTime();
         case 'endDate':
@@ -100,7 +100,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
         default:
           return (item as any)[property];
       }
-    };    
+    };
   }
 
   deleteProjectById(action: string, projectId: number): void {
@@ -108,13 +108,13 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       width: '300px',
       data: { message: `${action}?` }
     });
-  
+
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         this.projectService.deleteProjectById(projectId).subscribe({
           next: () => {
             this.showToast(`Projet supprimé avec succès ✅`);
-            this.fetchProjects(); 
+            this.fetchProjects();
           },
           error: (error) => {
             console.error('Erreur lors de la suppression du projet', error);
@@ -129,7 +129,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(ProjectComponent);
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
-        this.fetchProjects(); 
+        this.fetchProjects();
       }
     });
   }
@@ -139,20 +139,20 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       width: '300px',
       data: { message: `${action}?` }
     });
-  
+
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         const { list_action, ...projectData } = project;
 
-        const updatedProject = { 
-          ...projectData, 
-          is_archived: true 
+        const updatedProject = {
+          ...projectData,
+          is_archived: true
         };
-  
+
         this.projectService.updateProjectById(project.id_project, updatedProject).subscribe({
           next: () => {
             this.showToast(`Projet "${project.name}" archivé avec succès 🎉`);
-            this.fetchProjects(); 
+            this.fetchProjects();
           },
           error: (error) => {
             console.error('Erreur lors de l\'archivage du projet', error);

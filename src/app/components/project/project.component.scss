@@ -1,27 +1,161 @@
+/* Style global pour les éléments */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 
 
+.form-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  overflow: hidden;
+}
 
-/* Style pour un message de succès */
+.form-title {
+  font-size: 24px;
+  text-align: center;
+  color: #2f4050;
+  margin-bottom: 20px;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.form-actions {
+  text-align: center;
+}
+
+.validate-btn {
+  background-color: #2f4050;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.validate-btn:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #2f4050;
+}
+
 .success-toast {
-  background-color: #2f4050 !important; /* Vert */
+  background-color: #2f4050 !important;
   color: white !important;
   font-size: 16px;
   text-align: center;
 }
 
-/* Style pour un message d'erreur */
 .error-toast {
-  background-color: #f44336 !important; /* Rouge */
+  background-color: #f44336 !important;
   color: white !important;
   font-size: 16px;
   text-align: center;
 }
+
 
 .mat-mdc-snack-bar-container {
   &.blue-snackbar {
-    --mdc-snackbar-container-color: #2f4050 !important;
-    --mat-mdc-snack-bar-button-color: #fff;
-    --mdc-snackbar-supporting-text-color: #fff;
+      --mdc-snackbar-container-color: #2f4050 !important;
+      --mat-mdc-snack-bar-button-color: #fff;
+      --mdc-snackbar-supporting-text-color: #fff;
   }
 }
 
+@media (max-width: 768px) {
+  .form-container {
+      padding: 15px;
+  }
+
+  .form-title {
+      font-size: 20px;
+  }
+
+  .form-label {
+      font-size: 14px;
+  }
+
+  .form-input {
+      font-size: 14px;
+      padding: 8px;
+  }
+
+  .validate-btn {
+      font-size: 14px;
+      padding: 8px 16px;
+  }
+
+  .close-btn {
+      font-size: 20px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .form-container {
+      padding: 10px;
+      width: 100%;
+  }
+
+  .form-title {
+      font-size: 18px;
+  }
+
+  .form-label {
+      font-size: 14px;
+  }
+
+  .form-input {
+      font-size: 14px;
+      padding: 8px;
+  }
+
+  .validate-btn {
+      font-size: 14px;
+      padding: 10px;
+      width: 100%;
+  }
+
+  .close-btn {
+      font-size: 18px;
+  }
+}
