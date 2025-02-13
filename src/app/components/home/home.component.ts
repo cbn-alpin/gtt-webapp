@@ -1,9 +1,6 @@
-import { Component, OnInit} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, HostListener} from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { ListUsersComponent } from '../list-users/list-users.component';
-import { UserInfos } from 'src/app/models/UserInfos';
-import { UserService } from 'src/app/services/user/user.service';
+
 
 @Component({
   selector: 'app-home',
@@ -12,6 +9,10 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class HomeComponent {
   currentTitle: string = localStorage.getItem('newTitle') || '' ;
+  isMobile: boolean = false;
+  isSidenavOpened: boolean = true;
+
+  // Récupération des infos utilisateur (tu peux les stocker dans `localStorage` après connexion)
   userName = localStorage.getItem('user_name') || 'Utilisateur';
   isAdmin: boolean = false;
   // userImage = localStorage.getItem('user_photo') || 'assets/images/default-user.png'; // Image par défaut si aucune image
@@ -26,7 +27,22 @@ constructor(private authService: AuthService) {
   }
 
   logout() {
-    this.authService.logout(); 
+    this.authService.logout();
+  }
+  @HostListener('window:resize', [])
+  checkScreenSize() {
+    this.isMobile = window.innerWidth < 768;
+    this.isSidenavOpened = !this.isMobile; // Fermer le menu si mobile
+  }
+
+  toggleSidenav() {
+    this.isSidenavOpened = !this.isSidenavOpened;
+  }
+
+  closeSidenavOnMobile() {
+    if (this.isMobile) {
+      this.isSidenavOpened = false;
+    }
   }
 
   showUsers = false;

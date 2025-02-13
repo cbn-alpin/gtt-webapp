@@ -1,13 +1,13 @@
 .actions-container {
   display: flex;
-  flex-direction: column; 
-  align-items: flex-end; 
+  flex-direction: column;
+  align-items: flex-end;
   row-gap: 1.25em;
   margin: 0.5em 0 3em;
 }
 .actions-space {
   height: 7.5em;
-  min-height: 7.5em; 
+  min-height: 7.5em;
 }
 
 .toggle-container {
@@ -45,13 +45,13 @@
   cursor: pointer;
   color: #2f4050;
 }
-  
+
 .sticky-paginator {
   position: sticky;
   bottom: 0;
-  background: white; 
-  z-index: 2; 
-  border-top: 1px solid #e0e0e0; 
+  background: white;
+  z-index: 2;
+  border-top: 1px solid #e0e0e0;
 }
 
 table {
@@ -74,28 +74,28 @@ table {
   background: rgba(255, 255, 255, 0.7); 
   border-radius: 8px;
 }
-  
+
   tr.detail-row {
     height: 0;
   }
-  
+
   tr.element-row:not(.expanded-row):hover {
     background: whitesmoke;
   }
-  
+
   tr.element-row:not(.expanded-row):active {
     background: #efefef;
   }
-  
+
   .element-row td {
     border-bottom-width: 0;
   }
-  
+
   .element-diagram {
     border: 2px solid #2f4050;
     font-weight: lighter;
   }
-  
+
   .element-description-attribution {
     opacity: 0.5;
   }
@@ -103,11 +103,11 @@ table {
   // .detail-row.hidden {
   //   display: none;
   // }
-  
+
   // .element-row {
   //   border-bottom-width: 0;
   // }
-  
+
   .element-detail {
     overflow: hidden;
   }
@@ -123,16 +123,16 @@ table {
 }
 
 .mat-mdc-slide-toggle.mat-accent {
-  --mdc-switch-selected-focus-state-layer-color: #2f4050; 
-  --mdc-switch-selected-handle-color: #2f4050; 
-  --mdc-switch-selected-hover-state-layer-color: #2f4050; 
-  --mdc-switch-selected-pressed-state-layer-color: #2f4050; 
-  --mdc-switch-selected-focus-handle-color: #475a6b; 
-  --mdc-switch-selected-hover-handle-color: #475a6b; 
-  --mdc-switch-selected-pressed-handle-color: #2f4050; 
-  --mdc-switch-selected-focus-track-color: #475a6b; 
-  --mdc-switch-selected-hover-track-color: #475a6b; 
-  --mdc-switch-selected-pressed-track-color: #475a6b; 
-  --mdc-switch-selected-track-color: #475a6b; 
+  --mdc-switch-selected-focus-state-layer-color: #2f4050;
+  --mdc-switch-selected-handle-color: #2f4050;
+  --mdc-switch-selected-hover-state-layer-color: #2f4050;
+  --mdc-switch-selected-pressed-state-layer-color: #2f4050;
+  --mdc-switch-selected-focus-handle-color: #475a6b;
+  --mdc-switch-selected-hover-handle-color: #475a6b;
+  --mdc-switch-selected-pressed-handle-color: #2f4050;
+  --mdc-switch-selected-focus-track-color: #475a6b;
+  --mdc-switch-selected-hover-track-color: #475a6b;
+  --mdc-switch-selected-pressed-track-color: #475a6b;
+  --mdc-switch-selected-track-color: #475a6b;
 }
 

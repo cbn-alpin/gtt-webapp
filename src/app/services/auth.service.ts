@@ -13,7 +13,7 @@ interface AuthResponse {
 })
 export class AuthService {
   // Private token variable
-  private _token: string | null = localStorage.getItem('app_token');
+  private _token: string | null = localStorage.getItem('access_token');
 
   // BehaviorSubject to track authentication state
   private authSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
@@ -46,7 +46,7 @@ export class AuthService {
         tap((response: AuthResponse) => {
           // Save the backend-issued token and update the authentication state
           this._token = response.token;
-          localStorage.setItem('app_token', response.token);
+          localStorage.setItem('access_token', response.token);
           this.authSubject.next(true);
         })
       );
@@ -57,7 +57,7 @@ export class AuthService {
    */
   logout(): void {
     this._token = null;
-    localStorage.removeItem('app_token');
+    localStorage.removeItem('access_token');
     this.authSubject.next(false);
     // Optionally, you can add further cleanup or navigate to the login route.
   }

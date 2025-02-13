@@ -1,5 +1,5 @@
 <mat-toolbar class="header sticky-header">
-  <div class="logo-cbna">
+  <div class="logo-cbna" (click)="toggleSidenav()">
     <img src="assets/images/logo_cbna.png"  alt=""/>
   </div>
   <span class="title">{{ currentTitle }}</span>
@@ -51,7 +51,7 @@
 
 <div class="main-container">
   <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav mode="side" opened class="sidenav">
+    <mat-sidenav #sidenav mode="side"  [opened]="isSidenavOpened" [mode]="isMobile ? 'over' : 'side'"  class="sidenav">
       <div class="sidenav-content">
         <a mat-icon-button class="icon-container" routerLink="/accueil/saisie-des-temps" matTooltip="Saisie des temps" matTooltipPosition="right" (click)="updateTitle('Saisie des temps')">
           <mat-icon>schedule</mat-icon>

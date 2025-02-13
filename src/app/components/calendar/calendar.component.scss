@@ -144,6 +144,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  padding: 2px;
 }
 
 .calendar-headline-controls{
@@ -161,11 +162,12 @@
   background-color: #f5f5f5;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 50%;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .select-months {
-  min-width: 110px;
+  min-width: 80px;
   width: 100%;
 }
 .select-years {
@@ -173,8 +175,17 @@
   width: 100%;
 }
  .select-weeks {
-  min-width: 130px;
+  min-width: 80px;
   width: 100%;
+  min-width: fit-content;
+}
+.option-weeks, .option-months, .option-years{
+  font-size: 12px;
+  padding: 0%;
+  padding-left: 3px;
+  margin: 0px;
+  height: 0px;
+  min-width: fit-content;
 }
 
 
@@ -192,6 +203,7 @@
   padding-right: 10px;
   padding-left: 10px;
 }
+
 /* CSS time Table */
 
 .table-container {
@@ -206,9 +218,10 @@
     position: sticky;
     top: 0;
     background-color: white;
-    z-index: 2;
+    z-index: 3;
     border: 1px solid #ddd;
   }
+
 
   tbody .daily-total-row {
     position: sticky;
@@ -229,6 +242,7 @@
     width: 100%;
     border-collapse: collapse;
     min-height: 450px;
+
   }
 
   .project-name {
@@ -289,14 +303,26 @@ thead th, .total-year, .total-week {
   bottom: -80px;
   right: 0;
   background: rgba(0, 0, 0, 0.15);
-  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 3;
+  z-index: 4;
 }
+.project-col,
+.project-name,
+.action-name,
+.fixed-action-name {
+  position: sticky;
+  left: 0;
+  background: white;
+  z-index: 2;
+
+}
+
+
 /* Media Queries for Mobile Devices */
 @media (max-width: 768px) {
+
   .calendar-container {
     width: 100%;
     flex-direction: column;
@@ -304,8 +330,10 @@ thead th, .total-year, .total-week {
 
   .calendar-headline-controls {
     font-size: 1.8rem;
-    width: 100%;
-    margin-top: 20px;
+    width: -webkit-fill-available;
+    max-width: inherit;
+    margin: 20px auto;
+
   }
 
   .calendar-headline-control {
@@ -336,13 +364,24 @@ thead th, .total-year, .total-week {
   th, td {
     padding: 6px;
   }
+  .selectors{
+    display: block;
+    align-items: center;
+    padding: 2px;
+  }
 }
 
 @media (max-width: 480px) {
+  .project-name, .action-name{
+    position: sticky;
+    z-index: 2;
+  }
+
   .calendar-headline-controls {
     font-size: 1.6rem;
-    width: 100%;
-    margin-top: 20px;
+    width: -webkit-fill-available;
+    max-width: inherit;
+    margin: 20px auto;
   }
 
   .calendar-grid-cell {
@@ -360,5 +399,10 @@ thead th, .total-year, .total-week {
 
   .table-container {
     min-height: 200px;
+  }
+  .selectors{
+    display: block;
+    align-items: center;
+    padding: 2px;
   }
 }

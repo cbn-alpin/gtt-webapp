@@ -3,7 +3,7 @@
     font-size: 20px;
     color: #2f4050;
 }
-  
+
 .dialog-content {
     text-align: left;
     font-size: 16px;
@@ -11,18 +11,18 @@
 
 .dialog-actions {
     display: flex;
-    justify-content: center; 
-    gap: 100px; 
+    justify-content: center;
+    gap: 100px;
 }
 
 .action-bouton-confirm {
-    min-width: 80px; 
+    min-width: 80px;
     background-color: #2f4050;
     color: white;
 }
-  
+
 .action-bouton-cancel {
-    min-width: 80px; 
+    min-width: 80px;
     background-color: white;
     color: #2f4050;
 }
