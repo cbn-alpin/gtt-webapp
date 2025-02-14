@@ -15,7 +15,6 @@ import { ProjectsService } from 'src/app/services/projects/projects.service';
 export class DownloadProjectsComponent implements OnInit, AfterViewInit {
   private selectionState = new BehaviorSubject<boolean>(false);
   isButtonDisabled$ = this.selectionState.asObservable();
-
   displayedColumns: string[] = ['selection', 'code', 'name'];
   dataSource = new MatTableDataSource<Project>([]);
   selection = new SelectionModel<Project>(false, []);
@@ -80,7 +79,6 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
     this.projectService.getProjectActionsAndUsersTimesById(projectId).subscribe({
       next: (data) => {
         this.selectedProjectData = data;
-        console.error('Détails du projet sélectionné:', data);
       },
       error: () => {
         console.error('Erreur lors du chargement des détails du projet');
