@@ -109,6 +109,8 @@
                 min="0"
                 [ngClass]="{ 'weekend-input': day.isWeekend || isHoliday(day.date)}"
                 #inputRef
+                (focus)="onFocus(inputRef)"
+                (blur)="onBlur(inputRef)"
               >
 
 
@@ -146,6 +148,8 @@
                 min="0"
                 [ngClass]="{ 'weekend-input': day.isWeekend || isHoliday(day.date)}"
                 #inputRef2
+                (focus)="onFocus(inputRef2)"
+                (blur)="onBlur(inputRef2)"
               >
 
 

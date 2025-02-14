@@ -4,9 +4,11 @@ html, body {
     padding: 0;
     height: 100vh;
     width: 100vw;
-    overflow: hidden; 
+    overflow: hidden;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+
 }
 
 .mat-mdc-tooltip {
@@ -28,29 +30,31 @@ html, body {
     border-radius: 10px;
     width: 400px;
     margin: 0 auto;
-    position: relative; 
+    position: relative;
     display: flex;
     flex-direction: column;
-}  
+    max-width: 100%;
+    overflow: hidden;
+}
 
 .form-title {
     text-align: center;
     margin-bottom: 20px;
     color: #2f4050;
     font-weight: bold;
-} 
+}
 
 .form-field {
     margin-bottom: 15px;
   }
-  
+
   .form-label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
     color: #2f4050;
   }
-  
+
   .form-input {
     width: 100%;
     padding: 8px;
@@ -58,13 +62,13 @@ html, body {
     border-radius: 5px;
     box-sizing: border-box;
   }
-  
+
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: auto; 
+    margin-top: auto;
 }
-  
+
 .validate-btn {
     background-color: #2f4050;
     color: white;
@@ -74,7 +78,7 @@ html, body {
     cursor: pointer;
     font-size: 16px;
 }
-  
+
 .validate-btn[disabled] {
     background-color: #ddd;
     cursor: not-allowed;
@@ -84,24 +88,88 @@ html, body {
     position: absolute;
     top: 10px;
     right: 14px;
-    width: 32px; 
+    width: 32px;
     height: 32px;
-    background-color: #e4e7eb; 
+    background-color: #e4e7eb;
     border: none;
-    border-radius: 50%; 
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    color: #5a5a5a; 
+    color: #5a5a5a;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s, transform 0.2s;
 }
-  
+
 .close-btn:hover {
-    background-color: #d6dade; 
-    transform: scale(1.1); 
+    background-color: #d6dade;
+    transform: scale(1.1);
 }
 
+
+@media (max-width: 768px) {
+  .form-container {
+      padding: 15px;
+  }
+
+  .form-container .form-title {
+    font-size: 14px !important;
+}
+
+  .form-label {
+      font-size: 14px;
+  }
+
+  .form-input {
+      font-size: 14px;
+      padding: 8px;
+  }
+
+  .validate-btn {
+      font-size: 14px;
+      padding: 8px 16px;
+      width: 100%;
+  }
+
+  .close-btn {
+    font-size: 15px;
+    width: 22px;
+    height: 22px;
+
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+      padding: 10px;
+      width: 90%;
+  }
+
+  .form-container .form-title {
+    font-size: 14px !important;
+}
+
+  .form-label {
+      font-size: 14px;
+  }
+
+  .form-input {
+      font-size: 14px;
+      padding: 8px;
+  }
+
+  .validate-btn {
+      font-size: 14px;
+      padding: 10px;
+      width: 100%;
+  }
+
+  .close-btn {
+      font-size: 15px;
+      width: 22px;
+      height: 22px;
+  }
+}

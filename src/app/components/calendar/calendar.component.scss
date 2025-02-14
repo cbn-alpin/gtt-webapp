@@ -333,7 +333,7 @@ thead th, .total-year, .total-week {
     width: -webkit-fill-available;
     max-width: inherit;
     margin: 20px auto;
-
+    padding: 10px;
   }
 
   .calendar-headline-control {
@@ -382,6 +382,7 @@ thead th, .total-year, .total-week {
     width: -webkit-fill-available;
     max-width: inherit;
     margin: 20px auto;
+    padding: 10px;
   }
 
   .calendar-grid-cell {
@@ -401,8 +402,10 @@ thead th, .total-year, .total-week {
     min-height: 200px;
   }
   .selectors{
-    display: block;
+    display: flex;
+    flex-direction: row;
     align-items: center;
     padding: 2px;
   }
+
 }

@@ -97,7 +97,7 @@
   padding: 2em;
   overflow: hidden;
 }
-      
+
 .main-container {
   height: 100vh;
   display: flex;
@@ -133,7 +133,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  flex-direction: row; 
+  flex-direction: row;
 }
 
 
@@ -166,9 +166,6 @@
 }
 
 
-
-
-
 @media screen and (max-width: 768px) {
   .sidenav {
     width: var(--sidebar-width);
@@ -177,4 +174,32 @@
   .sidenav-content {
     padding-top: 10px;
   }
+  .logo-cbna img {
+    height: 2.5em;
+    width: 3.5em;
+  }
+
+  .user-avatar {
+    height: 45px;
+    width: 57px;
+  }
 }
+@media screen and (max-width: 480px) {
+  .sidenav {
+    width: var(--sidebar-width);
+  }
+
+  .sidenav-content {
+    padding-top: 10px;
+  }
+  .logo-cbna img {
+    height: 2.5em;
+    width: 3.5em;
+  }
+
+  .user-avatar {
+    height: 45px !important;
+    width: 57px !important;
+  }
+}
+
