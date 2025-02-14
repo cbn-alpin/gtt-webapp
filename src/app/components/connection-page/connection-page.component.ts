@@ -4,6 +4,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UserInfos } from 'src/app/models/UserInfos';
 import { AuthService } from 'src/app/services/auth/auth.service';
+declare const google: any;
+
 
 @Component({
   selector: 'app-connection-page',
@@ -47,8 +49,7 @@ export class ConnectionPageComponent {
           localStorage.setItem('user_name', `${userInfo.first_name} ${userInfo.last_name}`);
           localStorage.setItem('is_admin', `${userInfo.is_admin}`);
           localStorage.setItem('id_user', `${userInfo.id_user}`);
-          localStorage.setItem('newTitle', `saisie des temps`)
-
+          localStorage.setItem('newTitle', `saisie des temps`);
           this.isLoading = false;
           this.router.navigate(['/accueil/saisie-des-temps']);
         },
@@ -59,6 +60,38 @@ export class ConnectionPageComponent {
         }
       });
     }
+  }
+
+  ngAfterViewInit(): void {
+    // Initialize the Google Identity Services
+    google.accounts.id.initialize({
+      client_id: '800152835915-atf9657e73dip71f7velahqvn3rhf1k0.apps.googleusercontent.com',                   
+      callback: this.handleCredentialResponse.bind(this),
+      auto_select: false,
+    });
+
+    // Render the Google sign-in button into a container element
+    google.accounts.id.renderButton(
+      document.getElementById("google-signin-button"),
+      { theme: "outline", size: "large" }
+    );
+  }
+
+  handleCredentialResponse(response: any): void {
+    console.log("Encoded JWT ID token:", response.credential);
+
+    // Use the AuthService to handle login
+    this.authService.loginWithGoogle(response.credential)
+      .subscribe({
+        next: () => {
+          // On successful authentication, navigate to the protected home route
+          this.router.navigate(['/accueil/saisie-des-temps']);
+        },
+        error: err => {
+          console.error('Google login failed:', err);
+          // Handle errors (show a message, etc.)
+        }
+      });
   }
 
   showToast(message: string, isError: boolean = false) {

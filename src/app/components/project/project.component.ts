@@ -19,7 +19,7 @@ export class ProjectComponent implements OnInit{
     private readonly snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any) {
       this.projectForm = this.fb.group(
         {
-          projectId: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], 
+          code: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], 
           projectName: ['', Validators.required],
           startDate: ['', Validators.required],
           endDate: ['', Validators.required]
@@ -32,7 +32,7 @@ export class ProjectComponent implements OnInit{
       if (this.data?.project) {
         this.isEditMode = true;
         this.projectForm.patchValue({
-          projectId: this.data.project.code,
+          code: this.data.project.code,
           projectName: this.data.project.name,
           startDate: this.data.project.start_date,
           endDate: this.data.project.end_date
@@ -54,7 +54,7 @@ export class ProjectComponent implements OnInit{
     if (this.projectForm.valid) {
       this.isSubmitting = true;
       const projectData : any = {
-        code: this.projectForm.value.projectId,
+        code: this.projectForm.value.code,
         name: this.projectForm.value.projectName,
         start_date: this.projectForm.value.startDate,
         end_date: this.projectForm.value.endDate
