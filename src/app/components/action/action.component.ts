@@ -53,8 +53,6 @@ export class ActionComponent implements OnInit {
         id_project: this.id_project
       };
 
-      console.error("actionData", actionData)
-
       if (this.isEditMode && this.id_action) {
         this.projectActionsService.updateActionById(this.id_action, actionData).subscribe({
           next: () => {
