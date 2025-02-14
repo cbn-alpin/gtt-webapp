@@ -412,5 +412,15 @@ export class CalendarComponent implements OnInit {
   toLuxonDate(date: Date): DateTime {
     return DateTime.fromJSDate(date);
   }
+  onFocus(inputRef: HTMLInputElement) {
+    if (inputRef.value === '0') {
+      inputRef.value = '';
+    }
+  }
 
+  onBlur(inputRef: HTMLInputElement) {
+    if (inputRef.value === '') {
+      inputRef.value = '0'; 
+    }
+  }
 }
