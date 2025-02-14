@@ -36,13 +36,12 @@ import { TimeSheetComponent } from './components/TimeSheet/TimeSheet.component';
 import { PopupMessageComponent } from './popup-message/popup-message.component';
 import { DownloadPageComponent } from './components/download-page/download-page.component';
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
-import { TokenInterceptor } from './components/connection-page/token.interceptor';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { ListUsersComponent } from './components/list-users/list-users.component';
 import { ModifyPasswordComponent } from './components/modify-password/modify-password.component';
 import { DownloadExpensesComponent } from './components/download-expenses/download-expenses.component';
-import { ExpensesComponent } from './components/expenses/expenses.component';
+import { ListExpensesComponent } from './components/list-expenses/list-expenses.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +60,8 @@ import { ExpensesComponent } from './components/expenses/expenses.component';
     ListUsersComponent,
     ModifyPasswordComponent,
     DownloadExpensesComponent,
-    ExpensesComponent
+    ListExpensesComponent,
+  
   ],
   imports: [
     BrowserModule,
@@ -92,7 +92,6 @@ import { ExpensesComponent } from './components/expenses/expenses.component';
     MatDividerModule
 ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })
