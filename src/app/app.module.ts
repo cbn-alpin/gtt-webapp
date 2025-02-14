@@ -36,7 +36,6 @@ import { TimeSheetComponent } from './components/TimeSheet/TimeSheet.component';
 import { PopupMessageComponent } from './popup-message/popup-message.component';
 import { DownloadPageComponent } from './components/download-page/download-page.component';
 import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
-import { TokenInterceptor } from './components/connection-page/token.interceptor';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { ListUsersComponent } from './components/list-users/list-users.component';
@@ -92,7 +91,6 @@ import { ExpensesComponent } from './components/expenses/expenses.component';
     MatDividerModule
 ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })
