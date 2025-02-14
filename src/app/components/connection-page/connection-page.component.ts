@@ -50,10 +50,8 @@ export class ConnectionPageComponent {
           localStorage.setItem('is_admin', `${userInfo.is_admin}`);
           localStorage.setItem('id_user', `${userInfo.id_user}`);
           localStorage.setItem('newTitle', `saisie des temps`);
-          console.error("courant user:", userInfo.is_admin);
           this.isLoading = false;
           this.router.navigate(['/accueil/saisie-des-temps']);
-          console.error("courant user après redirection:", userInfo.is_admin);
         },
         error: (error) => {
           this.errorMessage = 'Échec de connexion. Vérifiez vos identifiants.';
