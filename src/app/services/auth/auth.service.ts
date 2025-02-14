@@ -16,7 +16,7 @@ interface AuthResponse {
 
 export class AuthService {
   baseUrl = environment.apiUrl;
-
+  
   private getHttpOptions() {
     const token = localStorage.getItem('access_token'); 
     
@@ -55,7 +55,7 @@ export class AuthService {
     //Redirige vers la page de connexion
     this.router.navigate(['/connexion']);
   }
-
+  
   get token(): string | null {
     return this._token;
   }
