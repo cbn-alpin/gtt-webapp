@@ -37,6 +37,7 @@ export class ListUsersComponent implements OnInit, AfterViewInit {
           setTimeout(() => { 
             this.dataSource.data = users;
             this.isLoadingResults = false;
+            console.error("list users:", users);
     
             setTimeout(() => { 
               this.dataSource.paginator = this.paginator;   
@@ -56,15 +57,10 @@ export class ListUsersComponent implements OnInit, AfterViewInit {
     }
 
     selectUser(userInfo: UserInfos) {
-      console.log("Utilisateur sélectionné :", userInfo);
-
-      // Mise à jour du localStorage
       localStorage.setItem('user_email', userInfo.email);
       localStorage.setItem('user_name', `${userInfo.first_name} ${userInfo.last_name}`);
       localStorage.setItem('is_admin', `${userInfo.is_admin}`);
       localStorage.setItem('id_user', `${userInfo.id_user}`);
-
-      // Recharger la page pour appliquer les changements
       window.location.reload();
     }
 }

@@ -32,12 +32,10 @@
         <div class="password-container" (click)="$event.stopPropagation()">
           <mat-icon class="menu-icon" (click)="togglePasswordChange($event)">chevron_left</mat-icon>
           <mat-divider></mat-divider>
-    
-          <app-modify-password></app-modify-password>
+          <app-modify-password (passwordUpdated)="togglePasswordChange($event)"></app-modify-password>
         </div>
       </ng-container>
       
-
       <ng-container *ngIf="showUsers">
         <div class="list-users-container" (click)="$event.stopPropagation()">
            <mat-icon class="menu-icon" (click)="toggleUserList($event)">chevron_left</mat-icon>
