@@ -18,13 +18,13 @@ FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built Angular files from the previous stage
-COPY --from=build /app/dist/angular-gtt-webapp /usr/share/nginx/html
+COPY --from=build /app/dist/gtt-webapp /usr/share/nginx/html
 
 # Copy the config.json file so it can be modified later
-COPY src/assets/config.json /usr/share/nginx/html/assets/config.json
+# COPY src/assets/config.json /usr/share/nginx/html/assets/config.json
 
-# Expose port 8080
-EXPOSE 8080
+# Expose port 80
+EXPOSE 80
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

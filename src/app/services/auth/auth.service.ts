@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  baseUrl = 'http://127.0.0.1:5000/api';
+  baseUrl = 'http://127.0.0.1:5001/api';
 
   httpOptions = {
     headers: new HttpHeaders({

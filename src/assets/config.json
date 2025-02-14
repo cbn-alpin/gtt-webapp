@@ -1,6 +1,0 @@
-{
-    "apiUrl": "http://localhost:5001/api",
-    "featureFlags": {
-      "enableNewUI": true
-    }
-  }
