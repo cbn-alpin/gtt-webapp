@@ -50,10 +50,10 @@ export class ModifyPasswordComponent {
     this.userService.updateUserById(userId,passwordData).subscribe({
       next: () => {
         this.isPasswordChanged = true;
+        this.passwordUpdated.emit(new MouseEvent('click'));
         this.showToast(" Mot de passe changé avec succès ! ✅", false);
         setTimeout(() => {
           this.isPasswordChanged = false;
-          this.passwordUpdated.emit();
         }, 3000);
         this.passwordForm.reset();
         Object.keys(this.passwordForm.controls).forEach((key) => {
