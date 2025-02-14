@@ -1,0 +1,96 @@
+.download-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start; 
+    width: 100%; 
+    min-height: 24em;
+    max-height: 24em; 
+}
+.table-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-width: 50em;
+    min-width: 30em;
+    position: relative;
+    min-height: 24em;
+    max-height: 24em;
+}
+
+.mat-mdc-form-field {
+    font-size: 14px;
+    width: 50em;
+}
+
+.loading-shade-download {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7); 
+    border-radius: 8px;
+}
+
+.selection-cell{
+    width: 8em; 
+    max-width: 8em;
+}
+
+.code-cell{
+    width: 11em; 
+    max-width: 11em;
+}
+
+.sticky-paginator {
+    position: sticky;
+    bottom: 0;
+    background: white; 
+    z-index: 2; 
+    border-top: 1px solid #e0e0e0; 
+}
+
+::ng-deep .mat-mdc-checkbox.mat-accent {
+    --mdc-checkbox-selected-icon-color: #2f4050 !important;
+    --mdc-checkbox-selected-hover-icon-color: #2f4050 !important;
+    --mdc-checkbox-selected-focus-icon-color: #2f4050 !important;
+    --mdc-checkbox-selected-pressed-icon-color: #2f4050 !important;
+}
+
+::ng-deep .mat-mdc-checkbox.mat-accent .mdc-checkbox--selected~.mdc-checkbox__ripple {
+    background-color: rgba(47, 64, 80, 0.3) !important;
+}
+
+.download-project-button {
+    display: flex;
+    height: 24em; 
+    align-items: flex-end; 
+}
+
+.download-project{
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    background-color: #2f4050;
+    border-radius: 5px;
+    padding: 10px 20px;
+    width: 14em;
+}
+
+.download-project:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: #666666;
+  
+      &:hover {
+        background-color: #cccccc;
+        color: #666666;
+      }
+  }
+  

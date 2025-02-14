@@ -43,7 +43,6 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.fetchProjects();
-    console.error('utilisateur courant', this.isAdmin);
   }
 
   ngAfterViewInit() {
@@ -117,7 +116,6 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
             this.fetchProjects();
           },
           error: (error) => {
-            console.error('Erreur lors de la suppression du projet', error);
             this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);
           }
         });
@@ -155,7 +153,6 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
             this.fetchProjects();
           },
           error: (error) => {
-            console.error('Erreur lors de l\'archivage du projet', error);
             this.showToast(`Erreur : ${error.message || 'Archivage impossible'} ❌`, true);
           }
         });
@@ -175,7 +172,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
   
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
-        this.fetchProjects(); // Rafraîchir la liste après la modification
+        this.fetchProjects();
       }
     });
   }
