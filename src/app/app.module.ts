@@ -41,7 +41,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { ListUsersComponent } from './components/list-users/list-users.component';
 import { ModifyPasswordComponent } from './components/modify-password/modify-password.component';
 import { DownloadExpensesComponent } from './components/download-expenses/download-expenses.component';
-import { ExpensesComponent } from './components/expenses/expenses.component';
+import { ListExpensesComponent } from './components/list-expenses/list-expenses.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +60,8 @@ import { ExpensesComponent } from './components/expenses/expenses.component';
     ListUsersComponent,
     ModifyPasswordComponent,
     DownloadExpensesComponent,
-    ExpensesComponent
+    ListExpensesComponent,
+  
   ],
   imports: [
     BrowserModule,
