@@ -7,9 +7,10 @@ import { environment } from 'src/app/environments/environment';
   providedIn: 'root'
 })
 export class UserActionService {
+
   baseUrl = environment.apiUrl;
 
-  private getHttpOptions() {
+   private getHttpOptions() {
     const token = localStorage.getItem('access_token'); 
     
     return {
@@ -24,7 +25,7 @@ export class UserActionService {
 
   createUserAction(user_id: number, action_id: number): Observable<any> {
     const url = `${this.baseUrl}/user/${user_id}/action/${action_id}`; 
-    return this.http.post(url, this.getHttpOptions());
+    return this.http.post(url, {}, this.getHttpOptions());
   }
 
    deleteUserAction(user_id: number, action_id: number): Observable<any> {
