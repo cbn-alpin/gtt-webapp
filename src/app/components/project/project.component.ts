@@ -114,12 +114,18 @@ export class ProjectComponent implements OnInit{
   }
 
   autocompleteProjectName(code: string) {
-    if (!code) return;
+    if (!code) {
+      this.projectForm.patchValue({ projectName: '' }); 
+      return;
+    }
     // find the same project code
     const foundProject = this.projectsGefiproj.find(proj => proj.code_p == code);
     if (foundProject) {
       // Auto-complete the project name
       this.projectForm.patchValue({ projectName: foundProject.nom_p });
+    }
+    else {
+      this.projectForm.patchValue({ projectName: '' });
     }
   }
 

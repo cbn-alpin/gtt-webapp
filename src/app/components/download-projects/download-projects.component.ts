@@ -91,17 +91,17 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
       console.error('Aucun projet sélectionné');
       return;
     }
-    const formattedData = this.formatProjectActionsForCSV(this.selectedProjectData.actions);  
+    const formattedData = this.formatProjectActionsForCSV(this.selectedProjectData.time_entries);  
     this.downloadServivce.downloadCSV(formattedData, exportFileName);
   }
 
   formatProjectActionsForCSV(data: any[]): any[] {
     return data.map(row => ({
-      'PRENOM NOM': row.user_name, 
-      'Date de début': row.date_start, 
-      'Date de fin': row.date_end, 
-      'Actions': `${row.numero_action}———${row.name_action}`, 
-      'Nombre d’heures réalisés': row.total_hours.toFixed(2) 
+      'PRENOM': row.first_name, 
+      'NOM': row.last_name, 
+      'Date': row.date, 
+      'Actions': `${row.numero_action}——${row.name_action}`, 
+      'Nombre d’heures réalisés': row.duration.toFixed(2) 
     }));
   }
 }
