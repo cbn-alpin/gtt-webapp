@@ -27,6 +27,7 @@ export class TravelExpenseComponent implements OnInit {
   isEditing: boolean = false;
   travelId: number | null = null;
   savedProjectCode : any;
+  list_mission_expenses : any[] = []; 
   
 
   constructor(private fb: FormBuilder, private municipalityService : MunicipalityService, 
@@ -149,14 +150,15 @@ export class TravelExpenseComponent implements OnInit {
       if (this.isEditing && this.travelId) {
         this.expenseService.updateUserTravelExpense(this.travelId, userId, travelData).subscribe({
           next: (response) => {
-            const createdTravelId = response.id_travel; // Supposons que l'API retourne l'ID
-            this.shareDataService.setTravelId(createdTravelId);
+           
             this.shareDataService.validateTravelExpense()
+
             this.router.navigate(['accueil/liste-frais-de-deplacement/']);
+            
             setTimeout(() => {
               this.showToast(`frais de déplacement mis à jour avec succès. 🎉`);
-            }, 100);
-;
+            }, 1000);
+
           },
           error: (err) => this.showToast(`Erreur lors de mise à jour du frais de déplacement.`, true),
         });
@@ -165,11 +167,9 @@ export class TravelExpenseComponent implements OnInit {
    
         this.expenseService.createTravelExpense(userId,this.projectId, travelData)
         .subscribe({
-          next: () => {
+          next: (travelexpense) => {
+            localStorage.setItem('id_travel', travelexpense.id_travel);
             this.router.navigate(['accueil/liste-frais-de-deplacement/']);
-            setTimeout(() => {
-              this.showToast(`frais de déplacement créé avec succès. 🎉`);
-            }, 100);
           },
           error: (error) => {
             console.log('Erreur lors de la création du frais de déplacement.', error);
@@ -228,6 +228,8 @@ export class TravelExpenseComponent implements OnInit {
     if (state.travelData) {
       this.isEditing = true;
       this.travelId = state.travelData.id_travel; 
+      this.list_mission_expenses = state.travelData.list_expenses;
+      localStorage.setItem('id_travel', state.travelData.id_travel);
 
       const formatDateForInput = (dateString: string) => {
         const [day, month, year] = dateString.split('/');

@@ -181,6 +181,4 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
     });
   }
 
-   
-
 }
