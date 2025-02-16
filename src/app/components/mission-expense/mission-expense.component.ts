@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-mission-expense',
@@ -10,13 +11,25 @@ export class MissionExpenseComponent {
   missionForm: FormGroup;
   isSubmitting = false;
 
-  constructor(private readonly fb: FormBuilder){
+  constructor(private readonly fb: FormBuilder, private readonly dialogRef: MatDialogRef<MissionExpenseComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { id_travel: number } ){
      this.missionForm = this.fb.group(
           {
             object: [''], 
             comment: [''],
             amount: [''],
+            id_travel: [this.data.id_travel] // Stocke l'ID ici
           },
         );
+  }
+
+  onClose(): void {
+    this.dialogRef.close();
+  }
+
+  onSubmit(): void {
+    if (this.missionForm.valid) {
+      this.dialogRef.close(this.missionForm.value);
+    }
   }
 }

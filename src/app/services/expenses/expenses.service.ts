@@ -28,9 +28,24 @@ export class ExpensesService {
     return this.http.post(url, travelData, this.getHttpOptions());
   }
 
-  getUserTravelsExpenses(userId: number): Observable<any> {
+  getUserAllTravelsExpenses(userId: number): Observable<any> {
     const url = `${this.baseUrl}/travels/user/${userId}`;
     return this.http.get(url, this.getHttpOptions());
+  }
+
+  updateUserTravelExpense(travelId: number, userId: number, travelData: any): Observable<any> {
+    const url = `${this.baseUrl}/travels/${travelId}/user/${userId}`;
+    return this.http.put(url, travelData, this.getHttpOptions());
+  }  
+
+  createMissionExpense( missionData: any): Observable<any> {
+    const url = `${this.baseUrl}/expenses`; 
+    return this.http.post(url, missionData, this.getHttpOptions());
+  }
+
+  deleteUserTravelExpense(travelId: number, userId: number): Observable<any> {
+    const url = `${this.baseUrl}/travels/${travelId}/user/${userId}`; 
+    return this.http.delete(url, this.getHttpOptions());
   }
 
 }
