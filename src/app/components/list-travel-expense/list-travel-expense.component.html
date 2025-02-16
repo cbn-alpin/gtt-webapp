@@ -1,7 +1,7 @@
 <div class="actions-space">
     <div class="actions-container">
-      <button mat-elevation-z8 class="add-expense" (click)="openAddExpenseDialog()">
-       Ajouter une note
+      <button mat-elevation-z8 class="add-expense" (click)="createExpense()">
+       Ajouter une note de frais
       </button>
     </div>
 </div>
@@ -14,61 +14,72 @@
   <ng-container *ngIf="dataSource.data.length > 0; else emptyState">
     <mat-form-field>
       <mat-label>Rechercher</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Saisir nom du projet" #input>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Saisir..." #input>
     </mat-form-field>
-
+    <div class="table-wrapper">
     <table mat-table
       [dataSource]="dataSource" multiTemplateDataRows matSort>
 
       <ng-container matColumnDef="date">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-        <td mat-cell *matCellDef="let element"> {{element.start_date | date:'dd/MM/yyyy'}} </td>
+        <td mat-cell *matCellDef="let element"> {{ element.start_date.split(' ')[0] }} </td>
       </ng-container>
 
       <ng-container matColumnDef="project">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Code projet </th>
-        <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+        <th mat-header-cell *matHeaderCellDef> Code projet </th>
+        <td mat-cell *matCellDef="let element"> {{element.project_code }} </td>
       </ng-container>
 
       <ng-container matColumnDef="purpose">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Objet</th>
+        <th mat-header-cell *matHeaderCellDef> Objet</th>
         <td mat-cell *matCellDef="let element"> {{element.purpose}} </td>
       </ng-container>
 
       <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Montant état frais </th>
-        <td mat-cell *matCellDef="let element"> {{element.totalAmount}} </td>
+        <th mat-header-cell *matHeaderCellDef> Montant état frais </th>
+        <td mat-cell *matCellDef="let element"> {{ element.total_expense | number: '1.2-2' }} €</td>
       </ng-container>
 
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Statut de traitement </th>
-        <td mat-cell *matCellDef="let element"> {{element.totalAmount}} </td>
+      <ng-container matColumnDef="status" *ngIf="isAdmin">
+        <th mat-header-cell *matHeaderCellDef>Statut de traitement</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-form-field appearance="outline" class="status-select">
+            <mat-select 
+              [value]="element.status"
+              (selectionChange)="updateStatus(element, $event.value)"
+              [ngClass]="element.status?.toLowerCase().replace(' ', '-')">
+              <mat-option [value]="element.status">{{element.status}}</mat-option>
+              <mat-option *ngFor="let status of statusOptions" [value]="status" 
+                [hidden]="status === element.status">
+                {{status}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status" *ngIf="!isAdmin">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let element"></td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef aria-label="row actions">Actions</th>
         <td mat-cell *matCellDef="let element">
-                <mat-icon class="project-action" style="margin-right: 10px;">edit</mat-icon>
-                <mat-icon class="project-action">delete</mat-icon>
+                <mat-icon class="expense-action" style="margin-right: 10px;" (click)="editExpense(element)">edit</mat-icon>
+                <mat-icon class="expense-action" (click)="deleteTravelExpense('supprimer ce frais de déplacement', element.id_travel)">delete</mat-icon>
         </td>
       </ng-container>
-
-      
-      <!-- <a class="project-action"
-      (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
-        <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
-        <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
-      </a> -->
-
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="element-row"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[10, 20, 30]"
+    <!-- <mat-paginator [pageSizeOptions]="[10, 20, 30]"
                     showFirstLastButtons
                     aria-label="Select page of projects elements"
                     class="sticky-paginator">
-    </mat-paginator>
+    </mat-paginator> -->
+    </div>
   </ng-container>
 
 

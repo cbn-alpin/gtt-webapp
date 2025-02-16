@@ -115,8 +115,8 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       if (result) {
         this.projectService.deleteProjectById(projectId).subscribe({
           next: () => {
-            this.showToast(`Projet supprimé avec succès ✅`);
             this.fetchProjects();
+            this.showToast(`Projet supprimé avec succès ✅`);
           },
           error: (error) => {
             this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);

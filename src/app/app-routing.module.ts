@@ -3,11 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { ConnectionPageComponent } from './components/connection-page/connection-page.component';
 import { HomeComponent } from './components/home/home.component';
 import { ListProjectsComponent } from './components/list-projects/list-projects.component';
-import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
 import { AuthGuard } from './guards/auth.guard';
 import { TimeSheetComponent } from './components/TimeSheet/TimeSheet.component';
 import { TravelExpenseComponent } from './components/travel-expense/travel-expense.component';
 import { ListTravelExpenseComponent } from './components/list-travel-expense/list-travel-expense.component';
+import { DownloadPageComponent } from './components/download-page/download-page.component';
 
 const routes: Routes = [
   { path: 'connexion', component: ConnectionPageComponent },
@@ -19,7 +19,7 @@ const routes: Routes = [
       { path: 'saisie-des-temps', component: TimeSheetComponent },
       { path: 'liste-des-projets', component: ListProjectsComponent },
       { path: 'liste-frais-de-deplacement', component: ListTravelExpenseComponent },
-      { path: 'telechargement', component: DownloadProjectsComponent },
+      { path: 'telechargement', component: DownloadPageComponent },
       { path: 'frais-de-deplacement', component: TravelExpenseComponent },
       { path: '**', redirectTo: 'liste-des-projets', pathMatch: 'full' },
     ]
