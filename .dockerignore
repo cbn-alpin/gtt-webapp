@@ -1,0 +1,24 @@
+# Exclude node modules from host (they'll be reinstalled in the container)
+node_modules
+**/node_modules
+
+# Exclude Angular build output and other build artifacts
+coverage
+tmp
+out-tsc
+
+# Exclude IDE and editor files
+.vscode
+.idea
+
+# Exclude OS-specific files
+.DS_Store
+Thumbs.db
+
+# Exclude Git files
+.git
+.gitignore
+
+# Exclude environment files (if not needed in the build)
+.env
+.env.*.local

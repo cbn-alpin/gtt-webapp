@@ -9,7 +9,7 @@ RUN npm install
 
 # Copy the rest of the application files and build
 COPY . .
-RUN npm run build --configuration=production
+RUN npm run build --configuration=development
 
 
 # Stage 2: Serve with Nginx
@@ -24,7 +24,7 @@ COPY --from=build /app/dist/gtt-webapp /usr/share/nginx/html
 # COPY src/assets/config.json /usr/share/nginx/html/assets/config.json
 
 # Expose port 80
-EXPOSE 80
+EXPOSE 8080
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
