@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MissionExpense } from 'src/app/models/MissionExpense';
@@ -14,20 +14,25 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./list-mission-expense.component.scss']
 })
 export class ListMissionExpenseComponent {
-  displayedColumns: string[] = ['object','comment', 'amount'];
+  @Input() list_expenses: MissionExpense[] = [];
+  
+  displayedColumns: string[] = ['name','comment', 'amount'];
   dataSource = new MatTableDataSource<MissionExpense>([]);
-  id_travel: number | null = null;
+  id_travel = Number(localStorage.getItem('id_travel'));
+  
 
   constructor(private dialog: MatDialog,  private shareDataService : ShareDataService,
     private expenseService: ExpensesService, private readonly snackBar: MatSnackBar) {
-    this.shareDataService.travelId$.subscribe(id => {
-      this.id_travel = id; 
-    });
+      this.dataSource.data = this.list_expenses;
 
     this.shareDataService.travelExpenseValidated$.subscribe(() => {
       this.sendAllExpensesToAPI();
     });
   }
+
+  
+  
+  
 
   openAddExpenseDialog(): void {
     const dialogRef = this.dialog.open(MissionExpenseComponent, {
@@ -58,7 +63,6 @@ export class ListMissionExpenseComponent {
       responses => {
         console.log('Toutes les dépenses ont été envoyées avec succès:', responses);
         setTimeout(() => {
-          this.showToast(`frais de déplacement mis à jour avec succès. 🎉`);
           this.dataSource.data = [];
         }, 100);
       },
