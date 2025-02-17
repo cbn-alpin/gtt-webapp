@@ -19,6 +19,7 @@ export class ListMissionExpenseComponent implements OnChanges {
   displayedColumns: string[] = ['name','comment', 'amount'];
   dataSource = new MatTableDataSource<MissionExpense>([]);
   id_travel = Number(localStorage.getItem('id_travel'));
+  pendingExpenses: any[] = [];
   
 
   constructor(private dialog: MatDialog,  private shareDataService : ShareDataService,
@@ -45,30 +46,37 @@ export class ListMissionExpenseComponent implements OnChanges {
       if (result) {
         result.id_travel = this.id_travel;
         this.dataSource.data = [...this.dataSource.data, result];
-  
-        // Envoyer toutes les dépenses à l'API après chaque ajout
-        this.sendAllExpensesToAPI();
+
+        // Ajouter la dépense au tableau temporaire
+        this.pendingExpenses.push(result);
       }
     });
   }
   
 
+  // Fonction pour envoyer toutes les dépenses à l'API après tous les ajouts
   sendAllExpensesToAPI(): void {
-    if (this.dataSource.data.length === 0) return;
-  
-    const expenseRequests = this.dataSource.data.map(expense => 
+    if (this.pendingExpenses.length === 0) {
+      this.showToast('Aucune dépense à envoyer.', true);
+      return;
+    }
+
+    const expenseRequests = this.pendingExpenses.map(expense => 
       this.expenseService.createMissionExpense(expense)
     );
-  
+
     forkJoin(expenseRequests).subscribe(
       responses => {
         console.log('Toutes les dépenses ont été envoyées avec succès:', responses);
-        setTimeout(() => {
-          this.dataSource.data = [];
-        }, 100);
+        this.showToast('Frais de déplacement créé avec succès.', false);
+
+        // Une fois envoyées, videz le tableau temporaire et le tableau principal.
+        this.pendingExpenses = [];
+        this.dataSource.data = [];
       },
       error => {
         console.error('Erreur lors de l\'envoi des dépenses:', error);
+        this.showToast('Erreur lors de l\'envoi des dépenses.', true);
       }
     );
   }

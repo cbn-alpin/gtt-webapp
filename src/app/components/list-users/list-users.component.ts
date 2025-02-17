@@ -37,9 +37,7 @@ export class ListUsersComponent implements OnInit, AfterViewInit {
           setTimeout(() => { 
             this.dataSource.data = users;
             this.isLoadingResults = false;
-            console.error("list users:", users);
-            console.error("isAdmin after changing user: ", localStorage.getItem('is_admin'))
-    
+            
             setTimeout(() => { 
               this.dataSource.paginator = this.paginator;   
             }, 100);

@@ -169,6 +169,7 @@ export class TravelExpenseComponent implements OnInit {
         .subscribe({
           next: (travelexpense) => {
             localStorage.setItem('id_travel', travelexpense.id_travel);
+            this.shareDataService.validateTravelExpense()
             this.router.navigate(['accueil/liste-frais-de-deplacement/']);
           },
           error: (error) => {
@@ -229,7 +230,6 @@ export class TravelExpenseComponent implements OnInit {
       this.isEditing = true;
       this.travelId = state.travelData.id_travel; 
       this.list_mission_expenses = state.travelData.list_expenses;
-      console.error("traveldate à envoyé :", this.list_mission_expenses); 
       localStorage.setItem('id_travel', state.travelData.id_travel);
 
       const formatDateForInput = (dateString: string) => {
@@ -265,7 +265,6 @@ export class TravelExpenseComponent implements OnInit {
         comments: state.travelData.comment
       });
       this.savedProjectCode = state.travelData.project_code;
-      console.error("traveldate :", state.travelData.list_expenses ); 
     }
   }
   
