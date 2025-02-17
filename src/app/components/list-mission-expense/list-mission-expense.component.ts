@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MissionExpense } from 'src/app/models/MissionExpense';
@@ -13,8 +13,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './list-mission-expense.component.html',
   styleUrls: ['./list-mission-expense.component.scss']
 })
-export class ListMissionExpenseComponent {
-  @Input() list_expenses: MissionExpense[] = [];
+export class ListMissionExpenseComponent implements OnChanges {
+  @Input() list_expenses: any[] = [];
   
   displayedColumns: string[] = ['name','comment', 'amount'];
   dataSource = new MatTableDataSource<MissionExpense>([]);
@@ -23,16 +23,17 @@ export class ListMissionExpenseComponent {
 
   constructor(private dialog: MatDialog,  private shareDataService : ShareDataService,
     private expenseService: ExpensesService, private readonly snackBar: MatSnackBar) {
-      this.dataSource.data = this.list_expenses;
 
     this.shareDataService.travelExpenseValidated$.subscribe(() => {
       this.sendAllExpensesToAPI();
     });
   }
 
-  
-  
-  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['list_expenses'] && changes['list_expenses'].currentValue) {
+      this.dataSource.data = [...this.list_expenses];
+    }
+  }
 
   openAddExpenseDialog(): void {
     const dialogRef = this.dialog.open(MissionExpenseComponent, {
