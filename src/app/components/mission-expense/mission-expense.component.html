@@ -1,0 +1,27 @@
+<div class="form-container">
+    <button class="close-btn">✖</button>
+    <h2 class="form-title">Ajouter un frais de mission</h2>
+    <form [formGroup]="missionForm" >
+      <div class="form-field">
+        <label class="form-label" for="name">Objet</label>
+        <input class="form-input" id="name" type="text" step="0.01" formControlName="name"/>
+      </div>
+  
+      <div class="form-field">
+        <label class="form-label" for="comment">Commentaire frais mission</label>
+        <input class="form-input" id="comment" type="text" formControlName="comment" />
+      </div>
+  
+      <div class="form-field">
+        <label class="form-label" for="amount">Montant</label>
+        <input class="form-input" id="amount" type="number"  formControlName="amount" />
+      </div>
+    
+      <div class="form-actions">
+        <button class="validate-btn" type="button" (click)="onSubmit()" [disabled]="!missionForm.valid || isSubmitting">
+          {{ isSubmitting ? 'Création...' : 'Ajouter' }}
+        </button>        
+      </div>      
+    </form>
+</div>
+  

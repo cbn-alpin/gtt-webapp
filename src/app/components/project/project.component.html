@@ -4,9 +4,9 @@
     <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
 
       <div class="form-field">
-        <label class="form-label" for="projectId">N° projet :</label>
-        <input class="form-input" id="projectId" type="number" formControlName="projectId" placeholder="(uniquement des chiffres)" />
-        <mat-error *ngIf="projectForm.get('projectId')?.invalid && projectForm.get('projectId')?.touched">
+        <label class="form-label" for="code">N° projet :</label>
+        <input class="form-input" id="code" type="number" formControlName="code" placeholder="(uniquement des chiffres)" />
+        <mat-error *ngIf="projectForm.get('code')?.invalid && projectForm.get('code')?.touched">
           Veuillez saisir un numéro de projet valide.
         </mat-error>
       </div>

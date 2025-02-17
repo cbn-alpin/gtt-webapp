@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
+
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
@@ -12,6 +13,7 @@ export class ProjectComponent implements OnInit{
   projectForm: FormGroup;
   isSubmitting = false;
   isEditMode = false;
+  projectsGefiproj: any[] = [];
 
   constructor(private readonly fb: FormBuilder , 
     private readonly dialogRef: MatDialogRef<ProjectComponent>, 
@@ -19,7 +21,7 @@ export class ProjectComponent implements OnInit{
     private readonly snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any) {
       this.projectForm = this.fb.group(
         {
-          projectId: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], 
+          code: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], 
           projectName: ['', Validators.required],
           startDate: ['', Validators.required],
           endDate: ['', Validators.required]
@@ -32,13 +34,28 @@ export class ProjectComponent implements OnInit{
       if (this.data?.project) {
         this.isEditMode = true;
         this.projectForm.patchValue({
-          projectId: this.data.project.code,
+          code: this.data.project.code,
           projectName: this.data.project.name,
           startDate: this.data.project.start_date,
           endDate: this.data.project.end_date
         });
       }
-    }
+
+      // Retrieve list projects for auto-completion
+      this.projectService.getGefiprojAllProjects().subscribe({
+        next: (projects) => {
+          this.projectsGefiproj = projects;
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement des projets de Gefiproj:', error);
+        }
+      });
+
+      // listen changements of "code" field
+      this.projectForm.get('code')?.valueChanges.subscribe(value => {
+        this.autocompleteProjectName(value);
+      });
+  }
 
   dateValidation(group: AbstractControl) {
     const startDate = group.get('startDate')?.value;
@@ -54,7 +71,7 @@ export class ProjectComponent implements OnInit{
     if (this.projectForm.valid) {
       this.isSubmitting = true;
       const projectData : any = {
-        code: this.projectForm.value.projectId,
+        code: this.projectForm.value.code,
         name: this.projectForm.value.projectName,
         start_date: this.projectForm.value.startDate,
         end_date: this.projectForm.value.endDate
@@ -94,6 +111,22 @@ export class ProjectComponent implements OnInit{
 
   onClose(): void {
     this.dialogRef.close();
+  }
+
+  autocompleteProjectName(code: string) {
+    if (!code) {
+      this.projectForm.patchValue({ projectName: '' }); 
+      return;
+    }
+    // find the same project code
+    const foundProject = this.projectsGefiproj.find(proj => proj.code_p == code);
+    if (foundProject) {
+      // Auto-complete the project name
+      this.projectForm.patchValue({ projectName: foundProject.nom_p });
+    }
+    else {
+      this.projectForm.patchValue({ projectName: '' });
+    }
   }
 
   showToast(message: string, isError: boolean = false) {

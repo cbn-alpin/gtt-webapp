@@ -64,12 +64,15 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       next: (projects) => {
         setTimeout(() => {
           const filteredProjects = projects
-            .filter((p: Project) => p.is_archived === this.showArchived)
-            .sort((a: Project, b: Project) => {
-              const codeA = Number(a.code) || 0;
-              const codeB = Number(b.code) || 0;
-              return codeB - codeA;
-            });
+          .filter((p: Project) => 
+            p.is_archived === this.showArchived && 
+            p.id_project !== 0
+          )
+          .sort((a: Project, b: Project) => {
+            const codeA = Number(a.code) || 0;
+            const codeB = Number(b.code) || 0;
+            return codeB - codeA;
+          });
 
           this.dataSource.data = filteredProjects;
           this.isLoadingResults = false;
@@ -112,8 +115,8 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       if (result) {
         this.projectService.deleteProjectById(projectId).subscribe({
           next: () => {
-            this.showToast(`Projet supprimé avec succès ✅`);
             this.fetchProjects();
+            this.showToast(`Projet supprimé avec succès ✅`);
           },
           error: (error) => {
             this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);

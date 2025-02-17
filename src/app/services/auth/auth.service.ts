@@ -55,8 +55,7 @@ export class AuthService {
     //Redirige vers la page de connexion
     this.router.navigate(['/connexion']);
   }
-
-
+  
   get token(): string | null {
     return this._token;
   }

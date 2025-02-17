@@ -1,0 +1,209 @@
+
+<form [formGroup]="expenseForm">
+    <div class="grid-container">
+      <!-- Card 1: General Information -->
+      <mat-card class="expense-card">
+        <mat-card-title>Informations</mat-card-title>
+        <mat-card-content>
+      
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label for="projectCode">Code projet</mat-label>
+                <input matInput id="projectCode" type="number" formControlName="projectCode">
+              </mat-form-field>
+      
+              <mat-form-field appearance="outline">
+                <mat-label for="projectName">Nom projet</mat-label>
+                <input matInput formControlName="projectName">
+              </mat-form-field>
+            </div>
+      
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label for="purpose">Objet</mat-label>
+                <input matInput formControlName="purpose">
+              </mat-form-field>
+            </div>
+             
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label for="startDate">Date début</mat-label>
+                <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+                <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+              </mat-form-field>
+      
+              <mat-form-field appearance="outline">
+                <mat-label for="startTime">Heure début</mat-label>
+                <input matInput type="time" formControlName="startTime">
+              </mat-form-field>
+      
+              <mat-form-field appearance="outline">
+                <mat-label for="startResidence">Résidence début</mat-label>
+                <mat-select formControlName="startResidence">
+                  <mat-option *ngFor="let option of residenceOptions" [value]="option">
+                    {{ option }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+      
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label for="endDate">Date fin</mat-label>
+                <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+                <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+              </mat-form-field>
+      
+              <mat-form-field appearance="outline">
+                <mat-label for="endTime">Heure fin</mat-label>
+                <input matInput type="time" formControlName="endTime">
+              </mat-form-field>
+      
+              <mat-form-field appearance="outline">
+                <mat-label for="endResidence">Résidence retour</mat-label>
+                <mat-select formControlName="endResidence">
+                  <mat-option *ngFor="let option of residenceOptions" [value]="option">
+                    {{ option }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+      
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label for="startMunicipality">Commune départ</mat-label>
+                <input type="text" matInput [matAutocomplete]="auto" formControlName="startMunicipality">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let commune of filteredCommunesStart | async" [value]="commune.nom">
+                    {{ commune.nom }} ({{ commune.codesPostaux[0] }})
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline">
+                <mat-label for="destinationMunicipality">Commune destination</mat-label>
+                <input type="text" matInput [matAutocomplete]="auto2" formControlName="destinationMunicipality">
+                <mat-autocomplete #auto2="matAutocomplete">
+                  <mat-option *ngFor="let commune of filteredCommunesDestination | async" [value]="commune.nom">
+                    {{ commune.nom }} ({{ commune.codesPostaux[0] }})
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+                  
+              <mat-form-field appearance="outline">
+                <mat-label for="returnMunicipality">Commune retour</mat-label>
+                <input type="text" matInput [matAutocomplete]="auto3" formControlName="returnMunicipality">
+                <mat-autocomplete #auto3="matAutocomplete">
+                  <mat-option *ngFor="let commune of filteredCommunesReturn | async" [value]="commune.nom">
+                    {{ commune.nom }} ({{ commune.codesPostaux[0] }})
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+        </mat-card-content>
+      </mat-card>
+  
+      <!-- Card 2: Hébergement / Repas -->
+      <mat-card class="expense-card">
+        <mat-card-title>Hébergement / Repas</mat-card-title>
+        <mat-card-content>
+  
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label for="nightMunicipality">Commune nuitée</mat-label>
+                <input type="text" matInput [matAutocomplete]="auto4" formControlName="nightMunicipality">
+                <mat-autocomplete #auto4="matAutocomplete">
+                  <mat-option *ngFor="let commune of filteredCommunesNight | async" [value]="commune.nom ">
+                    {{ commune.nom }} ({{ commune.codesPostaux[0] }})
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline">
+                <mat-label for="nightCount">Nombre nuitées</mat-label>
+                <input matInput type="number" formControlName="nightCount">
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline">
+                <mat-label for="mealCount">Nombre repas</mat-label>
+                <input matInput type="number" formControlName="mealCount">
+              </mat-form-field>
+            </div>
+            <mat-card-title>Frais de missions</mat-card-title>
+            <app-list-mission-expense [list_expenses]="list_mission_expenses"></app-list-mission-expense>         
+  
+        </mat-card-content>
+      </mat-card>
+  
+      <!-- Card 3: Transport -->
+      <mat-card class="expense-card">
+        <mat-card-title>Transport</mat-card-title>
+        <mat-card-content>
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label for="vehicleLicense">Plaque d'immatriculation du véhicule</mat-label>
+                <input matInput formControlName="vehicleLicense">
+              </mat-form-field>
+    
+              <mat-form-field appearance="outline">
+                <mat-label for="vehicleComment">Commentaire du véhicule</mat-label>
+                <mat-select formControlName="vehicleComment">
+                  <mat-option *ngFor="let option of vehicleOptions" [value]="option">
+                    {{ option }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label  for="startKm">KM de départ</mat-label>
+                <input matInput type="number" formControlName="startKm">
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline">
+                <mat-label for="endKm">KM d'arrivée</mat-label>
+                <input matInput type="number" formControlName="endKm">
+              </mat-form-field>
+  
+              <mat-form-field appearance="outline">
+                <mat-label for="totalKm">Total KM</mat-label>
+                <input matInput type="number" formControlName="totalKm" >
+              </mat-form-field>
+            </div>
+  
+        </mat-card-content>
+      </mat-card>
+  
+      <!-- Card 4: Comments -->
+      <mat-card class="expense-card">
+        <mat-card-title>Commentaires</mat-card-title>
+        <mat-card-content>
+            <div class="form-row">
+                <mat-form-field>
+                    <mat-label for="comments">Ajouter des commentaires</mat-label>
+                    <textarea matInput formControlName="comments"></textarea>
+                    <mat-hint>Ex: Nom du covoiturage</mat-hint>
+                </mat-form-field>
+            </div>
+            
+  
+        </mat-card-content>
+      </mat-card>
+    
+    </div>
+    <div class="action-div">
+      <button mat-button class="bouton-cancel" (click)="cancel()">Annuler</button>
+
+      <button mat-button class="bouton-confirm" (click)="save()" [disabled]="!expenseForm.valid">
+        {{ isEditing ? 'Mettre à jour' : 'Créer' }}
+      </button>
+       
+    </div>
+  <div class="actions-space">
+  </div>
+  </form>
+  
+  

@@ -10,7 +10,7 @@
   </div>
   
   <table class="action-table" mat-table [dataSource]="dataSource" *ngIf="dataSource.data.length > 0">
-    <p>{{dataSource}}</p>
+   
     <ng-container matColumnDef="numAction">
       <th mat-header-cell *matHeaderCellDef  class="num-cell">
         <mat-checkbox (change)="$event ? toggleAllRows() : null"

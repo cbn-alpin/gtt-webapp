@@ -1,6 +1,7 @@
 import {SelectionModel} from '@angular/cdk/collections';
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/models/Project';
@@ -24,7 +25,9 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private projectService: ProjectsService, private downloadServivce : DownloadService) {}
+  constructor(private projectService: ProjectsService, private downloadServivce : DownloadService,
+    private readonly snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.fetchProjects();
@@ -91,17 +94,33 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
       console.error('Aucun projet sélectionné');
       return;
     }
-    const formattedData = this.formatProjectActionsForCSV(this.selectedProjectData.actions);  
+    console.error('projet sélectionné', this.selectedProjectData);
+    const formattedData = this.formatProjectActionsForCSV(this.selectedProjectData.time_entries);  
     this.downloadServivce.downloadCSV(formattedData, exportFileName);
   }
 
   formatProjectActionsForCSV(data: any[]): any[] {
-    return data.map(row => ({
-      'PRENOM NOM': row.user_name, 
-      'Date de début': row.date_start, 
-      'Date de fin': row.date_end, 
-      'Actions': `${row.numero_action}———${row.name_action}`, 
-      'Nombre d’heures réalisés': row.total_hours.toFixed(2) 
-    }));
+    if(!data){
+      this.showToast(`Aucune saisie de temps sur ce project.`);
+      return [];
+    }else{
+      return data.map(row => ({
+        'PRENOM': row.first_name, 
+        'NOM': row.last_name, 
+        'Date': row.date, 
+        'Actions': `${row.numero_action}——${row.name_action}`, 
+        'Nombre d’heures réalisés': row.duration.toFixed(2) 
+      }));
+    }
+    
+  }
+
+  showToast(message: string, isError: boolean = false) {
+    this.snackBar.open(message, '', {
+      duration: 5000, 
+      panelClass: [isError ? 'error-toast' : 'success-toast'], 
+      verticalPosition: 'top', 
+      horizontalPosition: 'center', 
+    });
   }
 }

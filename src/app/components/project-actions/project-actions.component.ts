@@ -91,12 +91,13 @@ export class ProjectActionsComponent implements OnInit {
   toggleSelection(action: Action) {
     this.selection.toggle(action);
     const userId = Number(localStorage.getItem('id_user')); // Récupération de l’ID utilisateur
-  
+    console.error("token after check: ", localStorage.getItem('access_token'));
+
     if (this.selection.isSelected(action)) {
       // Ajout de l'action utilisateur
       this.userActionService.createUserAction(userId, action.id_action).subscribe({
         next: (response) => console.log(`Action ${action.id_action} enregistrée`, response),
-        error: (error) => console.error(' Erreur lors de l’enregistrement', error)
+        error: (error) => console.error(' Erreur lors de l’enregistrement', localStorage.getItem('access_token') )
       });
     } else {
       // Suppression de l'action utilisateur

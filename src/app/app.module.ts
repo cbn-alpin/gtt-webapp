@@ -19,8 +19,12 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatCardModule} from '@angular/material/card';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -41,7 +45,10 @@ import { MatOptionModule } from '@angular/material/core';
 import { ListUsersComponent } from './components/list-users/list-users.component';
 import { ModifyPasswordComponent } from './components/modify-password/modify-password.component';
 import { DownloadExpensesComponent } from './components/download-expenses/download-expenses.component';
-import { ExpensesComponent } from './components/expenses/expenses.component';
+import { TravelExpenseComponent } from './components/travel-expense/travel-expense.component';
+import { ListTravelExpenseComponent } from './components/list-travel-expense/list-travel-expense.component';
+import { MissionExpenseComponent } from './components/mission-expense/mission-expense.component';
+import { ListMissionExpenseComponent } from './components/list-mission-expense/list-mission-expense.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +67,11 @@ import { ExpensesComponent } from './components/expenses/expenses.component';
     ListUsersComponent,
     ModifyPasswordComponent,
     DownloadExpensesComponent,
-    ExpensesComponent
+    TravelExpenseComponent,
+    ListTravelExpenseComponent,
+    MissionExpenseComponent,
+    ListMissionExpenseComponent,
+  
   ],
   imports: [
     BrowserModule,
@@ -88,9 +99,14 @@ import { ExpensesComponent } from './components/expenses/expenses.component';
     MatSelectModule,
     MatSlideToggleModule,
     FormsModule,
-    MatDividerModule
+    MatDividerModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatAutocompleteModule
 ],
   providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' }
   ],
   bootstrap: [AppComponent]
 })

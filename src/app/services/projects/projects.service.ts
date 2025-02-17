@@ -53,4 +53,10 @@ export class ProjectsService {
     const url = `${this.baseUrl}/project/${projectId}/actions`;
     return this.http.get(url, this.getHttpOptions());
   }
+
+  getGefiprojAllProjects(): Observable<any> {
+    const url = `${this.baseUrl}/projects/gefiproj`;
+    return this.http.get(url, this.getHttpOptions());
+
+  }
 }
