@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MissionExpense } from 'src/app/models/MissionExpense';
@@ -23,7 +23,7 @@ export class ListMissionExpenseComponent implements OnChanges {
   
 
   constructor(private dialog: MatDialog,  private shareDataService : ShareDataService,
-    private expenseService: ExpensesService, private readonly snackBar: MatSnackBar) {
+    private expenseService: ExpensesService, private readonly snackBar: MatSnackBar, private cdr: ChangeDetectorRef) {
 
     this.shareDataService.travelExpenseValidated$.subscribe(() => {
       this.sendAllExpensesToAPI();
@@ -45,10 +45,16 @@ export class ListMissionExpenseComponent implements OnChanges {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         result.id_travel = this.id_travel;
-        this.dataSource.data = [...this.dataSource.data, result];
+        // this.list_expenses = [...this.list_expenses, result];
+        // this.list_expenses = [...this.list_expenses, ...this.pendingExpenses];
+        // this.dataSource.data = [...this.list_expenses];
 
         // Ajouter la dépense au tableau temporaire
         this.pendingExpenses.push(result);
+        this.cdr.detectChanges();
+        this.list_expenses = [...this.list_expenses, ...this.pendingExpenses];
+        this.dataSource.data = [...this.list_expenses];
+
       }
     });
   }
@@ -72,7 +78,9 @@ export class ListMissionExpenseComponent implements OnChanges {
 
         // Une fois envoyées, videz le tableau temporaire et le tableau principal.
         this.pendingExpenses = [];
-        this.dataSource.data = [];
+        // this.dataSource.data = [];
+
+        window.location.reload();
       },
       error => {
         console.error('Erreur lors de l\'envoi des dépenses:', error);
