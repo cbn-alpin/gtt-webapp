@@ -323,10 +323,30 @@ export class CalendarComponent implements OnInit {
     if (this.timer) {
       clearTimeout(this.timer);
     }
+
     this.timer = setTimeout(() => {
+      const formattedDate = new Date(date);
+
+      const currentTotal = this.calculateDayTotal(formattedDate);
+      const newTotal = currentTotal + value - initialValue;
+
+      if (newTotal > 10) {
+        this.dialog.open(PopupMessageComponent, {
+          data: {
+            title: 'Erreur',
+            message: 'Quota horaire journalier dépassé !'
+          }
+        });
+
+       
+        inputRef.value = initialValue.toString();
+        return;
+      }
+
       this.updateTimeEntry(value, projectId, actionId, date, inputRef, initialValue);
     }, 900);
   }
+
 
   calculateWeekTotal(projectId: number, actionId: number): number {
     let total = 0;
@@ -420,7 +440,7 @@ export class CalendarComponent implements OnInit {
 
   onBlur(inputRef: HTMLInputElement) {
     if (inputRef.value === '') {
-      inputRef.value = '0'; 
+      inputRef.value = '0';
     }
   }
 }
