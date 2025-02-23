@@ -24,7 +24,7 @@ export class TimeStateService {
   getStartOfWeek(date: Date): Date {
     const start = new Date(date);
     const day = start.getDay();
-    const diff = start.getDate() - day + (day === 0 ? -5 : 1);
+    const diff = start.getDate() - day + (day === 0 ? -6 : 1);
     start.setDate(diff);
     return start;
   }

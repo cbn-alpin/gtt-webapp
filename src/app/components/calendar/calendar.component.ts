@@ -257,6 +257,23 @@ export class CalendarComponent implements OnInit {
 }
 
   updateTimeEntry(value: number, projectId: number, actionId: number, date: string,  inputRef: HTMLInputElement, initialValue: number) {
+    const selectedDate = new Date(date);
+    const today = new Date();
+
+    selectedDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate > today) {
+      this.dialog.open(PopupMessageComponent, {
+          data: {
+              title: 'Erreur',
+              message: 'Vous ne pouvez pas saisir du temps pour une date future.'
+          }
+      });
+
+      inputRef.value = initialValue.toString();
+      return;
+    }
     if (projectId !== 0) {
       if (value > 10.25) {
         this.dialog.open(PopupMessageComponent, {
@@ -338,7 +355,7 @@ export class CalendarComponent implements OnInit {
           }
         });
 
-       
+
         inputRef.value = initialValue.toString();
         return;
       }
