@@ -1,6 +1,6 @@
 export interface MissionExpense {
-
-    object: string;
+    id_expense? : number;
+    name: string;
     comment: string;
     amount: number;
 }
