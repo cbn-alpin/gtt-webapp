@@ -86,7 +86,6 @@ export class ProjectActionsComponent implements OnInit {
       });
     });
   }
-  
 
   toggleSelection(action: Action) {
     this.selection.toggle(action);
@@ -107,7 +106,6 @@ export class ProjectActionsComponent implements OnInit {
       });
     }
   }
-  
 
   checkboxLabel(row?: Action): string {
     if (!row) {
@@ -158,7 +156,9 @@ export class ProjectActionsComponent implements OnInit {
     this.projectService.getProjectById(this.id_project).subscribe({
       next: (project) => {
         this._list_action = Array.isArray(project.list_action) ? project.list_action : [];
-        this.dataSource.data = [...this._list_action];
+       
+         // Appliquer le tri hiérarchique
+        this.dataSource.data = this.naturalSort([...this._list_action]);
   
         const userId = Number(localStorage.getItem('id_user'));
   
@@ -187,7 +187,32 @@ export class ProjectActionsComponent implements OnInit {
       }
     });
   }
-  
+
+    // Ajouter cette fonction pour le tri des numéros de format hiérarchique (1.2.3.3)
+  private naturalSort(list: Action[]): Action[] {
+    return [...list].sort((a, b) => {
+      // Diviser les numéros en segments numériques
+      const segmentsA = a.numero_action.split('.').map(segment => parseInt(segment, 10));
+      const segmentsB = b.numero_action.split('.').map(segment => parseInt(segment, 10));
+      
+      // Comparer segment par segment
+      const maxLength = Math.max(segmentsA.length, segmentsB.length);
+      
+      for (let i = 0; i < maxLength; i++) {
+        // Si un segment n'existe pas, on le considère comme 0
+        const segA = i < segmentsA.length ? segmentsA[i] : 0;
+        const segB = i < segmentsB.length ? segmentsB[i] : 0;
+        
+        if (segA !== segB) {
+          return segA - segB;
+        }
+      }
+      
+      // Si tous les segments sont égaux jusqu'ici, la plus courte vient en premier
+      return segmentsA.length - segmentsB.length;
+    });
+  }
+    
   
   showToast(message: string, isError: boolean = false) {
     this.snackBar.open(message, '', {

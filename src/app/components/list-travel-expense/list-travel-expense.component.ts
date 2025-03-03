@@ -9,6 +9,7 @@ import { TravelExpenseComponent } from '../travel-expense/travel-expense.compone
 import { Router } from '@angular/router';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { ShareDataService } from 'src/app/services/shareData/share-data.service';
 
 @Component({
   selector: 'app-list-travel-expense',
@@ -30,7 +31,7 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private readonly dialog: MatDialog,
-    private readonly snackBar: MatSnackBar, private router: Router, private readonly expensesService: ExpensesService,){
+    private readonly snackBar: MatSnackBar, private router: Router, private readonly expensesService: ExpensesService, private shareDateService : ShareDataService){
       this.isAdmin = localStorage.getItem('is_admin') === 'true';
       this.userId = Number(localStorage.getItem('id_user'));
   }
@@ -53,7 +54,7 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.expensesService.getUserAllTravelsExpenses(this.userId).subscribe({
+    this.expensesService.getUserAllTravelsExpenses(this.userId, '', '').subscribe({
       next: (travels) => {
         setTimeout(() => {
           this.dataSource.data = travels;
@@ -78,6 +79,7 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
   }
 
   createExpense(): void {
+    localStorage.removeItem('id_travel');
     this.router.navigate(['accueil/frais-de-deplacement/']);
   }
 
@@ -112,8 +114,8 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
   updateStatus(element: any, newStatus: string): void {
     if (!element || !this.userId) return;
 
-    const formattedStartDate = this.formatDate(element.start_date);
-    const formattedEndDate = this.formatDate(element.end_date);
+    console.error('element lorsqu on change le status de traitement :', element);
+
 
    // Vérifier si le statut a changé
    if (element.status === newStatus) return;
@@ -139,13 +141,14 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
      start_km: Number(element.start_km) || 0,
      end_km: Number(element.end_km) || 0
    };
+
     this.isLoadingResults = true;
 
     this.expensesService.updateUserTravelExpense(element.id_travel, this.userId, travelData)
       .subscribe({
         next: () => {
           this.showToast('Statut mis à jour avec succès ✅');
-          element.status = newStatus; // Mise à jour locale
+          element.status = newStatus; 
           this.isLoadingResults = false;
         },
         error: (error) => {
@@ -155,22 +158,20 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
     });
   }
 
-  formatDate(date: Date | string): string {
-    let parsedDate;
-    if (typeof date === 'string' && date.includes('/')) {
-      const [day, month, year] = date.split('/');
-      parsedDate = new Date(`${year}-${month}-${day}`);
-    } else {
-      parsedDate = new Date(date);
-    }
-  
-    const day = parsedDate.getDate().toString().padStart(2, '0');
-    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
-    const year = parsedDate.getFullYear();
-
-    return `${year}-${month}-${day}`;
+  formatDate(date: string): string {
+    let parsedDate = '';
+    return parsedDate = this.shareDateService.formatDate(date); 
   }
-  
+
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'En cours': return 'in-progress';
+      case 'Traité': return 'completed';
+      case 'À traiter': return 'pending';
+      case 'Problème': return 'problem';
+      default: return '';
+    }
+  }
 
   showToast(message: string, isError: boolean = false) {
     this.snackBar.open(message, '', {

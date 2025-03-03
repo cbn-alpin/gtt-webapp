@@ -87,64 +87,40 @@ tr.element-row:hover {
 .table-wrapper {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Remplit l'espace disponible */
+    flex-grow: 1; 
     overflow: auto;
 }
 
+// Style du statut dans le tableau
 .status-select {
-    // Supprimer les bordures et le fond
-    ::ng-deep {
-      .mat-form-field-wrapper {
-        padding-bottom: 0;
-        margin: 0;
-      }
-  
-      .mat-form-field-flex {
-        background-color: transparent;
-        padding: 0 !important;
-        border: none;
-      }
-  
-      .mat-form-field-underline {
-        display: none;
-      }
-  
-      .mat-form-field-outline {
-        display: none;
-      }
-  
-      // Supprimer les marges et paddings supplémentaires
-      .mat-form-field-infix {
-        border: none;
-        padding: 0;
-      }
-    }
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
 
-    // Styles pour les différents statuts
-  ::ng-deep {
-    .a-traiter .mat-select-value-text {
-      color: #ff9800;
-    }
-    
-    .en-cours .mat-select-value-text {
-      color: #2196f3;
-    }
-    
-    .traité .mat-select-value-text {
-      color: #4caf50;
-    }
-    
-    .problème .mat-select-value-text {
-      color: #f44336;
-    }
+  ::ng-deep .mat-form-field-flex {
+    background-color: transparent;
+    padding: 0 !important;
+    border: none;
   }
-  
+
+  ::ng-deep .mat-select-value-text {
+    font-weight: bold;
   }
-  
-  
-  // Ajuster la largeur du select
-  .mat-column-status {
-    .mat-form-field {
-      width: 30px;
-    }
-  }
+}
+
+// Couleurs des statuts
+.in-progress { color: #2196f3; }  
+.completed { color: #4caf50; }   
+.pending { color: #ff9800; }      
+.problem { color: #f44336; }      
+
+// Surligner la ligne si "Problème"
+.problem-row {
+  background-color: #ffebee !important; // Rouge clair
+}
+
+.disabled-icon {
+  pointer-events: none;  
+  opacity: 0.5;  
+  cursor: not-allowed; 
+}

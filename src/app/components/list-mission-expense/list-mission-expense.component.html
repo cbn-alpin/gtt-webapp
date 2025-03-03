@@ -10,23 +10,43 @@
     <table class="expense-table" mat-table [dataSource]="dataSource" *ngIf="dataSource.data.length > 0">
      
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef class="name-cell">Objet</th>
-        <td mat-cell *matCellDef="let element" class="name-cell">
-          {{element.name}}
+        <th mat-header-cell *matHeaderCellDef class="object-cell">Objet</th>
+        <td mat-cell *matCellDef="let element" class="object-cell">
+          <span class="truncate" matTooltip="{{element.name}}" matTooltipPosition="above">{{element.name}}</span>
       </td>
       </ng-container>
   
       <ng-container matColumnDef="comment" >
-        <th mat-header-cell *matHeaderCellDef class="name-cell">Commentaire frais de mission</th>
-        <td mat-cell *matCellDef="let element" class="name-cell">
-          {{element.comment}}
+        <th mat-header-cell *matHeaderCellDef class="comment-cell">Commentaire frais de mission</th>
+        <td mat-cell *matCellDef="let element" class="comment-cell">
+          <span class="truncate" matTooltip="{{element.comment}}" matTooltipPosition="above">{{element.comment}}</span>
       </td>
       </ng-container>
       
       <ng-container matColumnDef="amount" >
-        <th mat-header-cell *matHeaderCellDef class="description-cell"> Montant</th>
-        <td mat-cell *matCellDef="let element" class="description-cell">
+        <th mat-header-cell *matHeaderCellDef class="amount-cell"> Montant</th>
+        <td mat-cell *matCellDef="let element" class="amount-cell">
         {{element.amount | number: '1.2-2' }} €
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef aria-label="row actions">Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-icon 
+            class="mission-action"
+            matTooltip="Modifier" matTooltipPosition="above"
+            (click)="openEditExpenseDialog(element)"
+            style="margin-right: 10px;">
+            edit
+          </mat-icon>
+      
+          <mat-icon 
+            class="mission-action"
+            (click)="deleteExpenseById('supprimer ce frais de mission', element.id_expense)"
+            matTooltip="Supprimer" matTooltipPosition="above">
+            delete
+          </mat-icon>
+        </td>
       </ng-container>
                       
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

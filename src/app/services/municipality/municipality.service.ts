@@ -9,8 +9,6 @@ export class MunicipalityService {
 
   // private apiUrl = 'https://nominatim.openstreetmap.org/search';
 
-  // constructor(private http: HttpClient) {}
-
   // getCommunes(query: string): Observable<any[]> {
   //   const params = {
   //     q: query,

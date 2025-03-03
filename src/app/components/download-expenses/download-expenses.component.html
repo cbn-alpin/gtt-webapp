@@ -52,12 +52,33 @@
           </div>
         </ng-template>
     </section>
-    <div class="download-project-button">
-      <button mat-elevation-z8 class="download-project" (click)="exportProjectData('état_des_frais_de_déplacement')" [disabled]="(isButtonDisabled$ | async) === false">
-        Télécharger les frais 
-       </button>
+
+    <div class="date-filter-section  mat-elevation-z2">
+      <div class="date-filter-label">
+        <h3>Choisir une période des frais</h3>
+      </div>
+    
+      <div class="form-row ">
+        <div class="form-field-expense">
+          <label class="form-label" for="startDate">Date début</label>
+          <input class="form-input-expense" id="startDate" type="date" [disabled]="(isButtonDisabled$ | async) === false"
+          (change)="onStartDateChange($event)"/>
+        </div>
+    
+        <div class="form-field-expense">
+          <label class="form-label" for="endDate">Date fin</label>
+          <input class="form-input-expense" id="endDate" type="date" [disabled]="(isButtonDisabled$ | async) === false" 
+          (change)="onEndDateChange($event)"/>
+        </div>
+      </div>
     </div>
-  </div>
+      
+    <div class="download-project-button">
+      <button mat-elevation-z8 class="download-project" (click)="exportProjectData('état_des_frais_de_déplacement')" [disabled]="(isButtonDisabled$ | async) === false" matTooltip="Sélectioner d'abord un agent" matTooltipPosition="above">
+        Télécharger les frais 
+      </button>
+    </div>
+</div>
   
   
     

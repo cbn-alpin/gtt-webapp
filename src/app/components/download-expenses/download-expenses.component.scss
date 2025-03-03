@@ -67,8 +67,7 @@
 }
 
 .download-project-button {
-    display: flex;
-    height: 24em; 
+    display: flex; 
     align-items: flex-end; 
 }
 
@@ -81,7 +80,7 @@
     border-radius: 5px;
     padding: 10px 20px;
     width: 14em;
-    margin-bottom: 2.5em;
+    margin-top: 16em;
 }
 
 .download-project:disabled {
@@ -94,4 +93,43 @@
         color: #666666;
       }
   }
+
+  .date-filter-section {
+    width: 23em;
+    padding: 10px;
+  }
+   
   
+.form-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: nowrap; 
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-field-expense {
+    flex: 1; 
+    min-width: 150px; 
+    max-width: 1500px; 
+}
+
+.form-input-expense {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+
+.date-filter-label {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.date-filter-label h3 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2f4050;
+}

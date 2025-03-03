@@ -1,5 +1,5 @@
 
-<form [formGroup]="expenseForm">
+<form [formGroup]="expenseForm"  (keydown.enter)="preventEnterSubmit($event)">
     <div class="grid-container">
       <!-- Card 1: General Information -->
       <mat-card class="expense-card">
@@ -10,6 +10,9 @@
               <mat-form-field appearance="outline">
                 <mat-label for="projectCode">Code projet</mat-label>
                 <input matInput id="projectCode" type="number" formControlName="projectCode">
+                <mat-error *ngIf="expenseForm.get('projectCode')?.invalid && expenseForm.get('projectCode')?.touched">
+                  Le mot de passe est requis.
+                </mat-error>
               </mat-form-field>
       
               <mat-form-field appearance="outline">

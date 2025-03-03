@@ -1,5 +1,5 @@
 <div class="form-container">
-    <button class="close-btn">✖</button>
+    <button class="close-btn" (click)="onClose()">✖</button>
     <h2 class="form-title">Ajouter un frais de mission</h2>
     <form [formGroup]="missionForm" >
       <div class="form-field">
@@ -19,8 +19,8 @@
     
       <div class="form-actions">
         <button class="validate-btn" type="button" (click)="onSubmit()" [disabled]="!missionForm.valid || isSubmitting">
-          {{ isSubmitting ? 'Création...' : 'Ajouter' }}
-        </button>        
+          {{ isSubmitting ? (isEditMode ? 'Mise à jour...' : 'Création...') : (isEditMode ? 'Mettre à jour' : 'Ajouter') }}
+        </button>                       
       </div>      
     </form>
 </div>
