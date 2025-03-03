@@ -1,5 +1,5 @@
 .container{
-  max-height: fit-content;
+  max-height: max-content;
 
 }
 .calendar-container {
@@ -207,10 +207,10 @@
 /* CSS time Table */
 
 .table-container {
-  max-height: 450px;
-  overflow-y: auto;
-  position: relative;
-  min-height: 450px;
+  height: 100vh;
+   // overflow-y: auto;
+ // position: relative;
+ // min-height: 350px;
 
 }
 
@@ -224,10 +224,8 @@
 
 
   tbody .daily-total-row {
-    position: sticky;
     bottom: 0;
     background-color: white;
-    z-index: 2;
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
@@ -241,7 +239,7 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    min-height: 450px;
+
 
   }
 
@@ -251,6 +249,11 @@
     font-weight: bold;
   }
 
+  .fixed-row-name {
+    background-color: #607D8B ;
+    color: white;
+    font-weight: bold;
+  }
 
   .action-name {
     font-weight: bold;

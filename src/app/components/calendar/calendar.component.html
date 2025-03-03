@@ -86,22 +86,20 @@
         <ng-container *ngFor="let project of projects; trackBy: trackById">
           <!-- Project Row -->
           <tr>
-            <td class="project-name" colspan="10">{{ project.name }}</td>
-
+            <td class="project-name" colspan="10" >{{ project.name }}</td>
           </tr>
-
 
           <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
             <tr>
-              <td class="action-name" >
+              <td class="action-name" matTooltip="{{ action.description }}" matTooltipPosition="below" >
               {{  action.numero_action  }}  {{action.name }}
               </td>
 
               <td *ngFor="let day of weekDays; trackBy: trackByDate">
                 <input
                 type="number"
-                [ngModel]="getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours"
-                (ngModelChange)="updateTimeEntryDelayed($event, project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date)),
+                [ngModel]="getTimeEntry(project.id_project,  action.id_action, formatApiDate(toLuxonDate(day.date))).hours"
+                (ngModelChange)="updateTimeEntryDelayed($event, project.id_project, project.end_date, action.id_action, formatApiDate(toLuxonDate(day.date)),
                          inputRef, getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours)"
                 [id]="getInputId(project.id_project, action.id_action, day.date)"
                 step="0.25"
@@ -129,7 +127,9 @@
 
         <ng-container *ngFor="let project of fixedRows; trackBy: trackById">
 
-
+          <tr>
+            <td  colspan="10" class="fixed-row-name" >Absences, Formations et Tâches internes</td>
+          </tr>
           <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
             <tr>
               <td class="fixed-action-name" >
@@ -139,8 +139,8 @@
               <td *ngFor="let day of weekDays; trackBy: trackByDate">
                 <input
                 type="number"
-                [ngModel]="getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours"
-                (ngModelChange)="updateTimeEntryDelayed($event, project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date)),
+                [ngModel]="getTimeEntry(project.id_project,  action.id_action, formatApiDate(toLuxonDate(day.date))).hours"
+                (ngModelChange)="updateTimeEntryDelayed($event, project.id_project,  project.end_date, action.id_action, formatApiDate(toLuxonDate(day.date)),
                          inputRef2, getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours)"
                 [id]="getInputId(project.id_project, action.id_action, day.date)"
                 step="0.25"

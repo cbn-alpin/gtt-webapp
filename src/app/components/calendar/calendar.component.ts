@@ -12,12 +12,13 @@ import { TimeSheetService } from 'src/app/services/TimeSheet.service';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSelectModule} from '@angular/material/select';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, MatSlideToggleModule, MatSelectModule,MatProgressSpinnerModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, MatSlideToggleModule, MatSelectModule,MatProgressSpinnerModule, MatTooltipModule],
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
@@ -95,8 +96,8 @@ export class CalendarComponent implements OnInit {
   }
   updateStartEndDate() {
     const activeWeek = this.firstDayOfActiveMonth.value;
-    this.startDate = activeWeek.startOf('month');
-    this.endDate = activeWeek.endOf('month');
+    this.startDate = activeWeek.minus({ weeks: 1 }).startOf('month');
+    this.endDate = activeWeek.endOf('month').plus({ weeks: 1 });
   }
 
   get daysOfMonth() {
@@ -256,25 +257,27 @@ export class CalendarComponent implements OnInit {
     return timeEntry ? { hours: Number(timeEntry.duration) } : { hours: 0 };
 }
 
-  updateTimeEntry(value: number, projectId: number, actionId: number, date: string,  inputRef: HTMLInputElement, initialValue: number) {
+  updateTimeEntry(value: number, projectId: number, end_date: Date , actionId: number, date: string,  inputRef: HTMLInputElement, initialValue: number) {
     const selectedDate = new Date(date);
-    const today = new Date();
-
     selectedDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
+    const endDate = new Date(end_date);
+    endDate.setHours(0, 0, 0, 0);
+    console.log(selectedDate);
+    console.log(endDate);
 
-    if (selectedDate > today) {
-      this.dialog.open(PopupMessageComponent, {
-          data: {
-              title: 'Erreur',
-              message: 'Vous ne pouvez pas saisir du temps pour une date future.'
-          }
-      });
 
-      inputRef.value = initialValue.toString();
-      return;
-    }
     if (projectId !== 0) {
+      if (selectedDate > endDate) {
+        this.dialog.open(PopupMessageComponent, {
+            data: {
+                title: 'Erreur',
+                message: 'Vous ne pouvez pas saisir une date qui dépasse la date de fin du projet.'
+            }
+        });
+
+        inputRef.value = initialValue.toString();
+        return;
+      }
       if (value > 10.25) {
         this.dialog.open(PopupMessageComponent, {
           data: {
@@ -327,7 +330,7 @@ export class CalendarComponent implements OnInit {
 
     this.timeSheetService.saveUserTime(this.userId, actionId, formattedDate, value).subscribe(
       (response) => {
-        console.log('Time saved successfully:', response);
+        console.log('Time saved successfully:',value, response);
         this.loadProjects();
       },
       (error) => {
@@ -336,7 +339,7 @@ export class CalendarComponent implements OnInit {
     );
   }
   timer: any = null;
-  updateTimeEntryDelayed(value: number, projectId: number, actionId: number, date: string, inputRef: HTMLInputElement, initialValue: number) {
+  updateTimeEntryDelayed(value: number, projectId: number, end_date: Date , actionId: number, date: string, inputRef: HTMLInputElement, initialValue: number) {
     if (this.timer) {
       clearTimeout(this.timer);
     }
@@ -360,13 +363,14 @@ export class CalendarComponent implements OnInit {
         return;
       }
 
-      this.updateTimeEntry(value, projectId, actionId, date, inputRef, initialValue);
-    }, 900);
+      this.updateTimeEntry(value, projectId, end_date ,actionId, date, inputRef, initialValue);
+    }, 500);
   }
 
 
   calculateWeekTotal(projectId: number, actionId: number): number {
     let total = 0;
+
 
     this.weekDays.forEach(day => {
         const dateStr = this.formatApiDate(this.toLuxonDate(day.date));
@@ -381,6 +385,7 @@ export class CalendarComponent implements OnInit {
 
   calculateDayTotal(date: Date): number {
       let total = 0;
+
       const formattedDate = this.formatApiDate(this.toLuxonDate(date));
 
 
@@ -402,7 +407,19 @@ export class CalendarComponent implements OnInit {
               }
           });
       });
+      this.fixedRows.forEach((project: { id_project: number; list_action: { id_action: number }[] }) => {
+        if (!project.list_action || !Array.isArray(project.list_action)) {
+            console.warn(`calculateDayTotal: project.list_action est undefined ou n'est pas un tableau pour project ${project.id_project}`);
+            return;
+        }
 
+        project.list_action.forEach((action: { id_action: number }) => {
+            const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
+            if (entry && typeof entry.hours === 'number') {
+                total += entry.hours;
+            }
+        });
+    });
       return total;
   }
 
