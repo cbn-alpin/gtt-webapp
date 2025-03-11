@@ -122,9 +122,8 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
 
    // Créer l'objet selon le schéma attendu
    const travelData = {
-     id_travel: element.id_travel,
-     start_date: this.formatDate(element.start_date),
-     end_date: this.formatDate(element.end_date),
+     start_date: element.start_date,
+     end_date: element.end_date,
      start_place: element.start_place,
      return_place: element.return_place,
      status: newStatus,
@@ -133,13 +132,13 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
      end_municipality: element.end_municipality,
      night_municipality: element.night_municipality,
      destination: element.destination,
-     night_count: Number(element.night_count) || 0,
-     meal_count: Number(element.meal_count) || 0,
+     night_count: element.night_count || 0,
+     meal_count: element.meal_count || 0,
      comment: element.comment || '',
      license_vehicle: element.license_vehicle || '',
      comment_vehicle: element.comment_vehicle || '',
-     start_km: Number(element.start_km) || 0,
-     end_km: Number(element.end_km) || 0
+     start_km: element.start_km || 0,
+     end_km: element.end_km || 0
    };
 
     this.isLoadingResults = true;
@@ -156,11 +155,6 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
           this.isLoadingResults = false;
         }
     });
-  }
-
-  formatDate(date: string): string {
-    let parsedDate = '';
-    return parsedDate = this.shareDateService.formatDate(date); 
   }
 
   getStatusClass(status: string): string {

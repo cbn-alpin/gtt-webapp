@@ -31,8 +31,8 @@
 }
 
 .actions-space {
-  height: 5.5em;
-  min-height: 5.5em;
+  height: 3.5em;
+  min-height: 3.5em;
 }
 
 .bouton-confirm {
@@ -56,6 +56,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: block;
   cursor: pointer;
 }
+
+.bouton-confirm:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
 
   
   

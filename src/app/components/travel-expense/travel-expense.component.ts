@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Observable, startWith, switchMap } from 'rxjs';
+import { map, Observable, startWith, switchMap, tap } from 'rxjs';
 import { Project } from 'src/app/models/Project';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { MunicipalityService } from 'src/app/services/municipality/municipality.service';
@@ -26,6 +26,7 @@ export class TravelExpenseComponent implements OnInit {
   vehicleOptions = ['Service', 'Personnel', 'Location', 'Covoiturage'];
   residenceOptions = ['Résidence Administrative', 'Résidence Familiale'];
   isEditing: boolean = false;
+  isSubmitting = false;
   travelId!: number;
   savedProjectCode : any;
   list_mission_expenses : any[] = []; 
@@ -99,12 +100,9 @@ export class TravelExpenseComponent implements OnInit {
     this.expenseForm.get('endDate')?.valueChanges.subscribe(() => this.validateEndDate());
 
     this.loadTravelData();
-
-    this.expenseForm.statusChanges.subscribe(status => {
-      console.error('Statut du formulaire :', status);
-    });
   }
 
+ 
   autocompleteProjectName(code: string) {
     if (!code) {
       this.expenseForm.patchValue({ projectName: '' }); 
@@ -125,9 +123,15 @@ export class TravelExpenseComponent implements OnInit {
   setupAutocomplete(controlName: string): Observable<any[]> {
     return this.expenseForm.get(controlName)!.valueChanges.pipe(
       startWith(''),
-      switchMap(value => this.municipalityService.getCommunes(value || ''))
+      switchMap(value => this.municipalityService.getCommunes(value || '').pipe(
+        tap((communes:any) => console.error('Communes reçues:', communes))
+      ))
     );
   }
+
+  displayCommune(commune: any): string {
+    return commune ? `${commune.nom} (${commune.codesPostaux[0]})` : '';
+  }  
   
   save(): void {
     if (this.expenseForm.invalid) {
@@ -138,17 +142,30 @@ export class TravelExpenseComponent implements OnInit {
       return;
     }
   
+    this.isSubmitting = true;
     const formData = this.expenseForm.value;
   
-    // Vérifie que les heures de début et de fin sont bien renseignées
+    // Vérifier si les heures de début et de fin sont renseignées
     if (!formData.startTime || !formData.endTime) {
       this.showToast("L'heure de début et de fin sont obligatoires.", true);
       return;
     }
   
     const userId = Number(localStorage.getItem('id_user'));
+    const travelData = this.mapFormDataToTravelData(formData);
   
-    const travelData = {
+    if (this.isEditing && this.travelId) {
+      this.updateTravelExpense(userId, travelData);
+    } else {
+      this.createTravelExpense(userId, travelData);
+    }
+  }
+  
+  /**
+   * Mappe les données du formulaire en un objet `travelData`
+   */
+  private mapFormDataToTravelData(formData: any): any {
+    return {
       start_date: this.formatDate(formData.startDate, formData.startTime),
       end_date: this.formatDate(formData.endDate, formData.endTime),
       start_place: formData.startResidence,
@@ -167,58 +184,64 @@ export class TravelExpenseComponent implements OnInit {
       start_km: formData.startKm || 0,
       end_km: formData.endKm || 0
     };
+  }
   
-    if (this.isEditing && this.travelId) {
-      travelData.status = history.state.travelData.status;
-      this.shareDataService.sendTravelId(this.travelId);
-      console.error('travel id à modifier:', this.travelId);
-      this.expenseService.updateUserTravelExpense(this.travelId, userId, travelData).subscribe({
-        next: (response) => {
-          console.error('travel data modifié:', travelData);
-          
-          this.shareDataService.validateTravelExpense()
+  /**
+   * Met à jour un frais de déplacement existant
+   */
+  private updateTravelExpense(userId: number, travelData: any): void {
+    travelData.status = history.state.travelData.status;
+    this.shareDataService.sendTravelId(this.travelId);
+    console.error('Travel ID à modifier:', this.travelId);
   
-          this.router.navigate(['accueil/liste-frais-de-deplacement/']);
-          
-          setTimeout(() => {
-            this.showToast(`Frais de déplacement mis à jour avec succès. 🎉`);
-          }, 1000);
-        },
-        error: (err) => this.showToast(`Erreur lors de mise à jour du frais de déplacement.`, true),
-      });
+    this.expenseService.updateUserTravelExpense(this.travelId, userId, travelData).subscribe({
+      next: () => {
+        console.error('Travel data modifié:', travelData);
+        this.shareDataService.validateTravelExpense();
+        this.router.navigate(['accueil/liste-frais-de-deplacement/']);
   
-    } else {
-      this.expenseService.createTravelExpense(userId, this.projectId, travelData)
+        setTimeout(() => {
+          this.showToast(`Frais de déplacement mis à jour avec succès. 🎉`);
+        }, 1000);
+      },
+      error: () => {this.showToast(`Erreur lors de mise à jour du frais de déplacement.`, true),
+        this.isSubmitting = false;
+      }
+    });
+  }
+  
+  /**
+   * Crée un nouveau frais de déplacement
+   */
+  private createTravelExpense(userId: number, travelData: any): void {
+    this.expenseService.createTravelExpense(userId, this.projectId, travelData)
       .subscribe({
         next: (travelexpense) => {
           console.error('Nouveau Travel créé:', travelexpense);
           console.error('Nouveau ID Travel créé:', travelexpense.travel_id);
-          
-          // Émettre l'ID travel via le service
+  
           this.shareDataService.sendTravelId(travelexpense.travel_id);
           this.shareDataService.validateTravelExpense();
   
-          // Attendre si des frais de mission sont ajoutés, sinon rediriger immédiatement
+          // Vérifier si des frais de mission sont ajoutés
           this.shareDataService.missionExpensesProcessed$.subscribe(success => {
-            if (success) {
-              this.showToast('Frais de déplacement créé avec succès.', false);
-            } else {
-              this.showToast(`Frais de déplacement créé, mais aucun frais de mission ajouté.`, false);
-            }
+            this.showToast(success
+              ? 'Frais de déplacement créé avec succès.'
+              : `Frais de déplacement créé, mais aucun frais de mission ajouté.`
+            );
           });
-
-          // **Redirection forcée après la création, qu'il y ait des frais de mission ou non**
+  
+          // Redirection après la création
           this.router.navigate(['accueil/liste-frais-de-deplacement/']);
         },
         error: (error) => {
           console.log('Erreur lors de la création du frais de déplacement.', error);
           this.showToast(`Erreur lors de la création du frais de déplacement.`, true);
+          this.isSubmitting = false;
         }
       });
-    }
   }
   
-
   formatDate(date: string, timeString?: string): string {
     if (!date) return '';
   
@@ -326,10 +349,6 @@ export class TravelExpenseComponent implements OnInit {
     }
   }
   
-  
-  
-  
-
   showToast(message: string, isError: boolean = false) {
     this.snackBar.open(message, '', {
       duration: 5000,

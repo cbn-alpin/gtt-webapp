@@ -25,7 +25,6 @@ export class ConnectionPageComponent {
     });
   }
 
-
   isFieldInvalid(fieldName: string): boolean {
     const field = this.loginForm.get(fieldName);
     return field ? (field.invalid && (field.dirty || field.touched)) : false;
@@ -35,38 +34,44 @@ export class ConnectionPageComponent {
     if (this.loginForm.valid) {
       this.isLoading = true;
       this.errorMessage = '';
-
-      const credentials : any = {
+  
+      const credentials: any = {
         login: this.loginForm.value.email,
         password: this.loginForm.value.password
       };
-
+  
       this.authService.nativeAuthenticate(credentials).subscribe({
         next: (userInfo: UserInfos) => {
-          // Mettons à jour le localStorage de manière synchrone
-          Promise.all([
-            localStorage.setItem('access_token', userInfo.access_token),
-            localStorage.setItem('user_email', userInfo.email),
-            localStorage.setItem('user_name', `${userInfo.first_name} ${userInfo.last_name}`),
-            localStorage.setItem('is_admin', `${userInfo.is_admin}`),
-            localStorage.setItem('id_user', `${userInfo.id_user}`),
-            localStorage.setItem('newTitle', 'saisie des temps')
-          ]).then(() => {
-            this.isLoading = false;
-            // Assurons-nous que la navigation se fait dans la zone Angular
-            this.ngZone.run(() => {
-              this.router.navigate(['/accueil/saisie-des-temps']);
-            });
+          // Mettre à jour le localStorage de manière synchrone
+          localStorage.setItem('access_token', userInfo.access_token);
+          localStorage.setItem('user_email', userInfo.email);
+          localStorage.setItem('user_name', `${userInfo.first_name} ${userInfo.last_name}`);
+          localStorage.setItem('is_admin', `${userInfo.is_admin}`);
+          localStorage.setItem('id_user', `${userInfo.id_user}`);
+          localStorage.setItem('newTitle', 'saisie des temps');
+  
+          this.isLoading = false;
+          // Assurer que la navigation se fait dans la zone Angular
+          this.ngZone.run(() => {
+            this.router.navigate(['/accueil/saisie-des-temps']);
           });
         },
         error: (error) => {
-          this.errorMessage = 'Échec de connexion. Vérifiez vos identifiants.';
-          this.showToast(` ${this.errorMessage } ❌`, true);
           this.isLoading = false;
+          if (error.status === 404) {
+            this.errorMessage = 'Utilisateur non trouvé. Vérifiez votre email et réessayez.';
+          } else if (error.status === 401) {
+            this.errorMessage = 'Échec de connexion. Vérifiez vos identifiants.';
+          } else {
+            this.errorMessage = 'Échec de connexion. Une erreur est survenue.';
+          }
+          
+          this.showToast(`${this.errorMessage} ❌`, true);
         }
       });
     }
   }
+    
 
   ngAfterViewInit(): void {
     // Initialize the Google Identity Services

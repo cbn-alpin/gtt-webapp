@@ -50,6 +50,8 @@ export class AuthService {
     localStorage.removeItem('user_name');
     localStorage.removeItem('is_admin');
     localStorage.removeItem('id_user');
+    localStorage.removeItem('isAdminChangedAccount');
+    localStorage.removeItem('switched_user_name');
     this.authSubject.next(false);
 
     //Redirige vers la page de connexion

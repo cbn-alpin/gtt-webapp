@@ -14,6 +14,9 @@ export class ShareDataService {
   private missionExpensesProcessed = new Subject<boolean>(); 
   missionExpensesProcessed$ = this.missionExpensesProcessed.asObservable();
 
+  private isAdminChangedAccount = new Subject<boolean>(); 
+  isAdminChangedAccount$ = this.isAdminChangedAccount.asObservable();
+
   validateTravelExpense() {
     this.travelExpenseValidated.next();
   }
@@ -24,6 +27,10 @@ export class ShareDataService {
 
   notifyMissionExpensesProcessed(success: boolean) {
     this.missionExpensesProcessed.next(success);
+  }
+
+  notifyIsAdminChangedAccount(success: boolean) {
+    this.isAdminChangedAccount.next(success);
   }
 
   formatDate(date : string): string {

@@ -1,5 +1,5 @@
 
-<form [formGroup]="expenseForm"  (keydown.enter)="preventEnterSubmit($event)">
+<form [formGroup]="expenseForm"  (keydown.enter)="preventEnterSubmit($event)" (ngSubmit)="save()">
     <div class="grid-container">
       <!-- Card 1: General Information -->
       <mat-card class="expense-card">
@@ -78,8 +78,8 @@
               <mat-form-field appearance="outline">
                 <mat-label for="startMunicipality">Commune départ</mat-label>
                 <input type="text" matInput [matAutocomplete]="auto" formControlName="startMunicipality">
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let commune of filteredCommunesStart | async" [value]="commune.nom">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCommune">
+                  <mat-option *ngFor="let commune of filteredCommunesStart | async" [value]="commune">
                     {{ commune.nom }} ({{ commune.codesPostaux[0] }})
                   </mat-option>
                 </mat-autocomplete>
@@ -88,8 +88,8 @@
               <mat-form-field appearance="outline">
                 <mat-label for="destinationMunicipality">Commune destination</mat-label>
                 <input type="text" matInput [matAutocomplete]="auto2" formControlName="destinationMunicipality">
-                <mat-autocomplete #auto2="matAutocomplete">
-                  <mat-option *ngFor="let commune of filteredCommunesDestination | async" [value]="commune.nom">
+                <mat-autocomplete #auto2="matAutocomplete" [displayWith]="displayCommune">
+                  <mat-option *ngFor="let commune of filteredCommunesDestination | async" [value]="commune">
                     {{ commune.nom }} ({{ commune.codesPostaux[0] }})
                   </mat-option>
                 </mat-autocomplete>
@@ -98,8 +98,8 @@
               <mat-form-field appearance="outline">
                 <mat-label for="returnMunicipality">Commune retour</mat-label>
                 <input type="text" matInput [matAutocomplete]="auto3" formControlName="returnMunicipality">
-                <mat-autocomplete #auto3="matAutocomplete">
-                  <mat-option *ngFor="let commune of filteredCommunesReturn | async" [value]="commune.nom">
+                <mat-autocomplete #auto3="matAutocomplete" [displayWith]="displayCommune">
+                  <mat-option *ngFor="let commune of filteredCommunesReturn | async" [value]="commune">
                     {{ commune.nom }} ({{ commune.codesPostaux[0] }})
                   </mat-option>
                 </mat-autocomplete>
@@ -117,8 +117,8 @@
               <mat-form-field appearance="outline">
                 <mat-label for="nightMunicipality">Commune nuitée</mat-label>
                 <input type="text" matInput [matAutocomplete]="auto4" formControlName="nightMunicipality">
-                <mat-autocomplete #auto4="matAutocomplete">
-                  <mat-option *ngFor="let commune of filteredCommunesNight | async" [value]="commune.nom ">
+                <mat-autocomplete #auto4="matAutocomplete" [displayWith]="displayCommune">
+                  <mat-option *ngFor="let commune of filteredCommunesNight | async" [value]="commune">
                     {{ commune.nom }} ({{ commune.codesPostaux[0] }})
                   </mat-option>
                 </mat-autocomplete>
@@ -191,8 +191,6 @@
                     <mat-hint>Ex: Nom du covoiturage</mat-hint>
                 </mat-form-field>
             </div>
-            
-  
         </mat-card-content>
       </mat-card>
     
@@ -200,10 +198,9 @@
     <div class="action-div">
       <button mat-button class="bouton-cancel" (click)="cancel()">Annuler</button>
 
-      <button mat-button class="bouton-confirm" (click)="save()" [disabled]="!expenseForm.valid">
+      <button  type="submit" class="bouton-confirm" [disabled]="!expenseForm.valid || isSubmitting">
         {{ isEditing ? 'Mettre à jour' : 'Créer' }}
       </button>
-       
     </div>
   <div class="actions-space">
   </div>
