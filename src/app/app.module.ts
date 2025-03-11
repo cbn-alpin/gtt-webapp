@@ -22,7 +22,9 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatCardModule} from '@angular/material/card';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { FRENCH_DATE_FORMATS } from './core/config/date-formats'; 
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
@@ -105,9 +107,11 @@ import { ListMissionExpenseComponent } from './components/list-mission-expense/l
     MatNativeDateModule,
     MatAutocompleteModule
 ],
-  providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' }
-  ],
+providers: [
+  { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' }, // Locale en français
+  { provide: DateAdapter, useClass: MomentDateAdapter }, // Utilisation de Moment pour la gestion des dates
+  { provide: MAT_DATE_FORMATS, useValue: FRENCH_DATE_FORMATS }, // Format personnalisé global
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

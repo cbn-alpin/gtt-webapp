@@ -28,8 +28,8 @@ export class ExpensesService {
     return this.http.post(url, travelData, this.getHttpOptions());
   }
 
-  getUserAllTravelsExpenses(userId: number): Observable<any> {
-    const url = `${this.baseUrl}/travels/user/${userId}`;
+  getUserAllTravelsExpenses(userId: number, date_start: string, date_end: string): Observable<any> {
+    const url = `${this.baseUrl}/travels/user/${userId}?date_start=${date_start}&date_end=${date_end}`;
     return this.http.get(url, this.getHttpOptions());
   }
 

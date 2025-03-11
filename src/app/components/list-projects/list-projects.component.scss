@@ -94,12 +94,13 @@ table {
   .element-diagram {
     border: 2px solid #2f4050;
     font-weight: lighter;
+    max-height: 300px;
+    min-height: 80px;
   }
 
   .element-description-attribution {
     opacity: 0.5;
   }
-
 
   .element-detail {
     overflow: hidden;

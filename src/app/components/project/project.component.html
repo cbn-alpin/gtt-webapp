@@ -30,12 +30,12 @@
       <div class="form-field">
         <label class="form-label" for="endDate">Date fin projet :</label>
         <input class="form-input" id="endDate" type="date" formControlName="endDate" />
-        <small *ngIf="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched">
+        <mat-error *ngIf="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched">
           La date de fin est requise.
-        </small>
-        <small *ngIf="projectForm.get('endDate')?.errors?.['dateInvalid']">
+        </mat-error>
+        <mat-error *ngIf="projectForm.get('endDate')?.errors?.['dateInvalid']">
           La date de fin doit être supérieure ou égale à la date de début.
-        </small>
+        </mat-error>
       </div>
   
       <div class="form-actions">

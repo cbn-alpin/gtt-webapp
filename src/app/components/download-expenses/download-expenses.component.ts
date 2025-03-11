@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { UserInfos } from 'src/app/models/UserInfos';
 import { DownloadService } from 'src/app/services/Download/download.service';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
+import { ShareDataService } from 'src/app/services/shareData/share-data.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -21,14 +22,16 @@ export class DownloadExpensesComponent {
   displayedColumns: string[] = ['selection', 'nom', 'prenom'];
   dataSource = new MatTableDataSource<UserInfos>([]);
   selection = new SelectionModel<UserInfos>(false, []);
-  selectedUserExpensesData: any = null ;
+  selectedUserId : any = null;
   isLoadingResults = false;
   isError = false;
+  startDateFilter: string = '';
+  endDateFilter: string  = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private userService: UserService, private downloadServivce : DownloadService,
-     private readonly expensesService: ExpensesService, private readonly snackBar: MatSnackBar) {}
+     private readonly expensesService: ExpensesService, private readonly snackBar: MatSnackBar, private shareDateService : ShareDataService) {}
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -41,12 +44,12 @@ export class DownloadExpensesComponent {
   toggleSelection(row: UserInfos): void {
     if (this.selection.isSelected(row)) {
       this.selection.clear();
-      this.selectedUserExpensesData = null;
-      this.selectionState.next(false); 
+      this.selectedUserId = null;
+      this.selectionState.next(false);
     } else {
       this.selection.clear();
       this.selection.select(row);
-      this.loadUserExpenses(row.id_user);
+      this.selectedUserId = row.id_user;
       this.selectionState.next(true); 
     }
   }
@@ -60,6 +63,7 @@ export class DownloadExpensesComponent {
         setTimeout(() => { 
    
           this.dataSource.data = users;
+          console.error('Utilisateurs pour téléchargements frais  :', users);
           this.isLoadingResults = false;
   
           setTimeout(() => { 
@@ -79,25 +83,21 @@ export class DownloadExpensesComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  loadUserExpenses(userId: number): void {
-    this.expensesService.getUserAllTravelsExpenses(userId).subscribe({
-      next: (data) => {
-        this.selectedUserExpensesData = data;
-        console.error('selectedUserExpensesData :', data);
+  exportProjectData(exportFileName : string): void {
+    this.expensesService.getUserAllTravelsExpenses(this.selectedUserId,this.startDateFilter,this.endDateFilter).subscribe({
+      next: (usersTravelsExpenses) => {
+        if (usersTravelsExpenses.length == 0) {
+          this.showToast(`Aucun frais de déplacement trouvé pour cet agent.`);
+          return;
+        }
+        const formattedData = this.formatUserExpensesForCSV(usersTravelsExpenses);  
+        this.downloadServivce.downloadCSV(formattedData, exportFileName);
+        console.error('selectedUserExpensesData after filter dates in loadTravels:', usersTravelsExpenses);
       },
       error: () => {
         console.error('Erreur lors du chargement des expenses du user');
       }
     });
-  }
-
-  exportProjectData(exportFileName : string): void {
-    if (!this.selectedUserExpensesData) {
-      console.error('Aucun user sélectionné');
-      return;
-    }
-    const formattedData = this.formatUserExpensesForCSV(this.selectedUserExpensesData);  
-    this.downloadServivce.downloadCSV(formattedData, exportFileName);
   }
 
   formatUserExpensesForCSV(data: any[]): any[] {
@@ -108,7 +108,7 @@ export class DownloadExpensesComponent {
       return data.map(row => {
         // Création d'une chaîne pour les objets de frais de mission
         const expenseObjects = row.list_expenses
-          .map((expense: any) => expense.object?.trim())
+          .map((expense: any) => expense.name?.trim())
           .filter(Boolean)
           .join(', ');
     
@@ -125,14 +125,14 @@ export class DownloadExpensesComponent {
           .join(', ');
     
         // Calcul du total des kilomètres
-        const totalKm = `${(row.end_km + row.start_km)} KM`;
+        const totalKm = `${(row.end_km - row.start_km)} KM`;
     
         return {
           'Objet déplacement réalisé': row.purpose,
           'Projet': row.project_code,
           'Destination déplacement réalisé': row.destination,
           'Résidence début': row.start_place,
-          'Résidence fin': row.end_place,
+          'Résidence fin': row.return_place,
           'Date et Heure début': row.start_date,
           'Date et Heure fin': row.end_date,
           'Véhicule déplacé': row.license_vehicle,
@@ -149,6 +149,27 @@ export class DownloadExpensesComponent {
       });
     }
    
+  }
+
+  onStartDateChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.value) {
+      this.startDateFilter = this.shareDateService.formatDate(input.value);
+    } else {
+      this.startDateFilter = ''; 
+    }
+    
+    console.error("Nouvelle date de début:", this.startDateFilter);
+  }
+  
+  onEndDateChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.value) {
+      this.endDateFilter = this.shareDateService.formatDate(input.value); 
+    } else {
+      this.endDateFilter = ''; 
+    }
+      console.error("Nouvelle date de fin:", this.endDateFilter);
   }
 
   showToast(message: string, isError: boolean = false) {

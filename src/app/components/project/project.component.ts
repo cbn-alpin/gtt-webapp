@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
+import { ShareDataService } from 'src/app/services/shareData/share-data.service';
 
 @Component({
   selector: 'app-project',
@@ -18,7 +19,7 @@ export class ProjectComponent implements OnInit{
   constructor(private readonly fb: FormBuilder , 
     private readonly dialogRef: MatDialogRef<ProjectComponent>, 
     private readonly projectService: ProjectsService,
-    private readonly snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any) {
+    private readonly snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any, private shareDateService : ShareDataService) {
       this.projectForm = this.fb.group(
         {
           code: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], 
@@ -73,9 +74,11 @@ export class ProjectComponent implements OnInit{
       const projectData : any = {
         code: this.projectForm.value.code,
         name: this.projectForm.value.projectName,
-        start_date: this.projectForm.value.startDate,
-        end_date: this.projectForm.value.endDate
+        start_date: this.shareDateService.formatDate(this.projectForm.value.startDate),
+        end_date: this.shareDateService.formatDate(this.projectForm.value.endDate)
       };
+      console.error('data start dans create projet  :', this.shareDateService.formatDate(this.projectForm.value.startDate));
+      console.error('data end dans create projet  :', this.projectForm.value.endDate);
 
       if (this.isEditMode) {
         this.updateProject(projectData);

@@ -19,7 +19,7 @@
   <ng-container *ngIf="dataSource.data.length > 0; else emptyState">
     <mat-form-field>
       <mat-label>Rechercher</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Saisir nom du projet" #input>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Saisir la valeur à rechercher" #input>
     </mat-form-field>
 
     <table mat-table

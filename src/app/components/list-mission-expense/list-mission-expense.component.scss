@@ -30,24 +30,34 @@
     }
 }
 
-.description-cell{
-    padding: 10px;
+.comment-cell{
     text-align: left;
     white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 41em; 
-    max-width: 41em;
+    width: 23em; 
+    max-width: 23em;
 }
 
-.num-cell {
-    width: 18em; 
-    max-width: 18em;
+.amount-cell {
+    width: 8em; 
+    max-width: 8em;
 }
 
-.name-cell {
-    width: 25em; 
-    max-width: 25em;
+.object-cell {
+    width: 12em; 
+    max-width: 12em;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.truncate {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 tr.element-row:not(.expanded-row):hover {
@@ -68,6 +78,12 @@ background: whitesmoke;
     font-weight: bold;
     color: #2f4050;
 }
+
+.mission-action{
+    cursor: pointer;
+    color: #2f4050;
+}
+  
 
 
 

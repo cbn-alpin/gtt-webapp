@@ -8,6 +8,7 @@ import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { MunicipalityService } from 'src/app/services/municipality/municipality.service';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { ShareDataService } from 'src/app/services/shareData/share-data.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-travel-expense',
@@ -25,7 +26,7 @@ export class TravelExpenseComponent implements OnInit {
   vehicleOptions = ['Service', 'Personnel', 'Location', 'Covoiturage'];
   residenceOptions = ['Résidence Administrative', 'Résidence Familiale'];
   isEditing: boolean = false;
-  travelId: number | null = null;
+  travelId!: number;
   savedProjectCode : any;
   list_mission_expenses : any[] = []; 
   
@@ -41,15 +42,15 @@ export class TravelExpenseComponent implements OnInit {
       purpose: ['',Validators.required],
       startDate: ['', Validators.required],
       startTime: ['', Validators.required],
-      startResidence: [''],
+      startResidence: ['', Validators.required],
       endDate: ['', Validators.required],
       endTime: ['', Validators.required],
-      endResidence: [''],
-      startMunicipality: [''],
-      destinationMunicipality: [''],
-      returnMunicipality: [''],
+      endResidence: ['', Validators.required],
+      startMunicipality: ['', Validators.required],
+      destinationMunicipality: ['', Validators.required],
+      returnMunicipality: ['', Validators.required],
 
-      nightMunicipality: [''],
+      nightMunicipality: ['', Validators.required],
       nightCount: [''],
       mealCount: [''],
 
@@ -94,7 +95,14 @@ export class TravelExpenseComponent implements OnInit {
     this.expenseForm.get('startKm')!.valueChanges.subscribe(() => this.calculateTotalKm());
     this.expenseForm.get('endKm')!.valueChanges.subscribe(() => this.calculateTotalKm());
 
+    this.expenseForm.get('startDate')?.valueChanges.subscribe(() => this.validateEndDate());
+    this.expenseForm.get('endDate')?.valueChanges.subscribe(() => this.validateEndDate());
+
     this.loadTravelData();
+
+    this.expenseForm.statusChanges.subscribe(status => {
+      console.error('Statut du formulaire :', status);
+    });
   }
 
   autocompleteProjectName(code: string) {
@@ -122,88 +130,108 @@ export class TravelExpenseComponent implements OnInit {
   }
   
   save(): void {
-    if (this.expenseForm.valid) {
-      const formData = this.expenseForm.value;
-      
-      const userId = Number(localStorage.getItem('id_user'));
-
-      const travelData = {
-        start_date: this.formatDate(formData.startDate, formData.startTime),
-        end_date: this.formatDate(formData.endDate, formData.endTime),
-        start_place: formData.startResidence,
-        return_place: formData.endResidence,
-        status: "A Traiter",
-        purpose: formData.purpose,
-        start_municipality: formData.startMunicipality,
-        end_municipality: formData.returnMunicipality,
-        destination: formData.destinationMunicipality,
-        night_municipality: formData.nightMunicipality,
-        night_count: formData.nightCount || 0,
-        meal_count: formData.mealCount || 0,
-        comment: formData.comments,
-        license_vehicle: formData.vehicleLicense,
-        comment_vehicle: formData.vehicleComment,
-        start_km: formData.startKm || 0,
-        end_km: formData.endKm || 0
-      };
-
-      if (this.isEditing && this.travelId) {
-        this.expenseService.updateUserTravelExpense(this.travelId, userId, travelData).subscribe({
-          next: (response) => {
-           
-            this.shareDataService.validateTravelExpense()
-
-            this.router.navigate(['accueil/liste-frais-de-deplacement/']);
-            
-            setTimeout(() => {
-              this.showToast(`frais de déplacement mis à jour avec succès. 🎉`);
-            }, 1000);
-
-          },
-          error: (err) => this.showToast(`Erreur lors de mise à jour du frais de déplacement.`, true),
-        });
-
-      }else{
-   
-        this.expenseService.createTravelExpense(userId,this.projectId, travelData)
-        .subscribe({
-          next: (travelexpense) => {
-            localStorage.setItem('id_travel', travelexpense.id_travel);
-            this.shareDataService.validateTravelExpense()
-            this.router.navigate(['accueil/liste-frais-de-deplacement/']);
-          },
-          error: (error) => {
-            console.log('Erreur lors de la création du frais de déplacement.', error);
-            this.showToast(`Erreur lors de la création du frais de déplacement.`, true);
-          }
-        });
-      }
-   
+    if (this.expenseForm.invalid) {
+      this.expenseForm.markAllAsTouched(); // Force l'affichage des erreurs
+      setTimeout(() => {
+        this.showToast('Veuillez remplir tous les champs obligatoires.', true);
+      });
+      return;
+    }
+  
+    const formData = this.expenseForm.value;
+  
+    // Vérifie que les heures de début et de fin sont bien renseignées
+    if (!formData.startTime || !formData.endTime) {
+      this.showToast("L'heure de début et de fin sont obligatoires.", true);
+      return;
+    }
+  
+    const userId = Number(localStorage.getItem('id_user'));
+  
+    const travelData = {
+      start_date: this.formatDate(formData.startDate, formData.startTime),
+      end_date: this.formatDate(formData.endDate, formData.endTime),
+      start_place: formData.startResidence,
+      return_place: formData.endResidence,
+      status: "A Traiter",
+      purpose: formData.purpose,
+      start_municipality: formData.startMunicipality,
+      end_municipality: formData.returnMunicipality,
+      destination: formData.destinationMunicipality,
+      night_municipality: formData.nightMunicipality,
+      night_count: formData.nightCount || 0,
+      meal_count: formData.mealCount || 0,
+      comment: formData.comments,
+      license_vehicle: formData.vehicleLicense,
+      comment_vehicle: formData.vehicleComment,
+      start_km: formData.startKm || 0,
+      end_km: formData.endKm || 0
+    };
+  
+    if (this.isEditing && this.travelId) {
+      travelData.status = history.state.travelData.status;
+      this.shareDataService.sendTravelId(this.travelId);
+      console.error('travel id à modifier:', this.travelId);
+      this.expenseService.updateUserTravelExpense(this.travelId, userId, travelData).subscribe({
+        next: (response) => {
+          console.error('travel data modifié:', travelData);
+          
+          this.shareDataService.validateTravelExpense()
+  
+          this.router.navigate(['accueil/liste-frais-de-deplacement/']);
+          
+          setTimeout(() => {
+            this.showToast(`Frais de déplacement mis à jour avec succès. 🎉`);
+          }, 1000);
+        },
+        error: (err) => this.showToast(`Erreur lors de mise à jour du frais de déplacement.`, true),
+      });
+  
     } else {
-      console.log('Le formulaire est invalide.');
+      this.expenseService.createTravelExpense(userId, this.projectId, travelData)
+      .subscribe({
+        next: (travelexpense) => {
+          console.error('Nouveau Travel créé:', travelexpense);
+          console.error('Nouveau ID Travel créé:', travelexpense.travel_id);
+          
+          // Émettre l'ID travel via le service
+          this.shareDataService.sendTravelId(travelexpense.travel_id);
+          this.shareDataService.validateTravelExpense();
+  
+          // Attendre si des frais de mission sont ajoutés, sinon rediriger immédiatement
+          this.shareDataService.missionExpensesProcessed$.subscribe(success => {
+            if (success) {
+              this.showToast('Frais de déplacement créé avec succès.', false);
+            } else {
+              this.showToast(`Frais de déplacement créé, mais aucun frais de mission ajouté.`, false);
+            }
+          });
+
+          // **Redirection forcée après la création, qu'il y ait des frais de mission ou non**
+          this.router.navigate(['accueil/liste-frais-de-deplacement/']);
+        },
+        error: (error) => {
+          console.log('Erreur lors de la création du frais de déplacement.', error);
+          this.showToast(`Erreur lors de la création du frais de déplacement.`, true);
+        }
+      });
     }
   }
+  
 
-  formatDate(date: Date | string, timeString?: string): string {
-    let parsedDate;
+  formatDate(date: string, timeString?: string): string {
+    if (!date) return '';
   
-    // Vérifier si la date est une chaîne et la convertir
-    if (typeof date === 'string' && date.includes('/')) {
-      const [day, month, year] = date.split('/');
-      parsedDate = new Date(`${year}-${month}-${day}`);
-    } else {
-      parsedDate = new Date(date);
-    }
+    // Vérifie si la date est au format attendu (DD/MM/YYYY ou YYYY-MM-DD)
+    let parsedDate = moment(date, ['DD/MM/YYYY', 'YYYY-MM-DD'], true);
   
-    const day = parsedDate.getDate().toString().padStart(2, '0');
-    const month = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
-    const year = parsedDate.getFullYear();
+    if (!parsedDate.isValid()) return '';
   
-    if (timeString) {
-      return this.isEditing ? `${year}-${month}-${day}` : `${day}/${month}/${year} ${timeString}:00`;
-    }
-    
-    return `${day}/${month}/${year} 00:00:00`; // Ajoute une heure par défaut
+    // Toujours retourner la date au format DD/MM/YYYY
+    // Si c'est une création, on ajoute les secondes ":00"
+    return this.isEditing
+    ? `${parsedDate.format('DD/MM/YYYY')} ${timeString}`
+    : `${parsedDate.format('DD/MM/YYYY')} ${timeString}:00`;
   }
   
   
@@ -217,7 +245,7 @@ export class TravelExpenseComponent implements OnInit {
     const endKm = this.expenseForm.get('endKm')!.value;
   
     if (startKm !== null && endKm !== null && endKm >= startKm) {
-      this.expenseForm.patchValue({ totalKm: endKm + startKm });
+      this.expenseForm.patchValue({ totalKm: endKm - startKm });
     } else {
       this.expenseForm.patchValue({ totalKm: null }); 
     }
@@ -229,8 +257,10 @@ export class TravelExpenseComponent implements OnInit {
     if (state.travelData) {
       this.isEditing = true;
       this.travelId = state.travelData.id_travel; 
+      console.error('id travel dans loadTravelData ', this.travelId );
       this.list_mission_expenses = state.travelData.list_expenses;
       localStorage.setItem('id_travel', state.travelData.id_travel);
+      console.error('ID Travel mis à jour:', localStorage.getItem('id_travel'));
 
       const formatDateForInput = (dateString: string) => {
         const [day, month, year] = dateString.split('/');
@@ -267,6 +297,37 @@ export class TravelExpenseComponent implements OnInit {
       this.savedProjectCode = state.travelData.project_code;
     }
   }
+
+  preventEnterSubmit(event: Event) {
+    if (event instanceof KeyboardEvent) {
+      const target = event.target as HTMLElement;
+  
+      // Vérifier que le focus n'est pas sur un bouton
+      if (target.tagName !== 'BUTTON') {
+        event.preventDefault(); // Empêche la soumission du formulaire
+      }
+    }
+  }
+
+  validateEndDate(): void {
+    const startDate = this.expenseForm.get('startDate')?.value;
+    const endDate = this.expenseForm.get('endDate')?.value;
+  
+    if (startDate && endDate) {
+      const start = moment(startDate, 'YYYY-MM-DD');
+      const end = moment(endDate, 'YYYY-MM-DD');
+  
+      if (end.isBefore(start)) {
+        this.expenseForm.get('endDate')?.setErrors({ invalidEndDate: true });
+        this.showToast('Date fin ne doit pas être inférieure à la date de début.', true);
+      } else {
+        this.expenseForm.get('endDate')?.setErrors(null);
+      }
+    }
+  }
+  
+  
+  
   
 
   showToast(message: string, isError: boolean = false) {

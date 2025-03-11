@@ -19,7 +19,7 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['selection', 'code', 'name'];
   dataSource = new MatTableDataSource<Project>([]);
   selection = new SelectionModel<Project>(false, []);
-  selectedProjectData: any = null ;
+  selectedProjectId: any = null;
   isLoadingResults = false;
   isError = false;
 
@@ -40,12 +40,12 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
   toggleSelection(row: Project): void {
     if (this.selection.isSelected(row)) {
       this.selection.clear();
-      this.selectedProjectData = null;
+      this.selectedProjectId = null;
       this.selectionState.next(false); 
     } else {
       this.selection.clear();
       this.selection.select(row);
-      this.loadProjectDetails(row.id_project);
+      this.selectedProjectId = row.id_project;
       this.selectionState.next(true); 
     }
   }
@@ -56,13 +56,22 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
 
     this.projectService.getAllProjects().subscribe({
       next: (projects) => {
-        setTimeout(() => { 
-          const filteredProjects = projects;  
+        setTimeout(() => {
+          const filteredProjects = projects
+          .filter((p: Project) => 
+            p.id_project !== 0
+          )
+          .sort((a: Project, b: Project) => {
+            const codeA = Number(a.code) || 0;
+            const codeB = Number(b.code) || 0;
+            return codeB - codeA;
+          });
+
           this.dataSource.data = filteredProjects;
           this.isLoadingResults = false;
-  
-          setTimeout(() => { 
-            this.dataSource.paginator = this.paginator;   
+
+          setTimeout(() => {
+            this.dataSource.paginator = this.paginator;
           }, 100);
         }, 1000);
       },
@@ -78,25 +87,22 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  loadProjectDetails(projectId: number): void {
-    this.projectService.getProjectActionsAndUsersTimesById(projectId).subscribe({
+  exportProjectData(exportFileName : string): void {
+    this.projectService.getProjectActionsAndUsersTimesById(this.selectedProjectId).subscribe({
       next: (data) => {
-        this.selectedProjectData = data;
+        if (data.time_entries.length == 0 ) {
+          this.showToast(`Aucune saisie de temps trouvée sur ce projet.`);
+          return;
+        }
+        console.error('projet sélectionné', data);
+        const formattedData = this.formatProjectActionsForCSV(data.time_entries);  
+        this.downloadServivce.downloadCSV(formattedData, exportFileName);
       },
       error: () => {
         console.error('Erreur lors du chargement des détails du projet');
       }
     });
-  }
-
-  exportProjectData(exportFileName : string): void {
-    if (!this.selectedProjectData) {
-      console.error('Aucun projet sélectionné');
-      return;
-    }
-    console.error('projet sélectionné', this.selectedProjectData);
-    const formattedData = this.formatProjectActionsForCSV(this.selectedProjectData.time_entries);  
-    this.downloadServivce.downloadCSV(formattedData, exportFileName);
+    
   }
 
   formatProjectActionsForCSV(data: any[]): any[] {
