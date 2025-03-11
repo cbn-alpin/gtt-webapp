@@ -37,8 +37,8 @@ export class ProjectComponent implements OnInit{
         this.projectForm.patchValue({
           code: this.data.project.code,
           projectName: this.data.project.name,
-          startDate: this.data.project.start_date,
-          endDate: this.data.project.end_date
+          startDate: this.formatDateForForm(this.data.project.start_date),
+          endDate: this.formatDateForForm(this.data.project.end_date),
         });
       }
 
@@ -74,11 +74,11 @@ export class ProjectComponent implements OnInit{
       const projectData : any = {
         code: this.projectForm.value.code,
         name: this.projectForm.value.projectName,
-        start_date: this.shareDateService.formatDate(this.projectForm.value.startDate),
-        end_date: this.shareDateService.formatDate(this.projectForm.value.endDate)
+        startDate: this.formatDateForBackend(this.projectForm.value.startDate),
+        endDate: this.formatDateForBackend(this.projectForm.value.endDate),
       };
-      console.error('data start dans create projet  :', this.shareDateService.formatDate(this.projectForm.value.startDate));
-      console.error('data end dans create projet  :', this.projectForm.value.endDate);
+      console.error('dates before formated  :', this.projectForm.value.startDate, this.projectForm.value.endDate );
+      console.error('dates after formated  :', this.formatDateForBackend(this.projectForm.value.startDate), this.formatDateForBackend(this.projectForm.value.endDate));
 
       if (this.isEditMode) {
         this.updateProject(projectData);
@@ -96,6 +96,7 @@ export class ProjectComponent implements OnInit{
       },
       error: (error) => {
         this.showToast(`Erreur : ${error.message || 'Impossible de créer le projet'}`, true);
+        this.isSubmitting = false;
       }
     });
   }
@@ -104,10 +105,11 @@ export class ProjectComponent implements OnInit{
     this.projectService.updateProjectById(this.data.project.id_project, projectData).subscribe({
       next: () => {
         this.dialogRef.close(true);
-        this.showToast(`Projet "${projectData.name}" mis à jour avec succès 🎉`);
+        this.showToast(`Projet "${projectData.name}" mis à jour avec succès 🎉`, false);
       },
       error: (error) => {
         this.showToast(`Erreur : ${error.message || 'Mise à jour impossible'}`, true);
+        this.isSubmitting = false;
       }
     });
   }
@@ -131,6 +133,19 @@ export class ProjectComponent implements OnInit{
       this.projectForm.patchValue({ projectName: '' });
     }
   }
+
+  formatDateForBackend(dateStr: string): string {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split('-'); // "yyyy-MM-dd"
+    return `${day}/${month}/${year}`; // "dd/MM/yyyy"
+  }
+
+  formatDateForForm(dateStr: string): string {
+    if (!dateStr) return '';
+    const [day, month, year] = dateStr.split('/'); // "dd/MM/yyyy"
+    return `${year}-${month}-${day}`; // "yyyy-MM-dd"
+  }
+ 
 
   showToast(message: string, isError: boolean = false) {
       this.snackBar.open(message, '', {

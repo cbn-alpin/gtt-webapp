@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { UserInfos } from 'src/app/models/UserInfos';
+import { ShareDataService } from 'src/app/services/shareData/share-data.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -15,20 +16,21 @@ export class ListUsersComponent implements OnInit, AfterViewInit {
     selectedProjectData: any = null ;
     isLoadingResults = false;
     isError = false;
+    isAdminChangingAccount = false;
   
     @ViewChild(MatPaginator) paginator!: MatPaginator;
   
-    constructor(private userService: UserService) {}
+    constructor(private userService: UserService, private shareDataService : ShareDataService) {}
   
     ngOnInit(): void {
-      this.fetchProjects();
+      this.fetchUsers();
     }
      
     ngAfterViewInit() {
       this.dataSource.paginator = this.paginator;
     }
   
-    fetchProjects(): void {
+    fetchUsers(): void {
       this.isLoadingResults = true;
       this.isError = false;
   
@@ -57,7 +59,8 @@ export class ListUsersComponent implements OnInit, AfterViewInit {
 
     selectUser(userInfo: UserInfos) {
       localStorage.setItem('user_email', userInfo.email);
-      localStorage.setItem('user_name', `${userInfo.first_name} ${userInfo.last_name}`);
+      localStorage.setItem('switched_user_name', `${userInfo.first_name} ${userInfo.last_name}`);
+      localStorage.setItem('isAdminChangedAccount', `true`);
       localStorage.setItem('id_user', `${userInfo.id_user}`);
       window.location.reload();
     }

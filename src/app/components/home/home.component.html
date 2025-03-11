@@ -13,6 +13,7 @@
         <div class="user-profile">
           <img src="assets/images/defaultProfil.png" alt="User Image" class="user-avatar-large" />
           <p class="user-name">{{ userName }}</p>
+          <p class="user-name" *ngIf="isAdminChangedAccount">Connecté comme : {{switched_user_name}}</p>
         </div>
         <mat-divider></mat-divider>
         <button mat-menu-item (click)="togglePasswordChange($event)">
