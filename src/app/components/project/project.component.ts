@@ -74,8 +74,8 @@ export class ProjectComponent implements OnInit{
       const projectData : any = {
         code: this.projectForm.value.code,
         name: this.projectForm.value.projectName,
-        startDate: this.formatDateForBackend(this.projectForm.value.startDate),
-        endDate: this.formatDateForBackend(this.projectForm.value.endDate),
+        start_date: this.formatDateForBackend(this.projectForm.value.startDate),
+        end_date: this.formatDateForBackend(this.projectForm.value.endDate),
       };
       console.error('dates before formated  :', this.projectForm.value.startDate, this.projectForm.value.endDate );
       console.error('dates after formated  :', this.formatDateForBackend(this.projectForm.value.startDate), this.formatDateForBackend(this.projectForm.value.endDate));

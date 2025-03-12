@@ -31,7 +31,7 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private readonly dialog: MatDialog,
-    private readonly snackBar: MatSnackBar, private router: Router, private readonly expensesService: ExpensesService, private shareDateService : ShareDataService){
+    private readonly snackBar: MatSnackBar, private router: Router, private readonly expensesService: ExpensesService, private shareDataService : ShareDataService){
       this.isAdmin = localStorage.getItem('is_admin') === 'true';
       this.userId = Number(localStorage.getItem('id_user'));
   }
@@ -87,6 +87,7 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
     this.router.navigate(['accueil/frais-de-deplacement/'], { 
       state: { travelData: travel }  
     });
+    this.shareDataService.sendTravelId(travel.travel_id)
   }
 
   deleteTravelExpense(action: string, travelId: number): void {

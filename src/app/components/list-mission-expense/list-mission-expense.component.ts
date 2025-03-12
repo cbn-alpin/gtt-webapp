@@ -27,6 +27,7 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
       this.id_travel = id;
       console.error('Nouvel ID Travel reçu dans ListMissionExpense:', this.id_travel);
     });
+    
   }
   
   constructor(private dialog: MatDialog,  private shareDataService : ShareDataService,
@@ -35,7 +36,7 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
     this.shareDataService.travelExpenseValidated$.subscribe(() => {
       this.sendAllExpensesToAPI();
     });
-
+    this.id_travel = Number(localStorage.getItem('id_travel'));
     console.error('ID Travel enregistré:', localStorage.getItem('id_travel'));
     console.error('ID Travel enregistré dans id_travel:', this.id_travel);
   }
@@ -50,13 +51,13 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
     // this.id_travel = Number(localStorage.getItem('id_travel'));
     console.error('Ouverture du dialogue avec ID Travel:', this.id_travel);
     const dialogRef = this.dialog.open(MissionExpenseComponent, {
-      disableClose: false,
+      disableClose: true,
       data: { id_travel: this.id_travel }
     });
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        result.id_travel = this.id_travel;
+        this.id_travel = result.id_travel;
         console.error('Ajouter la dépense au tableau temporaire:', result.id_travel);
         // this.list_expenses = [...this.list_expenses, result];
         // this.list_expenses = [...this.list_expenses, ...this.pendingExpenses];
@@ -72,13 +73,13 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
       }
     });
   }
-  
 
   // Fonction pour envoyer toutes les dépenses à l'API après tous les ajouts
   sendAllExpensesToAPI(): void {
+    const userId = Number(localStorage.getItem('id_user'));
+
     const expenseRequests = this.pendingExpenses.map(expense => {
-      expense.id_travel = this.id_travel;
-      return this.expenseService.createMissionExpense(expense);
+      return this.expenseService.createMissionExpense(expense, userId , this.id_travel);
     });
 
     forkJoin(expenseRequests).subscribe({
@@ -96,7 +97,7 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
          this.cdr.detectChanges();
     
           // Recharger la page (pas optimal, mais fonctionne)
-          // window.location.reload();
+          window.location.reload();
       },
       error: (error) => {
         console.error('Erreur lors de l\'envoi des dépenses:', error);
@@ -116,39 +117,60 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
   
     dialogRef.afterClosed().subscribe(updatedExpense => {
       if (updatedExpense) {
-        updatedExpense.id_travel = this.id_travel;
-        console.error('Mise à jour de la dépense:', updatedExpense);
   
-        // Remplacer l'ancienne dépense par la nouvelle dans la liste
-        this.list_expenses = this.list_expenses.map(exp => 
-          exp === expense ? updatedExpense : exp
-        );
+        const userId = Number(localStorage.getItem('id_user'));
   
-        this.dataSource.data = [...this.list_expenses];
-        this.cdr.detectChanges();
+        console.error('Mise à jour de la dépense en cours...', updatedExpense);
+  
+        // ✅ Appel API pour mettre à jour la dépense
+        this.expenseService.updateMissionExpense(updatedExpense, userId, expense.id_expense).subscribe({
+          next: (response) => {
+            console.error('Mise à jour réussie:', response);
+  
+            // ✅ Remplace l'ancienne dépense par la nouvelle version
+            this.list_expenses = this.list_expenses.map(exp => 
+              exp.id_expense === expense.id_expense ? response : exp
+            );
+  
+            this.dataSource.data = [...this.list_expenses]; // Mise à jour du tableau
+            this.cdr.detectChanges(); // Forcer le rafraîchissement
+            
+            this.showToast(`Frais de mission mis à jour avec succès ✅`);
+          },
+          error: (error) => {
+            console.error('Erreur lors de la mise à jour:', error);
+            this.showToast(`Erreur : Impossible de mettre à jour la dépense ❌`, true);
+          }
+        });
       }
     });
-  } 
+  }   
   
   deleteExpenseById(action: string, expenseId: number): void {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '300px',
         data: { message: `${action}?` }
       });
+
+      const userId = Number(localStorage.getItem('id_user'));
   
-      // dialogRef.afterClosed().subscribe((result: boolean) => {
-      //   if (result) {
-      //     this.projectService.deleteProjectById(projectId).subscribe({
-      //       next: () => {
-      //         this.fetchProjects();
-      //         this.showToast(`Projet supprimé avec succès ✅`);
-      //       },
-      //       error: (error) => {
-      //         this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);
-      //       }
-      //     });
-      //   }
-      // });
+      dialogRef.afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          this.expenseService.deleteMissionExpense( userId, expenseId).subscribe({
+            next: () => {
+               // ✅ Supprimer la dépense de la liste et mettre à jour la table
+              this.list_expenses = this.list_expenses.filter(expense => expense.id_expense !== expenseId);
+              this.dataSource.data = [...this.list_expenses]; 
+              this.cdr.detectChanges(); 
+
+              this.showToast(`Frais de mission supprimé avec succès ✅`);
+            },
+            error: (error) => {
+              this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);
+            }
+          });
+        }
+      });
     }
 
   showToast(message: string, isError: boolean = false) {
