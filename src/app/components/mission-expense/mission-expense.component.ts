@@ -18,8 +18,6 @@ export class MissionExpenseComponent implements OnInit {
     this.shareDataService.newTravelId$.subscribe(id => {
       this.id_travel = id;
     });
-
-    console.error('ID Travel utilisé dans ListMissionExpense:', this.id_travel);
   }
 
   constructor(private readonly fb: FormBuilder, private readonly dialogRef: MatDialogRef<MissionExpenseComponent>,
@@ -29,10 +27,7 @@ export class MissionExpenseComponent implements OnInit {
         comment: [data.expense ? data.expense.comment : ''],
         amount: [data.expense ? data.expense.amount : ''],
       });
-
       this.isEditMode = !!this.data.expense;
-
-    console.error('Ouverture du dialogue avec ID Travel dans missionExpenseComponent:', this.id_travel);
   }
 
   onClose(): void {

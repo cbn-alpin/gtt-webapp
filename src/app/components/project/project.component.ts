@@ -130,6 +130,8 @@ export class ProjectComponent implements OnInit{
     if (foundProject) {
       // Auto-complete the project name
       this.projectForm.patchValue({ projectName: foundProject.nom_p });
+      // Afficher un message lorsqu'un projet est trouvé
+      this.showToast(`Projet trouvé dans Gefiproj : "${foundProject.nom_p}"`, false);
     }
     else {
       this.projectForm.patchValue({ projectName: '' });
@@ -148,8 +150,8 @@ export class ProjectComponent implements OnInit{
   }  
 
   filterProjects(value: string): any[] {
-    if (!value || value.length < 3) {
-      this.showDropdown = false;
+    if (!value ) {
+      this.projectForm.get('code')?.setValue('', {emitEvent: false});
       this.cdRef.detectChanges();
       return [];
     }
@@ -185,7 +187,6 @@ export class ProjectComponent implements OnInit{
       this.projectForm.patchValue({ projectName: '' });
       return;
     }
-
     const foundProject = this.projectsGefiproj.find(proj => proj.code_p == code);
     if (foundProject) {
       this.projectForm.patchValue({ projectName: foundProject.nom_p });
@@ -214,14 +215,13 @@ export class ProjectComponent implements OnInit{
     const [day, month, year] = dateStr.split('/'); // "dd/MM/yyyy"
     return `${year}-${month}-${day}`; // "yyyy-MM-dd"
   }
- 
 
   showToast(message: string, isError: boolean = false) {
-      this.snackBar.open(message, '', {
-        duration: 5000, 
-        panelClass: [isError ? 'error-toast' : 'success-toast'], 
-        verticalPosition: 'top', 
-        horizontalPosition: 'center', 
+    this.snackBar.open(message, '', {
+      duration: 5000,
+      panelClass: isError ? 'error-toast' : 'success-toast',
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
     });
-  }
+  } 
 }

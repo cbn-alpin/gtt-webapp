@@ -16,7 +16,6 @@ export class ModifyPasswordComponent {
   isPasswordChanged = false;
   passwordError: string = '';
 
-
   constructor(private fb: FormBuilder, private userService: UserService,
      private readonly snackBar: MatSnackBar) {
     this.passwordForm = this.fb.group({
