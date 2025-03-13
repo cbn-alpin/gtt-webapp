@@ -85,7 +85,6 @@ export class TravelExpenseComponent implements OnInit {
         console.error('Erreur lors du chargement des projets :', error);
       }
     });
-    
 
     // listen changements of "code" field
     this.expenseForm.get('projectCode')?.valueChanges.subscribe(value => {
@@ -196,9 +195,7 @@ export class TravelExpenseComponent implements OnInit {
   
     this.expenseService.updateUserTravelExpense(this.travelId, userId, travelData).subscribe({
       next: () => {
-        console.error('Travel data modifié:', travelData);
         this.shareDataService.validateTravelExpense();
-
         // Vérifier si des frais de mission sont ajoutés
         this.shareDataService.missionExpensesProcessed$.subscribe(success => {
           this.showToast(`Frais de déplacement mis à jour avec succès. 🎉`);
@@ -219,9 +216,6 @@ export class TravelExpenseComponent implements OnInit {
     this.expenseService.createTravelExpense(userId, this.projectId, travelData)
       .subscribe({
         next: (travelexpense) => {
-          console.error('Nouveau Travel créé:', travelexpense);
-          console.error('Nouveau ID Travel créé:', travelexpense.travel_id);
-  
           this.shareDataService.sendTravelId(travelexpense.travel_id);
           this.shareDataService.validateTravelExpense();
   
@@ -278,7 +272,6 @@ export class TravelExpenseComponent implements OnInit {
 
   loadTravelData(): void {
     const state = history.state;
-    
     if (state.travelData) {
       this.isEditing = true;
       this.travelId = state.travelData.id_travel; 

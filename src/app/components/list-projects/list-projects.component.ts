@@ -89,16 +89,16 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.dataSource.sortingDataAccessor = (item: Project, property: string) => {
+    this.dataSource.sortingDataAccessor = (item: any, property: string) => {
       switch (property) {
         case 'code':
           return Number(item.code) || 0;
         case 'name':
           return item.name?.toLowerCase().trim() || '';
         case 'startDate':
-          return new Date(item.start_date).getTime();
+          return new Date(this.formatDateForForm(item.start_date)).getTime(); 
         case 'endDate':
-          return new Date(item.end_date).getTime();
+          return new Date(this.formatDateForForm(item.end_date)).getTime(); 
         default:
           return (item as any)[property];
       }
@@ -178,6 +178,12 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
         this.fetchProjects();
       }
     });
+  }
+
+  formatDateForForm(dateStr: string): string {
+    if (!dateStr) return '';
+    const [day, month, year] = dateStr.split('/'); // "dd/MM/yyyy"
+    return `${year}-${month}-${day}`; // "yyyy-MM-dd"
   }
 
   showToast(message: string, isError: boolean = false) {

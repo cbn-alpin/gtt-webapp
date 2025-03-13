@@ -11,6 +11,7 @@
     max-width: 40em;
     min-width: 30em;
     position: relative;
+    height: 50%;
 }
 
 .mat-mdc-form-field {
@@ -64,7 +65,6 @@
 
 .download-project-button {
     display: flex;
-    height: 24em; 
     align-items: flex-end; 
 }
 
@@ -77,7 +77,6 @@
     border-radius: 5px;
     padding: 10px 20px;
     width: 14em;
-    margin-bottom: 2.5em;
 }
 
 .download-project:disabled {
