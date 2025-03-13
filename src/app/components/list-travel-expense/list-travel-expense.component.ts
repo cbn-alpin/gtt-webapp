@@ -19,13 +19,12 @@ import { ShareDataService } from 'src/app/services/shareData/share-data.service'
 export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['date', 'project', 'purpose', 'amount','status','actions'];
-  statusOptions = ['En cours', 'Traité', 'Problème'];
+  statusOptions = ['A Traiter', 'En cours', 'Traité', 'Problème'];
   dataSource = new MatTableDataSource<any>([]);
   isLoadingResults = false;
   isError = false;
   isAdmin: boolean = false;
   userId : number;
-
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -50,7 +49,6 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
     this.isError = false;
 
     if (!this.userId) {
-      console.error('Utilisateur non connecté');
       return;
     }
 
@@ -111,12 +109,8 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
     });
   }
 
-  
   updateStatus(element: any, newStatus: string): void {
     if (!element || !this.userId) return;
-
-    console.error('element lorsqu on change le status de traitement :', element);
-
 
    // Vérifier si le statut a changé
    if (element.status === newStatus) return;
@@ -156,6 +150,10 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
           this.isLoadingResults = false;
         }
     });
+  }
+
+  getFilteredStatusOptions(currentStatus: string): string[] {
+    return this.statusOptions.filter(status => status !== currentStatus);
   }
 
   getStatusClass(status: string): string {

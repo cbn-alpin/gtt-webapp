@@ -5,12 +5,14 @@
     align-items: flex-start; 
     width: 100%; 
 }
+
 .table-container {
     overflow-y: auto;
     overflow-x: hidden;
     max-width: 40em;
     min-width: 30em;
     position: relative;
+    height: 50%;
 }
 
 .mat-mdc-form-field {
@@ -62,12 +64,12 @@
     background-color: rgba(47, 64, 80, 0.3) !important;
 }
 
-.download-project-button {
+.download-exponse-button {
     display: flex; 
     align-items: flex-end; 
 }
 
-.download-project{
+.download-expense{
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
@@ -76,10 +78,9 @@
     border-radius: 5px;
     padding: 10px 20px;
     width: 14em;
-    margin-top: 16em;
 }
 
-.download-project:disabled {
+.download-expense:disabled {
     background-color: #ccc;
     cursor: not-allowed;
     color: #666666;
@@ -87,15 +88,14 @@
       &:hover {
         background-color: #cccccc;
         color: #666666;
-      }
-  }
+    }
+}
 
-  .date-filter-section {
-    width: 23em;
-    padding: 10px;
-  }
-   
-  
+    .date-filter-section {
+        width: 23em;
+        padding: 10px;
+    }
+    
 .form-row {
     display: flex;
     gap: 16px;

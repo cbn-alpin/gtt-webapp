@@ -5,7 +5,8 @@
 
       <div class="form-field">
         <label class="form-label" for="code">N° projet :</label>
-        <input class="form-input" id="code" type="number" formControlName="code" placeholder="(uniquement des chiffres)" />
+        <input class="form-input" id="code" type="number" formControlName="code" placeholder="(uniquement des chiffres)" 
+        (input)="onCodeInput($event)" />
         <mat-error *ngIf="projectForm.get('code')?.invalid && projectForm.get('code')?.touched">
           Veuillez saisir un numéro de projet valide.
         </mat-error>
@@ -13,7 +14,18 @@
   
       <div class="form-field">
         <label class="form-label" for="projectName">Nom projet :</label>
-        <input class="form-input" id="projectName" type="text" formControlName="projectName" />
+        <input class="form-input" id="projectName" type="text" formControlName="projectName" 
+        (input)="onProjectNameInput($event)"
+          (focus)="showDropdown = true"
+          (blur)="hideDropdownWithDelay()"/>
+        <div class="autocomplete-list" *ngIf="showDropdown && (filteredGefiprojProjects | async)">
+          <div 
+            *ngFor="let project of (filteredGefiprojProjects | async)" 
+            class="autocomplete-item" 
+            (mousedown)="selectGefiprojProject(project)">
+            {{ project.nom_p }} ({{ project.code_p }})
+          </div>
+        </div>
         <mat-error *ngIf="projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched">
           Le nom du projet est requis.
         </mat-error>
