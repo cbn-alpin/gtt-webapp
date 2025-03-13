@@ -1,11 +1,21 @@
-.expense-container{
-    max-height: 300px;
-    min-height: 80px;
+
+.expense-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 300px; /* Ajuste selon ton besoin */
+    overflow: hidden; /* Empêche le dépassement */
 }
 
-.add-expense-space{
-    height: 2em;
-    min-height: 2em;
+.table-wrapper {
+    overflow-y: auto; /* Active le scroll vertical */
+    overflow-x: hidden;
+    max-height: 250px; /* Ajuste selon ton besoin */
+    border: 1px solid #ddd; /* Ajoute une bordure si nécessaire */
+}
+
+.expense-table {
+    width: 100%;
+    border-collapse: collapse; 
 }
 
 .add-expense{
@@ -16,18 +26,12 @@
     min-height: 2em;
 }
  
-.expense-table {
-    overflow-y: auto;
-    border-collapse: collapse; 
-    border-spacing: 0; 
-
-    th, td {
-        padding: 8px; 
-        text-align: left;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+.expense-table th, .expense-table td {
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .comment-cell{

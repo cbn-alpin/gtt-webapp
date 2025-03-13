@@ -135,7 +135,7 @@ export class TravelExpenseComponent implements OnInit {
   
   save(): void {
     if (this.expenseForm.invalid) {
-      this.expenseForm.markAllAsTouched(); // Force l'affichage des erreurs
+      this.expenseForm.markAllAsTouched(); 
       setTimeout(() => {
         this.showToast('Veuillez remplir tous les champs obligatoires.', true);
       });
@@ -172,10 +172,10 @@ export class TravelExpenseComponent implements OnInit {
       return_place: formData.endResidence,
       status: "A Traiter",
       purpose: formData.purpose,
-      start_municipality: formData.startMunicipality,
-      end_municipality: formData.returnMunicipality,
-      destination: formData.destinationMunicipality,
-      night_municipality: formData.nightMunicipality,
+      start_municipality: `${formData.startMunicipality.nom} (${formData.startMunicipality.codesPostaux[0]})`,
+      end_municipality: `${formData.returnMunicipality.nom} (${formData.returnMunicipality.codesPostaux[0]})`,
+      destination: `${formData.destinationMunicipality.nom} (${formData.destinationMunicipality.codesPostaux[0]})`,
+      night_municipality: `${formData.nightMunicipality.nom} (${formData.nightMunicipality.codesPostaux[0]})`,
       night_count: formData.nightCount || 0,
       meal_count: formData.mealCount || 0,
       comment: formData.comments,
@@ -198,11 +198,13 @@ export class TravelExpenseComponent implements OnInit {
       next: () => {
         console.error('Travel data modifié:', travelData);
         this.shareDataService.validateTravelExpense();
-        this.router.navigate(['accueil/liste-frais-de-deplacement/']);
-  
-        setTimeout(() => {
+
+        // Vérifier si des frais de mission sont ajoutés
+        this.shareDataService.missionExpensesProcessed$.subscribe(success => {
           this.showToast(`Frais de déplacement mis à jour avec succès. 🎉`);
-        }, 1000);
+        });
+        
+        this.router.navigate(['accueil/liste-frais-de-deplacement/']);
       },
       error: () => {this.showToast(`Erreur lors de mise à jour du frais de déplacement.`, true),
         this.isSubmitting = false;
@@ -302,11 +304,10 @@ export class TravelExpenseComponent implements OnInit {
         endDate: formatDateForInput(state.travelData.end_date.split(' ')[0]),
         endTime: state.travelData.end_date.split(' ')[1],
         endResidence: state.travelData.return_place,
-        startMunicipality: state.travelData.start_municipality,
-        destinationMunicipality: state.travelData.destination,
-        returnMunicipality: state.travelData.end_municipality,
-
-        nightMunicipality: state.travelData.night_municipality,
+        startMunicipality: this.parseMunicipality(state.travelData.start_municipality),
+        destinationMunicipality: this.parseMunicipality(state.travelData.destination),
+        returnMunicipality: this.parseMunicipality(state.travelData.end_municipality),
+        nightMunicipality: this.parseMunicipality(state.travelData.night_municipality),
         nightCount: state.travelData.night_count,
         mealCount: state.travelData.meal_count,
 
@@ -348,6 +349,12 @@ export class TravelExpenseComponent implements OnInit {
       }
     }
   }
+
+  parseMunicipality(value: string): any {
+    const match = value.match(/^(.*?) \((\d{5})\)$/);
+    return match ? { nom: match[1], codesPostaux: [match[2]] } : null;
+  }
+  
   
   showToast(message: string, isError: boolean = false) {
     this.snackBar.open(message, '', {

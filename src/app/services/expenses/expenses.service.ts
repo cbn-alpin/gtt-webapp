@@ -38,14 +38,23 @@ export class ExpensesService {
     return this.http.put(url, travelData, this.getHttpOptions());
   }  
 
-  createMissionExpense( missionData: any): Observable<any> {
-    const url = `${this.baseUrl}/expenses`; 
-    return this.http.post(url, missionData, this.getHttpOptions());
-  }
-
   deleteUserTravelExpense(travelId: number, userId: number): Observable<any> {
     const url = `${this.baseUrl}/travels/${travelId}/user/${userId}`; 
     return this.http.delete(url, this.getHttpOptions());
   }
 
+  createMissionExpense( missionData: any, user_id : number, travel_id: any): Observable<any> {
+    const url = `${this.baseUrl}/expenses/user/${user_id}/travel/${travel_id}`; 
+    return this.http.post(url, missionData, this.getHttpOptions());
+  }
+
+  updateMissionExpense( missionData: any, user_id : number, expense_id: number): Observable<any> {
+    const url = `${this.baseUrl}/expenses/${expense_id}/user/${user_id}`; 
+    return this.http.put(url, missionData, this.getHttpOptions());
+  }
+
+  deleteMissionExpense( user_id : number, expense_id: number): Observable<any> {
+    const url = `${this.baseUrl}/expenses/${expense_id}/user/${user_id}`; 
+    return this.http.delete(url,  this.getHttpOptions());
+  }
 }

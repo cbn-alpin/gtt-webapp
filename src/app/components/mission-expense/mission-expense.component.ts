@@ -28,7 +28,6 @@ export class MissionExpenseComponent implements OnInit {
         name: [data.expense ? data.expense.name : ''], 
         comment: [data.expense ? data.expense.comment : ''],
         amount: [data.expense ? data.expense.amount : ''],
-        id_travel: [data.id_travel]
       });
 
       this.isEditMode = !!this.data.expense;
