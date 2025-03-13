@@ -17,7 +17,6 @@ export class HomeComponent {
   userImage :any = '';
   switched_user_name : any = '';
   isAdmin: boolean = false;
-  
 
   constructor(private authService: AuthService) {
     this.currentTitle = localStorage.getItem('newTitle') || '' ;
@@ -40,7 +39,7 @@ export class HomeComponent {
   @HostListener('window:resize', [])
   checkScreenSize() {
     this.isMobile = window.innerWidth < 768;
-    this.isSidenavOpened = !this.isMobile; 
+    this.isSidenavOpened = !this.isMobile;
   }
 
   toggleSidenav() {
@@ -51,10 +50,10 @@ export class HomeComponent {
     if (this.isMobile) {
       this.isSidenavOpened = false;
     }
-  } 
+  }
 
   toggleUserList(event: MouseEvent) {
-    event.stopPropagation(); 
+    event.stopPropagation();
     this.showUsers = !this.showUsers;
   }
 

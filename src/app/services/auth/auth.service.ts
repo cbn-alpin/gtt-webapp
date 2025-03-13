@@ -14,6 +14,7 @@ interface AuthResponse {
   is_admin: boolean;
   access_token: string;
   refresh_token: string;
+  picture?: string;
 }
 
 @Injectable({
@@ -91,6 +92,7 @@ export class AuthService {
           localStorage.setItem('user_name', `${response.first_name} ${response.last_name}`);
           localStorage.setItem('is_admin', `${response.is_admin}`);
           localStorage.setItem('id_user', `${response.id_user}`);
+          localStorage.setItem('user_photo', `${response.picture}`);
           this.authSubject.next(true);
           console.log("Google One Tap login response:", response);
         })
@@ -113,6 +115,7 @@ export class AuthService {
           localStorage.setItem('user_name', `${response.first_name} ${response.last_name}`);
           localStorage.setItem('is_admin', `${response.is_admin}`);
           localStorage.setItem('id_user', `${response.id_user}`);
+          localStorage.setItem('user_photo', `${response.picture}`);
           this.authSubject.next(true);
           console.log("Google popup login response:", response);
         })

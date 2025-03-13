@@ -46,7 +46,7 @@ export class ConnectionPageComponent implements AfterViewInit {
         login: this.loginForm.value.email,
         password: this.loginForm.value.password
       };
-  
+
       this.authService.nativeAuthenticate(credentials).subscribe({
         next: (userInfo: UserInfos) => {
           // Mettre à jour le localStorage de manière synchrone
@@ -56,7 +56,8 @@ export class ConnectionPageComponent implements AfterViewInit {
           localStorage.setItem('is_admin', `${userInfo.is_admin}`);
           localStorage.setItem('id_user', `${userInfo.id_user}`);
           localStorage.setItem('newTitle', 'saisie des temps');
-  
+          localStorage.setItem('user_photo', `${userInfo.picture}`);
+
           this.isLoading = false;
           // Assurer que la navigation se fait dans la zone Angular
           this.ngZone.run(() => {
@@ -72,13 +73,13 @@ export class ConnectionPageComponent implements AfterViewInit {
           } else {
             this.errorMessage = 'Échec de connexion. Une erreur est survenue.';
           }
-          
+
           this.showToast(`${this.errorMessage} ❌`, true);
         }
       });
     }
   }
-    
+
 
   ngAfterViewInit(): void {
     // Initialize the Google Identity Services
@@ -111,8 +112,8 @@ export class ConnectionPageComponent implements AfterViewInit {
           this.router.navigate(['/accueil/saisie-des-temps']);
         },
         error: err => {
-          const detailedMessage = err.error && err.error.message 
-            ? err.error.message 
+          const detailedMessage = err.error && err.error.message
+            ? err.error.message
             : 'Échec de connexion via Google One Tap.';
           console.error('Google One Tap login failed:', err);
           this.showToast(detailedMessage, true);
@@ -131,8 +132,8 @@ export class ConnectionPageComponent implements AfterViewInit {
           this.router.navigate(['/accueil/saisie-des-temps']);
         },
         error: err => {
-          const detailedMessage = err.error && err.error.message 
-          ? err.error.message 
+          const detailedMessage = err.error && err.error.message
+          ? err.error.message
           : 'Échec de connexion via Google One Tap.';
           console.error('Google One Tap login failed:', err);
           this.showToast(detailedMessage, true);
