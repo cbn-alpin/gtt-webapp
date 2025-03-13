@@ -105,7 +105,7 @@
                 step="0.25"
                 max="10"
                 min="0"
-                [ngClass]="{ 'weekend-input': day.isWeekend || isHoliday(day.date)}"
+                [ngClass]="{ 'weekend-input': day.isWeekend, 'holiday-input': isHoliday(day.date) }"
                 #inputRef
                 (focus)="onFocus(inputRef)"
                 (blur)="onBlur(inputRef)"
@@ -147,7 +147,7 @@
                 step="0.25"
                 max="24"
                 min="0"
-                [ngClass]="{ 'weekend-input': day.isWeekend || isHoliday(day.date)}"
+                [ngClass]="{ 'weekend-input': day.isWeekend, 'holiday-input': isHoliday(day.date) }"
                 #inputRef2
                 (focus)="onFocus(inputRef2)"
                 (blur)="onBlur(inputRef2)"

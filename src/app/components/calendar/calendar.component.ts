@@ -271,7 +271,7 @@ export class CalendarComponent implements OnInit {
         this.dialog.open(PopupMessageComponent, {
             data: {
                 title: 'Erreur',
-                message: 'Vous ne pouvez pas saisir une date qui dépasse la date de fin du projet.'
+                message: 'Vous ne pouvez pas saisir un temps pour une date qui dépasse la date de fin du projet.'
             }
         });
 
