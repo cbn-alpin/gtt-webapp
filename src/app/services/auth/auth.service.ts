@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { environment } from 'src/app/environments/environment';
+import { environment } from 'src/environments/environment';
 
 
 interface AuthResponse {
@@ -77,9 +77,9 @@ export class AuthService {
     return this.http.post<AuthResponse>(url, { token: googleToken })
       .pipe(
         tap((response: AuthResponse) => {
-          // this._token = response.token;
-          // localStorage.setItem('access_token', response.token);
-          // this.authSubject.next(true);
+          this._token = response.token;
+          localStorage.setItem('access_token', response.token);
+          this.authSubject.next(true);
           console.log("Google One Tap login response:", response);
         })
       );
@@ -95,9 +95,9 @@ export class AuthService {
     return this.http.post<AuthResponse>(url, { code: googleCode })
       .pipe(
         tap((response: AuthResponse) => {
-          // this._token = response.token;
-          // localStorage.setItem('access_token', response.token);
-          // this.authSubject.next(true);
+          this._token = response.token;
+          localStorage.setItem('access_token', response.token);
+          this.authSubject.next(true);
           console.log("Google popup login response:", response);
         })
       );

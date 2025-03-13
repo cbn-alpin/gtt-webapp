@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UserInfos } from 'src/app/models/UserInfos';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { environment } from 'src/environments/environment';
 declare const google: any;
 
 @Component({
@@ -76,14 +77,14 @@ export class ConnectionPageComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     // Initialize the Google Identity Services
     google.accounts.id.initialize({
-      client_id: '800152835915-atf9657e73dip71f7velahqvn3rhf1k0.apps.googleusercontent.com',
+      client_id: environment.googleClientId,
       callback: this.handleCredentialResponse.bind(this),
       auto_select: false,
     });
     google.accounts.id.prompt();
 
     this.codeClient = google.accounts.oauth2.initCodeClient({
-      client_id: '800152835915-atf9657e73dip71f7velahqvn3rhf1k0.apps.googleusercontent.com',  // Replace with your actual client ID
+      client_id: environment.googleClientId,
       scope: 'profile email',
       callback: this.handleCodeResponse.bind(this)
     });
@@ -104,8 +105,11 @@ export class ConnectionPageComponent implements AfterViewInit {
           this.router.navigate(['/accueil/saisie-des-temps']);
         },
         error: err => {
+          const detailedMessage = err.error && err.error.message 
+            ? err.error.message 
+            : 'Échec de connexion via Google One Tap.';
           console.error('Google One Tap login failed:', err);
-          this.showToast('Échec de connexion via Google One Tap.', true);
+          this.showToast(detailedMessage, true);
         }
       });
   }
