@@ -109,6 +109,7 @@
                 #inputRef
                 (focus)="onFocus(inputRef)"
                 (blur)="onBlur(inputRef)"
+                (keydown)="blockNegativeInput($event)"
               >
 
 
@@ -150,6 +151,7 @@
                 #inputRef2
                 (focus)="onFocus(inputRef2)"
                 (blur)="onBlur(inputRef2)"
+                (keydown)="blockNegativeInput($event)"
               >
 
 

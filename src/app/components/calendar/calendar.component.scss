@@ -1,7 +1,4 @@
-.container{
-  max-height: max-content;
 
-}
 .calendar-container {
   display: flex;
   margin-bottom: 10px;
@@ -234,7 +231,7 @@
 
 .time-sheet {
   position: relative;
-  max-height: fit-content;
+//  max-height: fit-content;
 
   table {
     width: 100%;

@@ -449,8 +449,8 @@ export class CalendarComponent implements OnInit {
       (data) => {
 
         this.projects = data.filter((project: any) => project.id_project !== 0);
-        this.fixedRows = [data.find((project: any) => project.id_project === 0)];
-
+        this.fixedRows = data.filter((project: any) => project.id_project === 0);
+        console.log('Fixed Rows:', this.fixedRows);
         this.isLoadingResults = false;
       },
       (error) => {
@@ -477,4 +477,10 @@ export class CalendarComponent implements OnInit {
       inputRef.value = '0';
     }
   }
+  blockNegativeInput(event: KeyboardEvent): void {
+    if (event.key === '-') {
+      event.preventDefault();
+    }
+  }
+
 }
