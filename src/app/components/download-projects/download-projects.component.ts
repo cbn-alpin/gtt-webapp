@@ -98,7 +98,6 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
           this.showToast(`Aucune saisie de temps trouvée sur ce projet.`);
           return;
         }
-        console.error('projet sélectionné', data);
         const formattedData = this.formatProjectActionsForCSV(data.time_entries);  
         this.downloadServivce.downloadCSV(formattedData, exportFileName);
       },

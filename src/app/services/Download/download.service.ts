@@ -10,7 +10,6 @@ export class DownloadService {
 
   downloadCSV(data: any[], exportFileName: string) {
     if (!data || data.length === 0) {
-      this.showToast(`No data provided`);
       return;
     }
   
@@ -47,14 +46,5 @@ export class DownloadService {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  }
-
-  showToast(message: string, isError: boolean = false) {
-    this.snackBar.open(message, '', {
-      duration: 5000, 
-      panelClass: [isError ? 'error-toast' : 'success-toast'], 
-      verticalPosition: 'top', 
-      horizontalPosition: 'center', 
-    });
   }
 }

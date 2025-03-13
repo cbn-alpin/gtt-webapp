@@ -122,9 +122,7 @@ export class TravelExpenseComponent implements OnInit {
   setupAutocomplete(controlName: string): Observable<any[]> {
     return this.expenseForm.get(controlName)!.valueChanges.pipe(
       startWith(''),
-      switchMap(value => this.municipalityService.getCommunes(value || '').pipe(
-        tap((communes:any) => console.error('Communes reçues:', communes))
-      ))
+      switchMap(value => this.municipalityService.getCommunes(value || ''))
     );
   }
 
@@ -191,8 +189,7 @@ export class TravelExpenseComponent implements OnInit {
   private updateTravelExpense(userId: number, travelData: any): void {
     travelData.status = history.state.travelData.status;
     this.shareDataService.sendTravelId(this.travelId);
-    console.error('Travel ID à modifier:', this.travelId);
-  
+    
     this.expenseService.updateUserTravelExpense(this.travelId, userId, travelData).subscribe({
       next: () => {
         this.shareDataService.validateTravelExpense();
@@ -275,11 +272,9 @@ export class TravelExpenseComponent implements OnInit {
     if (state.travelData) {
       this.isEditing = true;
       this.travelId = state.travelData.id_travel; 
-      console.error('id travel dans loadTravelData ', this.travelId );
       this.list_mission_expenses = state.travelData.list_expenses;
       localStorage.setItem('id_travel', state.travelData.id_travel);
-      console.error('ID Travel mis à jour:', localStorage.getItem('id_travel'));
-
+ 
       const formatDateForInput = (dateString: string) => {
         const [day, month, year] = dateString.split('/');
         return `${year}-${month}-${day}`; // Convertir en format YYYY-MM-DD
@@ -336,7 +331,6 @@ export class TravelExpenseComponent implements OnInit {
   
       if (end.isBefore(start)) {
         this.expenseForm.get('endDate')?.setErrors({ invalidEndDate: true });
-        this.showToast('Date fin ne doit pas être inférieure à la date de début.', true);
       } else {
         this.expenseForm.get('endDate')?.setErrors(null);
       }

@@ -57,15 +57,11 @@ export class DownloadExpensesComponent {
   fetchUsers(): void {
     this.isLoadingResults = true;
     this.isError = false;
-
     this.userService.getAllUsers().subscribe({
       next: (users) => {
         setTimeout(() => { 
-   
           this.dataSource.data = users;
-          console.error('Utilisateurs pour téléchargements frais  :', users);
           this.isLoadingResults = false;
-  
           setTimeout(() => { 
             this.dataSource.paginator = this.paginator;   
           }, 100);
@@ -158,8 +154,6 @@ export class DownloadExpensesComponent {
     } else {
       this.startDateFilter = ''; 
     }
-    
-    console.error("Nouvelle date de début:", this.startDateFilter);
   }
   
   onEndDateChange(event: Event): void {
@@ -169,7 +163,6 @@ export class DownloadExpensesComponent {
     } else {
       this.endDateFilter = ''; 
     }
-      console.error("Nouvelle date de fin:", this.endDateFilter);
   }
 
   showToast(message: string, isError: boolean = false) {

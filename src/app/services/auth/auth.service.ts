@@ -5,7 +5,6 @@ import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
-
 interface AuthResponse {
   id_user: number;
   last_name: string;

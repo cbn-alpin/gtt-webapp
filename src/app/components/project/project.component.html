@@ -20,7 +20,7 @@
           (blur)="hideDropdownWithDelay()"/>
         <div class="autocomplete-list" *ngIf="showDropdown && (filteredGefiprojProjects | async)">
           <div 
-            *ngFor="let project of (filteredGefiprojProjects | async)" 
+            *ngFor="let project of filteredGefiprojProjects | async" 
             class="autocomplete-item" 
             (mousedown)="selectGefiprojProject(project)">
             {{ project.nom_p }} ({{ project.code_p }})
