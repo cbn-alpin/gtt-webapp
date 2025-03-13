@@ -6,4 +6,5 @@ export interface UserInfos {
   id_user: number;
   is_admin: boolean;
   refresh_token: string;
+  picture?: string;
 }

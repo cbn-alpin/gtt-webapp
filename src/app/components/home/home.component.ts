@@ -18,7 +18,7 @@ export class HomeComponent {
   userName = localStorage.getItem('user_name') || 'Utilisateur';
   isAdmin: boolean = false;
   switched_user_name = localStorage.getItem('switched_user_name');
-  // userImage = localStorage.getItem('user_photo') || 'assets/images/default-user.png'; // Image par défaut si aucune image
+  userImage = localStorage.getItem('user_photo') || 'assets/images/default-user.png'; // Image par défaut si aucune image
 
   constructor(private authService: AuthService) {
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
@@ -37,7 +37,7 @@ export class HomeComponent {
   @HostListener('window:resize', [])
   checkScreenSize() {
     this.isMobile = window.innerWidth < 768;
-    this.isSidenavOpened = !this.isMobile; 
+    this.isSidenavOpened = !this.isMobile;
   }
 
   toggleSidenav() {
@@ -48,10 +48,10 @@ export class HomeComponent {
     if (this.isMobile) {
       this.isSidenavOpened = false;
     }
-  } 
+  }
 
   toggleUserList(event: MouseEvent) {
-    event.stopPropagation(); 
+    event.stopPropagation();
     this.showUsers = !this.showUsers;
   }
 
