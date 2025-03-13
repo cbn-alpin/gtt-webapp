@@ -110,7 +110,6 @@
   overflow-y: auto;
   background: white;
   flex: 1;
-  height: 90vh;
 }
 
 .icon-container {
@@ -164,6 +163,11 @@
 .password-container{
   height: 17em;
   width: 243px;
+}
+
+::ng-deep .mat-drawer-content {
+  height: 90vh;
+  overflow: hidden;
 }
 
 @media screen and (max-width: 768px) {

@@ -1,10 +1,10 @@
 <div class="expense-container">
-        <a (click)="openAddExpenseDialog()">
-          <mat-icon class="project-expense" matTooltip="Ajouter un frais de mission" matTooltipPosition="right" >
-          add_circle_outline</mat-icon> 
-        </a>  
-    <div class="table-wrapper">
-      <table class="expense-table mat-elevation-z8" mat-table [dataSource]="dataSource" *ngIf="dataSource.data.length > 0">
+    <a (click)="openAddExpenseDialog()">
+      <mat-icon class="project-expense" matTooltip="Ajouter un frais de mission" matTooltipPosition="right" >
+      add_circle_outline</mat-icon> 
+    </a>  
+    <div class="table-wrapper" *ngIf="dataSource.data.length > 0">
+      <table class="expense-table mat-elevation-z8" mat-table [dataSource]="dataSource">
       
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef class="object-cell">Objet</th>
@@ -39,7 +39,7 @@
         
             <mat-icon 
               class="mission-action"
-              (click)="deleteExpenseById('supprimer ce frais de mission', element.id_expense)"
+              (click)="deleteExpenseById('supprimer ce frais de mission', element)"
               matTooltip="Supprimer" matTooltipPosition="above">
               delete
             </mat-icon>
@@ -55,5 +55,4 @@
     <div class="empty-container" *ngIf="dataSource.data.length === 0">
       <p>Aucun frais de mission ajouté.</p> 
     </div>
-  
 </div>
