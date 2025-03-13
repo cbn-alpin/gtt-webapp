@@ -4,8 +4,6 @@
     justify-content: space-between;
     align-items: flex-start; 
     width: 100%; 
-    min-height: 21em;
-    max-height: 21em; 
 }
 .table-container {
     overflow-y: auto;
@@ -13,8 +11,6 @@
     max-width: 40em;
     min-width: 30em;
     position: relative;
-    min-height: 21em;
-    max-height: 21em;
 }
 
 .mat-mdc-form-field {
@@ -92,6 +88,6 @@
       &:hover {
         background-color: #cccccc;
         color: #666666;
-      }
-  }
+    }
+}
   
