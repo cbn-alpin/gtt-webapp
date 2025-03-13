@@ -131,8 +131,11 @@ export class ConnectionPageComponent implements AfterViewInit {
           this.router.navigate(['/accueil/saisie-des-temps']);
         },
         error: err => {
-          console.error('Google popup login failed:', err);
-          this.showToast('Échec de connexion via Google popup.', true);
+          const detailedMessage = err.error && err.error.message 
+          ? err.error.message 
+          : 'Échec de connexion via Google One Tap.';
+          console.error('Google One Tap login failed:', err);
+          this.showToast(detailedMessage, true);
         }
       });
   }

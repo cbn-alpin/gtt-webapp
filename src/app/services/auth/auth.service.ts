@@ -7,7 +7,13 @@ import { environment } from 'src/environments/environment';
 
 
 interface AuthResponse {
-  token: string;
+  id_user: number;
+  last_name: string;
+  first_name: string;
+  email: string;
+  is_admin: boolean;
+  access_token: string;
+  refresh_token: string;
 }
 
 @Injectable({
@@ -79,8 +85,12 @@ export class AuthService {
     return this.http.post<AuthResponse>(url, { token: googleToken })
       .pipe(
         tap((response: AuthResponse) => {
-          this._token = response.token;
-          localStorage.setItem('access_token', response.token);
+          this._token = response.access_token;
+          localStorage.setItem('access_token', response.access_token);
+          localStorage.setItem('user_email', response.email);
+          localStorage.setItem('user_name', `${response.first_name} ${response.last_name}`);
+          localStorage.setItem('is_admin', `${response.is_admin}`);
+          localStorage.setItem('id_user', `${response.id_user}`);
           this.authSubject.next(true);
           console.log("Google One Tap login response:", response);
         })
@@ -97,8 +107,12 @@ export class AuthService {
     return this.http.post<AuthResponse>(url, { code: googleCode })
       .pipe(
         tap((response: AuthResponse) => {
-          this._token = response.token;
-          localStorage.setItem('access_token', response.token);
+          this._token = response.access_token;
+          localStorage.setItem('access_token', response.access_token);
+          localStorage.setItem('user_email', response.email);
+          localStorage.setItem('user_name', `${response.first_name} ${response.last_name}`);
+          localStorage.setItem('is_admin', `${response.is_admin}`);
+          localStorage.setItem('id_user', `${response.id_user}`);
           this.authSubject.next(true);
           console.log("Google popup login response:", response);
         })
