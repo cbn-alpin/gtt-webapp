@@ -26,8 +26,6 @@
 }
 
 .table-container {
-  min-height: 69em;
-  max-height: 69em;
   overflow: auto;
   position: relative;
 }
@@ -39,7 +37,6 @@
   background-color: white;
   border-radius: 5px;
 }
-
 
 .project-action{
   cursor: pointer;
@@ -55,10 +52,8 @@
 }
 
 table {
-    min-height: 69em;
-    max-height: 69em;
     width: 100%;
-  }
+}
 
 .loading-shade {
   position: absolute;
@@ -110,7 +105,7 @@ table {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 500px;
+    height: 480px;
     font-size: 18px;
     font-weight: bold;
     color: #2f4050;
@@ -138,8 +133,4 @@ table {
   .mat-header-cell, .mat-cell {
     font-size: 12px;
   }
-
-  // .project-action {
-  //   font-size: 14px;
-  // }
 }

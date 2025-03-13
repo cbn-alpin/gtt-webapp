@@ -7,8 +7,8 @@
 }
 
 .actions-space {
-    height: 7.5em;
-    min-height: 7.5em;
+  height: 7.5em;
+  min-height: 7.5em;
 }
 
 .mat-mdc-form-field {
@@ -17,65 +17,62 @@
 }
  
 .table-container {
-    min-height: 500px;
-    max-height: 500px;
     overflow: auto;
     position: relative;
 }
 
 .add-expense{
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #2f4050;
-    background-color: white;
-    border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #2f4050;
+  background-color: white;
+  border-radius: 5px;
 }
   
 .expense-action{
-    cursor: pointer;
-    color: #2f4050;
+  cursor: pointer;
+  color: #2f4050;
 }
   
 .sticky-paginator {
-    position: sticky; 
-    bottom: 0;
-    background: white;
-    z-index: 2;
-    border-top: 1px solid #e0e0e0;
-    flex-shrink: 0; 
+  position: sticky; 
+  bottom: 0;
+  background: white;
+  z-index: 2;
+  border-top: 1px solid #e0e0e0;
+  flex-shrink: 0; 
 }
   
 table {
-
-    flex-grow: 1;
-    width: 100%;
-    border-collapse: collapse;
+  flex-grow: 1;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .loading-shade {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 8px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
 }  
 
 .empty-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 500px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #2f4050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 480px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #2f4050;
 }
 
 
@@ -83,15 +80,13 @@ tr.element-row:hover {
     background: whitesmoke;
 }
 
-
 .table-wrapper {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1; 
-    overflow: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1; 
+  overflow: auto;
 }
 
-// Style du statut dans le tableau
 .status-select {
   ::ng-deep .mat-form-field-wrapper {
     padding-bottom: 0;
@@ -108,15 +103,13 @@ tr.element-row:hover {
   }
 }
 
-// Couleurs des statuts
 .in-progress { color: #2196f3; }  
 .completed { color: #4caf50; }   
 .pending { color: #ff9800; }      
 .problem { color: #f44336; }      
 
-// Surligner la ligne si "Problème"
 .problem-row {
-  background-color: #ffebee !important; // Rouge clair
+  background-color: #ffebee !important; 
 }
 
 .disabled-icon {
