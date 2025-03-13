@@ -1,9 +1,10 @@
-import { Component, NgZone } from '@angular/core';
+import { AfterViewInit, Component, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UserInfos } from 'src/app/models/UserInfos';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { environment } from 'src/environments/environment';
 declare const google: any;
 
 @Component({
@@ -11,14 +12,20 @@ declare const google: any;
   templateUrl: './connection-page.component.html',
   styleUrls: ['./connection-page.component.scss']
 })
-export class ConnectionPageComponent {
+export class ConnectionPageComponent implements AfterViewInit {
   title = 'GESTEMPS';
   isLoading = false;
   errorMessage = '';
   loginForm: FormGroup;
+  codeClient: any;
 
-  constructor(private authService: AuthService, private router: Router, 
-    private fb: FormBuilder, private readonly snackBar: MatSnackBar, private ngZone: NgZone) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private fb: FormBuilder,
+    private readonly snackBar: MatSnackBar,
+    private ngZone: NgZone
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
@@ -34,7 +41,7 @@ export class ConnectionPageComponent {
     if (this.loginForm.valid) {
       this.isLoading = true;
       this.errorMessage = '';
-  
+
       const credentials: any = {
         login: this.loginForm.value.email,
         password: this.loginForm.value.password
@@ -76,31 +83,56 @@ export class ConnectionPageComponent {
   ngAfterViewInit(): void {
     // Initialize the Google Identity Services
     google.accounts.id.initialize({
-      client_id: '800152835915-atf9657e73dip71f7velahqvn3rhf1k0.apps.googleusercontent.com',                   
+      client_id: environment.googleClientId,
       callback: this.handleCredentialResponse.bind(this),
       auto_select: false,
     });
+    google.accounts.id.prompt();
 
-    // Render the Google sign-in button into a container element
-    google.accounts.id.renderButton(
-      document.getElementById("google-signin-button"),
-      { theme: "outline", size: "large" }
-    );
+    this.codeClient = google.accounts.oauth2.initCodeClient({
+      client_id: environment.googleClientId,
+      scope: 'profile email',
+      callback: this.handleCodeResponse.bind(this)
+    });
   }
 
-  handleCredentialResponse(response: any): void {
-    console.log("Encoded JWT ID token:", response.credential);
+  googleLogin(): void {
+    this.codeClient.requestCode();
+  }
 
-    // Use the AuthService to handle login
+  /**
+   * Handle the response from the One Tap prompt (ID token flow).
+   */
+  handleCredentialResponse(response: any): void {
+    console.log("One Tap - Encoded JWT ID token:", response.credential);
     this.authService.loginWithGoogle(response.credential)
       .subscribe({
         next: () => {
-          // On successful authentication, navigate to the protected home route
           this.router.navigate(['/accueil/saisie-des-temps']);
         },
         error: err => {
-          console.error('Google login failed:', err);
-          // Handle errors (show a message, etc.)
+          const detailedMessage = err.error && err.error.message 
+            ? err.error.message 
+            : 'Échec de connexion via Google One Tap.';
+          console.error('Google One Tap login failed:', err);
+          this.showToast(detailedMessage, true);
+        }
+      });
+  }
+
+  /**
+   * Handle the response from the popup (authorization code flow).
+   */
+  handleCodeResponse(response: any): void {
+    console.log("Popup - Authorization code:", response.code);
+    this.authService.loginWithGoogleCode(response.code)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/accueil/saisie-des-temps']);
+        },
+        error: err => {
+          console.error('Google popup login failed:', err);
+          this.showToast('Échec de connexion via Google popup.', true);
         }
       });
   }

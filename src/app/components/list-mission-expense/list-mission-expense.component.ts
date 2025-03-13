@@ -119,10 +119,16 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
       if (updatedExpense) {
   
         const userId = Number(localStorage.getItem('id_user'));
+        const pendingIndex = this.pendingExpenses.findIndex(e => e === expense);
   
         console.error('Mise à jour de la dépense en cours...', updatedExpense);
-  
-        // ✅ Appel API pour mettre à jour la dépense
+
+        if (pendingIndex !== -1) {
+          // ✅ Modifier la dépense en pending sans appel API
+          this.pendingExpenses[pendingIndex] = updatedExpense;
+          console.error('Dépense modifiée en pending:', this.pendingExpenses[pendingIndex]);
+        }else{
+          // ✅ Appel API pour mettre à jour la dépense
         this.expenseService.updateMissionExpense(updatedExpense, userId, expense.id_expense).subscribe({
           next: (response) => {
             console.error('Mise à jour réussie:', response);
@@ -143,10 +149,13 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
           }
         });
       }
+        this.dataSource.data = [...this.list_expenses, ...this.pendingExpenses];
+        this.cdr.detectChanges();
+      }
     });
   }   
   
-  deleteExpenseById(action: string, expenseId: number): void {
+  deleteExpenseById(action: string, expense: any): void {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
         width: '300px',
         data: { message: `${action}?` }
@@ -156,19 +165,27 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
   
       dialogRef.afterClosed().subscribe((result: boolean) => {
         if (result) {
-          this.expenseService.deleteMissionExpense( userId, expenseId).subscribe({
-            next: () => {
-               // ✅ Supprimer la dépense de la liste et mettre à jour la table
-              this.list_expenses = this.list_expenses.filter(expense => expense.id_expense !== expenseId);
-              this.dataSource.data = [...this.list_expenses]; 
-              this.cdr.detectChanges(); 
-
-              this.showToast(`Frais de mission supprimé avec succès ✅`);
-            },
-            error: (error) => {
-              this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);
-            }
-          });
+          if (!expense.id_expense) {
+            // ✅ Supprimer une dépense qui est encore en pending
+            this.pendingExpenses = this.pendingExpenses.filter(e => e !== expense);
+            this.showToast(`Frais de mission supprimé avec succès ✅`);
+          }else{
+            this.expenseService.deleteMissionExpense( userId, expense.id_expense).subscribe({
+              next: () => {
+                 // ✅ Supprimer la dépense de la liste et mettre à jour la table
+                this.list_expenses = this.list_expenses.filter(expense => expense.id_expense !== expense.id_expense);
+                this.dataSource.data = [...this.list_expenses]; 
+                this.cdr.detectChanges(); 
+  
+                this.showToast(`Frais de mission supprimé avec succès ✅`);
+              },
+              error: (error) => {
+                this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);
+              }
+            });
+          }
+          this.dataSource.data = [...this.list_expenses, ...this.pendingExpenses];
+          this.cdr.detectChanges();
         }
       });
     }
@@ -180,6 +197,5 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
       verticalPosition: 'top',
       horizontalPosition: 'center',
     });
-  }
-  
+  } 
 }

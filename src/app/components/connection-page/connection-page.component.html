@@ -57,11 +57,15 @@
         <p>OU</p>
       </div>
       
-      <button mat-fab extended type="submit" class="login-button">
+      <button 
+        mat-fab 
+        extended 
+        type="button" 
+        class="login-button" 
+        (click)="googleLogin()">
         <img src="assets/images/google-logo.png" class="google-logo" alt="" />
         SE CONNECTER AVEC GOOGLE
       </button>
-      <!-- <div id="google-signin-button" class="login-button"></div> -->
     </div>
   </div>
     

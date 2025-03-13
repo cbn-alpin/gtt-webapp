@@ -103,6 +103,7 @@
   height: 90vh;
   display: flex !important;
   flex-direction: column;
+  background: white;
 }
 
 .main-content {
@@ -110,7 +111,6 @@
   overflow-y: auto;
   background: white;
   flex: 1;
-  height: 90vh;
 }
 
 .icon-container {
@@ -164,6 +164,10 @@
 .password-container{
   height: 17em;
   width: 243px;
+}
+
+mat-drawer-content {
+  background-color: white;
 }
 
 @media screen and (max-width: 768px) {

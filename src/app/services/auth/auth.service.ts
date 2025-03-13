@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { environment } from 'src/app/environments/environment';
+import { environment } from 'src/environments/environment';
 
 
 interface AuthResponse {
-  token: string; // Token issued by your backend after verifying the Google token
-} 
+  token: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -16,31 +16,33 @@ interface AuthResponse {
 
 export class AuthService {
   baseUrl = environment.apiUrl;
-  
-  private getHttpOptions() {
-    const token = localStorage.getItem('access_token'); 
-    
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
-      })
-    };
-  }
 
   // Private token variable
   private _token: string | null = localStorage.getItem('access_token');
+
   // BehaviorSubject to track authentication state
   private authSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
   // Public observable to subscribe to auth changes
   authState$: Observable<boolean> = this.authSubject.asObservable();
 
-  constructor(private http : HttpClient, private router: Router) { }
+  private getHttpOptions() {
+    const token = localStorage.getItem('access_token');
+
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      })
+    };
+  }
+
+
+  constructor(private http: HttpClient, private router: Router) { }
 
   // Service pour la connexion native à gtt
   nativeAuthenticate(credentials: { login: string, password: string }): Observable<any> {
     const url = `${this.baseUrl}/auth/gtt`;
-   return this.http.post(url, credentials, this.getHttpOptions());
+    return this.http.post(url, credentials, this.getHttpOptions());
   }
 
   logout() {
@@ -52,43 +54,56 @@ export class AuthService {
     localStorage.removeItem('id_user');
     localStorage.removeItem('isAdminChangedAccount');
     localStorage.removeItem('switched_user_name');
+    this._token = null;
     this.authSubject.next(false);
 
     //Redirige vers la page de connexion
     this.router.navigate(['/connexion']);
   }
-  
+
   get token(): string | null {
     return this._token;
   }
-    
+
   isAuthenticated(): boolean {
     return !!this._token;
   }
 
   /**
-   * Sends the Google JWT to the backend for verification and retrieves your app's token.
-   * @param googleToken - The token received from Google Identity Services.
+   * Sends the Google ID token from One Tap to the backend for verification.
+   * The backend should verify the token with Google and then issue your app's token.
+   * @param googleToken - The ID token received from Google One Tap.
    */
   loginWithGoogle(googleToken: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('/api/auth/google', { token: googleToken })
+    const url = `${this.baseUrl}/auth/google`;
+    return this.http.post<AuthResponse>(url, { token: googleToken })
       .pipe(
         tap((response: AuthResponse) => {
-          // Save the backend-issued token and update the authentication state
           this._token = response.token;
           localStorage.setItem('access_token', response.token);
           this.authSubject.next(true);
-        }));
+          console.log("Google One Tap login response:", response);
+        })
+      );
   }
 
-   /**
-   * Logs the user out.
+  /**
+   * Sends the Google authorization code (from the popup) to the backend.
+   * The backend exchanges this code for tokens with Google and then issues your app's token.
+   * @param googleCode - The authorization code received from the popup flow.
    */
-  //  logout(): void {
-  //   this._token = null;
-  //   localStorage.removeItem('access_token');
-  //   this.authSubject.next(false);
-  //   // Optionally, you can add further cleanup or navigate to the login route.
-  // }
-  
+  loginWithGoogleCode(googleCode: string): Observable<AuthResponse> {
+    const url = `${this.baseUrl}/auth/google`;
+    return this.http.post<AuthResponse>(url, { code: googleCode })
+      .pipe(
+        tap((response: AuthResponse) => {
+          this._token = response.token;
+          localStorage.setItem('access_token', response.token);
+          this.authSubject.next(true);
+          console.log("Google popup login response:", response);
+        })
+      );
+  }
+
+
 }
