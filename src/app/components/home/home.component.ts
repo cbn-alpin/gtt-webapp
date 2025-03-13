@@ -1,6 +1,5 @@
 import { Component, HostListener} from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { ShareDataService } from 'src/app/services/shareData/share-data.service';
 
 @Component({
   selector: 'app-home',
@@ -8,21 +7,24 @@ import { ShareDataService } from 'src/app/services/shareData/share-data.service'
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  currentTitle: string = localStorage.getItem('newTitle') || '' ;
+  currentTitle: any = '';
   showUsers = false;
   showPasswordChange = false;
   isMobile: boolean = false;
   isSidenavOpened: boolean = true;
   isAdminChangedAccount : boolean = false;
-
-  userName = localStorage.getItem('user_name') || 'Utilisateur';
+  userName : any = '';
+  userImage :any = '';
+  switched_user_name : any = '';
   isAdmin: boolean = false;
-  switched_user_name = localStorage.getItem('switched_user_name');
-  userImage = localStorage.getItem('user_photo') || 'assets/images/default-user.png'; // Image par défaut si aucune image
 
   constructor(private authService: AuthService) {
+    this.currentTitle = localStorage.getItem('newTitle') || '' ;
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
     this.isAdminChangedAccount = localStorage.getItem('isAdminChangedAccount') === 'true';
+    this.userName = localStorage.getItem('user_name') || 'Utilisateur';
+    this.userImage = localStorage.getItem('user_photo') || 'assets/images/defaultProfil.png'; // Image par défaut si aucune image
+    this.switched_user_name = localStorage.getItem('switched_user_name');
   }
 
   updateTitle(newTitle: string) {
@@ -59,5 +61,4 @@ export class HomeComponent {
     event.stopPropagation();
     this.showPasswordChange = !this.showPasswordChange;
   }
-
 }

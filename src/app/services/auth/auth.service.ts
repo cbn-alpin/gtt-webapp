@@ -61,9 +61,9 @@ export class AuthService {
     localStorage.removeItem('id_user');
     localStorage.removeItem('isAdminChangedAccount');
     localStorage.removeItem('switched_user_name');
+    localStorage.removeItem('user_photo');
     this._token = null;
     this.authSubject.next(false);
-
     //Redirige vers la page de connexion
     this.router.navigate(['/connexion']);
   }

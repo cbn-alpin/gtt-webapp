@@ -2,6 +2,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/models/Project';
@@ -24,6 +25,7 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
   isError = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private projectService: ProjectsService, private downloadServivce : DownloadService,
     private readonly snackBar: MatSnackBar
@@ -35,6 +37,7 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
    
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
  
   toggleSelection(row: Project): void {
@@ -72,6 +75,7 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
           }, 100);
         }, 1000);
       },

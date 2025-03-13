@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -51,6 +51,7 @@ import { TravelExpenseComponent } from './components/travel-expense/travel-expen
 import { ListTravelExpenseComponent } from './components/list-travel-expense/list-travel-expense.component';
 import { MissionExpenseComponent } from './components/mission-expense/mission-expense.component';
 import { ListMissionExpenseComponent } from './components/list-mission-expense/list-mission-expense.component';
+import { FrenchPaginatorIntl } from './core/config/frenchPaginatorIntl';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,7 @@ import { ListMissionExpenseComponent } from './components/list-mission-expense/l
     TravelExpenseComponent,
     ListTravelExpenseComponent,
     MissionExpenseComponent,
-    ListMissionExpenseComponent,
+    ListMissionExpenseComponent
   
   ],
   imports: [
@@ -111,6 +112,7 @@ providers: [
   { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' }, // Locale en français
   { provide: DateAdapter, useClass: MomentDateAdapter }, // Utilisation de Moment pour la gestion des dates
   { provide: MAT_DATE_FORMATS, useValue: FRENCH_DATE_FORMATS }, // Format personnalisé global
+  { provide: MatPaginatorIntl, useClass: FrenchPaginatorIntl },
 ],
   bootstrap: [AppComponent]
 })

@@ -2,8 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { map, Observable, startWith } from 'rxjs';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { ShareDataService } from 'src/app/services/shareData/share-data.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-project',
@@ -14,12 +16,14 @@ export class ProjectComponent implements OnInit{
   projectForm: FormGroup;
   isSubmitting = false;
   isEditMode = false;
+  showDropdown = false;
   projectsGefiproj: any[] = [];
+  filteredGefiprojProjects!: Observable<any[]>;
 
   constructor(private readonly fb: FormBuilder , 
     private readonly dialogRef: MatDialogRef<ProjectComponent>, 
     private readonly projectService: ProjectsService,
-    private readonly snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any, private shareDateService : ShareDataService) {
+    private readonly snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any, private shareDateService : ShareDataService, private cdRef: ChangeDetectorRef) {
       this.projectForm = this.fb.group(
         {
           code: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], 
@@ -46,6 +50,7 @@ export class ProjectComponent implements OnInit{
       this.projectService.getGefiprojAllProjects().subscribe({
         next: (projects) => {
           this.projectsGefiproj = projects;
+          this.initAutoComplete();
         },
         error: (error) => {
           console.error('Erreur lors du chargement des projets de Gefiproj:', error);
@@ -77,9 +82,6 @@ export class ProjectComponent implements OnInit{
         start_date: this.formatDateForBackend(this.projectForm.value.startDate),
         end_date: this.formatDateForBackend(this.projectForm.value.endDate),
       };
-      console.error('dates before formated  :', this.projectForm.value.startDate, this.projectForm.value.endDate );
-      console.error('dates after formated  :', this.formatDateForBackend(this.projectForm.value.startDate), this.formatDateForBackend(this.projectForm.value.endDate));
-
       if (this.isEditMode) {
         this.updateProject(projectData);
       } else {
@@ -132,6 +134,73 @@ export class ProjectComponent implements OnInit{
     else {
       this.projectForm.patchValue({ projectName: '' });
     }
+  }
+
+  initAutoComplete() {
+    this.filteredGefiprojProjects = this.projectForm.get('projectName')!.valueChanges.pipe(
+      startWith(''),
+      map(value => (typeof value === 'string' ? this.filterProjects(value) : this.projectsGefiproj))
+    );
+  
+    this.projectForm.get('code')?.valueChanges.subscribe(value => {
+      this.autocompleteByCode(value);
+    });
+  }  
+
+  filterProjects(value: string): any[] {
+    if (!value || value.length < 3) {
+      this.showDropdown = false;
+      this.cdRef.detectChanges();
+      return [];
+    }
+  
+    const filterValue = value.toLowerCase();
+    const filteredProjects = this.projectsGefiproj.filter(proj =>
+      proj.nom_p.toLowerCase().includes(filterValue) || proj.code_p.toString().includes(filterValue)
+    );
+  
+    this.showDropdown = filteredProjects.length > 0; 
+    this.cdRef.detectChanges();
+    return filteredProjects;
+  }
+  
+  hideDropdownWithDelay() {
+    setTimeout(() => {
+      this.showDropdown = false;
+    }, 200); // Petit délai pour permettre le clic sur un élément
+  }
+  
+  onProjectNameInput(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.filterProjects(inputElement.value);
+  }
+
+  onCodeInput(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    this.autocompleteByCode(inputElement.value);
+  }
+
+  autocompleteByCode(code: string) {
+    if (!code) {
+      this.projectForm.patchValue({ projectName: '' });
+      return;
+    }
+
+    const foundProject = this.projectsGefiproj.find(proj => proj.code_p == code);
+    if (foundProject) {
+      this.projectForm.patchValue({ projectName: foundProject.nom_p });
+    } else {
+      this.projectForm.patchValue({ projectName: '' });
+    }
+  }
+
+  selectGefiprojProject(project: any) {
+    this.projectForm.patchValue({
+      code: project.code_p,
+      projectName: project.nom_p
+    });
+    this.showDropdown = false;
+    this.cdRef.detectChanges();
   }
 
   formatDateForBackend(dateStr: string): string {

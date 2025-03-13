@@ -100,3 +100,23 @@ body {
   }
 }
 
+.autocomplete-list {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  width: 100%;
+  z-index: 1000;
+}
+
+.autocomplete-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.autocomplete-item:hover {
+  background: #f0f0f0;
+}
+
+

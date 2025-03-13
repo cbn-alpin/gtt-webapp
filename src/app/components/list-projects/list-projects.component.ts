@@ -64,8 +64,8 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       next: (projects) => {
         setTimeout(() => {
           const filteredProjects = projects
-          .filter((p: Project) => 
-            p.is_archived === this.showArchived && 
+          .filter((p: Project) =>
+            p.is_archived === this.showArchived &&
             p.id_project !== 0
           )
           .sort((a: Project, b: Project) => {
@@ -89,16 +89,16 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.dataSource.sortingDataAccessor = (item: Project, property: string) => {
+    this.dataSource.sortingDataAccessor = (item: any, property: string) => {
       switch (property) {
         case 'code':
           return Number(item.code) || 0;
         case 'name':
           return item.name?.toLowerCase().trim() || '';
         case 'startDate':
-          return new Date(item.start_date).getTime();
+          return new Date(this.formatDateForForm(item.start_date)).getTime(); 
         case 'endDate':
-          return new Date(item.end_date).getTime();
+          return new Date(this.formatDateForForm(item.end_date)).getTime(); 
         default:
           return (item as any)[property];
       }
@@ -119,7 +119,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
             this.showToast(`Projet supprimé avec succès ✅`);
           },
           error: (error) => {
-            this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);
+            this.showToast(`Erreur : ${error.error.message || 'Suppression impossible'} ❌`, true);
           }
         });
       }
@@ -156,7 +156,8 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
             this.fetchProjects();
           },
           error: (error) => {
-            this.showToast(`Erreur : ${error.message || 'Archivage impossible'} ❌`, true);
+            console.log(error)
+            this.showToast(`Erreur : ${error.error || 'Archivage impossible'} ❌`, true);
           }
         });
       }
@@ -170,14 +171,20 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
 
   editProject(project: Project) {
     const dialogRef = this.dialog.open(ProjectComponent, {
-      data: { project } 
+      data: { project }
     });
-  
+
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         this.fetchProjects();
       }
     });
+  }
+
+  formatDateForForm(dateStr: string): string {
+    if (!dateStr) return '';
+    const [day, month, year] = dateStr.split('/'); // "dd/MM/yyyy"
+    return `${year}-${month}-${day}`; // "yyyy-MM-dd"
   }
 
   showToast(message: string, isError: boolean = false) {

@@ -67,7 +67,7 @@ export class ConnectionPageComponent implements AfterViewInit {
         error: (error) => {
           this.isLoading = false;
           if (error.status === 404) {
-            this.errorMessage = 'Utilisateur non trouvé. Vérifiez votre email et réessayez.';
+            this.errorMessage = 'Utilisateur non trouvé. Vérifiez vos identifiants et réessayez.';
           } else if (error.status === 401) {
             this.errorMessage = 'Échec de connexion. Vérifiez vos identifiants.';
           } else {
