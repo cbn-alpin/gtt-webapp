@@ -64,8 +64,8 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       next: (projects) => {
         setTimeout(() => {
           const filteredProjects = projects
-          .filter((p: Project) => 
-            p.is_archived === this.showArchived && 
+          .filter((p: Project) =>
+            p.is_archived === this.showArchived &&
             p.id_project !== 0
           )
           .sort((a: Project, b: Project) => {
@@ -119,7 +119,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
             this.showToast(`Projet supprimé avec succès ✅`);
           },
           error: (error) => {
-            this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);
+            this.showToast(`Erreur : ${error.error.message || 'Suppression impossible'} ❌`, true);
           }
         });
       }
@@ -156,7 +156,8 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
             this.fetchProjects();
           },
           error: (error) => {
-            this.showToast(`Erreur : ${error.message || 'Archivage impossible'} ❌`, true);
+            console.log(error)
+            this.showToast(`Erreur : ${error.error || 'Archivage impossible'} ❌`, true);
           }
         });
       }
@@ -170,9 +171,9 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
 
   editProject(project: Project) {
     const dialogRef = this.dialog.open(ProjectComponent, {
-      data: { project } 
+      data: { project }
     });
-  
+
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         this.fetchProjects();
