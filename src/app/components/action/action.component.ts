@@ -61,6 +61,7 @@ export class ActionComponent implements OnInit {
           },
           error: (error) => {
             this.showToast(`Erreur : ${error.message || 'Mise à jour impossible'}`, true);
+            this.isSubmitting = false;
           }
         });
       } else {
@@ -71,6 +72,7 @@ export class ActionComponent implements OnInit {
           },
           error: (error) => {
             this.showToast(`Erreur : ${error.message || 'Création impossible'}`, true);
+            this.isSubmitting = false;
           }
         });
       }

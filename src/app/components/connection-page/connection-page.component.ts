@@ -49,7 +49,7 @@ export class ConnectionPageComponent implements AfterViewInit {
 
       this.authService.nativeAuthenticate(credentials).subscribe({
         next: (userInfo: UserInfos) => {
-          // Mettre à jour le localStorage de manière synchrone
+          // Update localStorage synchronously
           localStorage.setItem('access_token', userInfo.access_token);
           localStorage.setItem('user_email', userInfo.email);
           localStorage.setItem('user_name', `${userInfo.first_name} ${userInfo.last_name}`);
@@ -59,7 +59,7 @@ export class ConnectionPageComponent implements AfterViewInit {
           localStorage.setItem('user_photo', `${userInfo.picture}`);
 
           this.isLoading = false;
-          // Assurer que la navigation se fait dans la zone Angular
+          // Ensure that navigation takes place in the Angular zone
           this.ngZone.run(() => {
             this.router.navigate(['/accueil/saisie-des-temps']);
           });

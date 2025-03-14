@@ -113,10 +113,10 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
   updateStatus(element: any, newStatus: string): void {
     if (!element || !this.userId) return;
 
-   // Vérifier si le statut a changé
+   // Check if status has changed
    if (element.status === newStatus) return;
 
-   // Créer l'objet selon le schéma attendu
+   // Create the object as expected
    const travelData = {
      start_date: element.start_date,
      end_date: element.end_date,
