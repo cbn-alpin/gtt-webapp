@@ -21,6 +21,7 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Project>([]);
   selection = new SelectionModel<Project>(false, []);
   selectedProjectId: any = null;
+  selectedProjectCode: any = null;
   isLoadingResults = false;
   isError = false;
 
@@ -44,11 +45,13 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
     if (this.selection.isSelected(row)) {
       this.selection.clear();
       this.selectedProjectId = null;
+      this.selectedProjectCode = null;
       this.selectionState.next(false); 
     } else {
       this.selection.clear();
       this.selection.select(row);
       this.selectedProjectId = row.id_project;
+      this.selectedProjectCode = row.code;
       this.selectionState.next(true); 
     }
   }
@@ -98,8 +101,9 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
           this.showToast(`Aucune saisie de temps trouvée sur ce projet.`);
           return;
         }
+        const fileName = `${exportFileName}_${this.selectedProjectCode}`;
         const formattedData = this.formatProjectActionsForCSV(data.time_entries);  
-        this.downloadServivce.downloadCSV(formattedData, exportFileName);
+        this.downloadServivce.downloadCSV(formattedData, fileName);
       },
       error: () => {
         console.error('Erreur lors du chargement des détails du projet');

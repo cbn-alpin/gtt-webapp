@@ -23,6 +23,8 @@ export class DownloadExpensesComponent {
   dataSource = new MatTableDataSource<UserInfos>([]);
   selection = new SelectionModel<UserInfos>(false, []);
   selectedUserId : any = null;
+  selectedUserLastName : any = null;
+  selectedUserFirstName : any = null;
   isLoadingResults = false;
   isError = false;
   startDateFilter: string = '';
@@ -45,11 +47,15 @@ export class DownloadExpensesComponent {
     if (this.selection.isSelected(row)) {
       this.selection.clear();
       this.selectedUserId = null;
+      this.selectedUserLastName = null;
+      this.selectedUserFirstName  = null;
       this.selectionState.next(false);
     } else {
       this.selection.clear();
       this.selection.select(row);
       this.selectedUserId = row.id_user;
+      this.selectedUserLastName = row.last_name;
+      this.selectedUserFirstName  = row.first_name;
       this.selectionState.next(true); 
     }
   }
@@ -86,9 +92,9 @@ export class DownloadExpensesComponent {
           this.showToast(`Aucun frais de déplacement trouvé pour cet agent.`);
           return;
         }
+        const fileName = `${exportFileName}_${this.selectedUserFirstName}_${this.selectedUserLastName}`;
         const formattedData = this.formatUserExpensesForCSV(usersTravelsExpenses);  
-        this.downloadServivce.downloadCSV(formattedData, exportFileName);
-        console.error('selectedUserExpensesData after filter dates in loadTravels:', usersTravelsExpenses);
+        this.downloadServivce.downloadCSV(formattedData, fileName);
       },
       error: () => {
         console.error('Erreur lors du chargement des expenses du user');

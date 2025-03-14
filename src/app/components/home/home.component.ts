@@ -1,4 +1,4 @@
-import { Component, HostListener} from '@angular/core';
+import { Component, HostListener, OnInit} from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   currentTitle: any = '';
   showUsers = false;
   showPasswordChange = false;
@@ -18,13 +18,16 @@ export class HomeComponent {
   switched_user_name : any = '';
   isAdmin: boolean = false;
 
-  constructor(private authService: AuthService) {
+  ngOnInit() {
     this.currentTitle = localStorage.getItem('newTitle') || '' ;
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
     this.isAdminChangedAccount = localStorage.getItem('isAdminChangedAccount') === 'true';
     this.userName = localStorage.getItem('user_name') || 'Utilisateur';
     this.userImage = localStorage.getItem('user_photo') || 'assets/images/defaultProfil.png'; // Image par défaut si aucune image
-    this.switched_user_name = localStorage.getItem('switched_user_name');
+    this.switched_user_name = localStorage.getItem('switched_user_name'); 
+  }
+
+  constructor(private authService: AuthService) {
   }
 
   updateTitle(newTitle: string) {
@@ -61,4 +64,8 @@ export class HomeComponent {
     event.stopPropagation();
     this.showPasswordChange = !this.showPasswordChange;
   }
+
+  setDefaultImage() {
+    this.userImage = 'assets/images/defaultProfil.png';
+  }  
 }
