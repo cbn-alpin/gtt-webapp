@@ -73,7 +73,8 @@
     </div>
       
     <div class="download-project-button">
-      <button mat-elevation-z8 class="download-expense" (click)="exportProjectData('état_des_frais_de_déplacement')" [disabled]="(isButtonDisabled$ | async) === false" matTooltip="Sélectioner d'abord un agent" matTooltipPosition="above">
+      <button mat-elevation-z8 class="download-expense" (click)="exportProjectData('état_des_frais_de_déplacement_de')" [disabled]="(isButtonDisabled$ | async) === false" 
+      [matTooltip]="'Sélectionner d\'abord un agent'" [matTooltipDisabled]="(isButtonDisabled$ | async)" matTooltipPosition="above">
         Télécharger les frais 
       </button>
     </div>
