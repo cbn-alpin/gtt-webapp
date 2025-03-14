@@ -29,11 +29,14 @@ export class DownloadExpensesComponent {
   isError = false;
   startDateFilter: string = '';
   endDateFilter: string  = '';
+  userId :  any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private userService: UserService, private downloadServivce : DownloadService,
-     private readonly expensesService: ExpensesService, private readonly snackBar: MatSnackBar, private shareDateService : ShareDataService) {}
+     private readonly expensesService: ExpensesService, private readonly snackBar: MatSnackBar, private shareDateService : ShareDataService) {
+      this.userId = Number(localStorage.getItem('id_user'));
+     }
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -95,11 +98,41 @@ export class DownloadExpensesComponent {
         const fileName = `${exportFileName}_${this.selectedUserFirstName}_${this.selectedUserLastName}`;
         const formattedData = this.formatUserExpensesForCSV(usersTravelsExpenses);  
         this.downloadServivce.downloadCSV(formattedData, fileName);
-      },
+        console.error('expenses du user', formattedData);
+
+        //Update the status to “In progress” for each travel with a status other than In progress or To be processed.
+        usersTravelsExpenses.forEach((travel: any) => {
+          const travelId = travel.id_travel;
+          if (travel.status !== "En cours" && travel.status !== "Traité") {
+            travel.status = "En cours";
+            // delete no needed field for update travel status
+            delete travel.list_expenses;
+            delete travel.total_expense;
+            delete travel.project_code;
+            delete travel.id_user;
+            delete travel.id_travel;
+            delete travel.id_project;
+            this.updateTravelStatus(travelId, this.userId , travel);
+          }
+        });},
       error: () => {
         console.error('Erreur lors du chargement des expenses du user');
       }
     });
+  }
+
+  updateTravelStatus(travelId: number, userId: number, travelData: any): void {
+    if (!travelId || !userId) return;
+  
+    this.expensesService.updateUserTravelExpense(travelId, userId, travelData)
+      .subscribe({
+        next: () => {
+          console.log(`Statut du travel ${travelId} mis à jour après téléchargement ✅`);
+        },
+        error: (error) => {
+          console.error(`Erreur lors de la mise à jour du statut du travel ${travelId} :`, error);
+        }
+      });
   }
 
   formatUserExpensesForCSV(data: any[]): any[] {
