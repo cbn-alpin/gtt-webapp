@@ -116,6 +116,7 @@ export class ProjectActionsComponent implements OnInit {
 
   createAction(action?: Action) {
     const dialogRef = this.dialog.open(ActionComponent, {
+      disableClose: true,
       data: { id_project: this.id_project, action } 
     });
   
@@ -132,6 +133,7 @@ export class ProjectActionsComponent implements OnInit {
 
   deleteActionById(action: string, idAaction: number): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      disableClose: true,
       width: '300px',
       data: { message: `${action}?` }
     });

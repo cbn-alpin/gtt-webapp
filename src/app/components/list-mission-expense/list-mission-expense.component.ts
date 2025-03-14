@@ -93,7 +93,7 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
 
   openEditExpenseDialog(expense: any): void {    
     const dialogRef = this.dialog.open(MissionExpenseComponent, {
-      disableClose: false,
+      disableClose: true,
       data: { id_travel: this.id_travel, expense }
     });
   
@@ -134,8 +134,9 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
   
   deleteExpenseById(action: string, expense: any): void {
       const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        disableClose: true,
         width: '300px',
-        data: { message: `${action}?` }
+        data: { message: `${action}?` } 
       });
 
       const userId = Number(localStorage.getItem('id_user'));

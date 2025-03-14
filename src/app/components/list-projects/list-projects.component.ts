@@ -107,6 +107,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
 
   deleteProjectById(action: string, projectId: number): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      disableClose: true,
       width: '300px',
       data: { message: `${action}?` }
     });
@@ -127,7 +128,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
   }
 
   createProject() {
-    const dialogRef = this.dialog.open(ProjectComponent);
+    const dialogRef = this.dialog.open(ProjectComponent,{disableClose: true});
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         this.fetchProjects();
@@ -137,6 +138,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
 
   archiveProject(action: string, project: Project): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      disableClose: true,
       width: '300px',
       data: { message: `${action}?` }
     });
@@ -171,6 +173,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
 
   editProject(project: Project) {
     const dialogRef = this.dialog.open(ProjectComponent, {
+      disableClose: true,
       data: { project }
     });
 
