@@ -125,6 +125,15 @@ table {
   --mdc-switch-selected-track-color: #475a6b;
 }
 
+button[mat-menu-item][disabled] {
+  color: rgba(0, 0, 0, 0.38);  
+  cursor: not-allowed;
+}
+
+button[mat-menu-item][disabled] mat-icon {
+  color: rgba(0, 0, 0, 0.38); 
+}
+
 @media (max-width: 7480px) {
   table {
     min-width: 100%;
