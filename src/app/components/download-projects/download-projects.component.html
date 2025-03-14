@@ -52,7 +52,8 @@
       </ng-template>
   </section>
   <div class="download-project-button">
-    <button mat-elevation-z8 class="download-project" (click)="exportProjectData('saisie_de_temps_des_agents')" [disabled]="(isButtonDisabled$ | async) === false" matTooltip="Sélectioner d'abord un projet" matTooltipPosition="above">
+    <button mat-elevation-z8 class="download-project" (click)="exportProjectData('saisie_de_temps_des_agents_sur_le_projet')" [disabled]="(isButtonDisabled$ | async) === false"
+    [matTooltip]="'Sélectionner d\'abord un projet'" [matTooltipDisabled]="(isButtonDisabled$ | async)"  matTooltipPosition="above">
       Télécharger les temps 
      </button>
   </div>

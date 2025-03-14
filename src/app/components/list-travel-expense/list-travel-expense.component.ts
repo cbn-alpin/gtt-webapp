@@ -90,6 +90,7 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
 
   deleteTravelExpense(action: string, travelId: number): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      disableClose: true,
       width: '300px',
       data: { message: `${action}?` }
     });

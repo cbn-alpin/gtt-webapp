@@ -105,7 +105,6 @@ export class ConnectionPageComponent implements AfterViewInit {
    * Handle the response from the One Tap prompt (ID token flow).
    */
   handleCredentialResponse(response: any): void {
-    console.log("One Tap - Encoded JWT ID token:", response.credential);
     this.authService.loginWithGoogle(response.credential)
       .subscribe({
         next: () => {
@@ -125,7 +124,6 @@ export class ConnectionPageComponent implements AfterViewInit {
    * Handle the response from the popup (authorization code flow).
    */
   handleCodeResponse(response: any): void {
-    console.log("Popup - Authorization code:", response.code);
     this.authService.loginWithGoogleCode(response.code)
       .subscribe({
         next: () => {
