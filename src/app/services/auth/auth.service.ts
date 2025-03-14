@@ -45,14 +45,14 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  // Service pour la connexion native à gtt
+  // Service for native connection to gtt
   nativeAuthenticate(credentials: { login: string, password: string }): Observable<any> {
     const url = `${this.baseUrl}/auth/gtt`;
     return this.http.post(url, credentials, this.getHttpOptions());
   }
 
   logout() {
-    //Supprime toutes les informations stockées localement
+    //Deletes all locally stored information
     localStorage.removeItem('access_token');
     localStorage.removeItem('user_email');
     localStorage.removeItem('user_name');
@@ -63,7 +63,7 @@ export class AuthService {
     localStorage.removeItem('user_photo');
     this._token = null;
     this.authSubject.next(false);
-    //Redirige vers la page de connexion
+    //Redirects to login page
     this.router.navigate(['/connexion']);
   }
 

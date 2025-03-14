@@ -76,7 +76,7 @@ export class TravelExpenseComponent implements OnInit {
       next: (projects) => {
         this.projects = projects;
     
-        // Vérifier si on a un projet en édition
+        // Check if you have a publishing project
         if (this.savedProjectCode) {
           this.autocompleteProjectName(this.savedProjectCode);
         }
@@ -91,7 +91,7 @@ export class TravelExpenseComponent implements OnInit {
       this.autocompleteProjectName(value);
     });
 
-     // Calcul automatique du totalKm
+     // Automatic calculation of totalKm
     this.expenseForm.get('startKm')!.valueChanges.subscribe(() => this.calculateTotalKm());
     this.expenseForm.get('endKm')!.valueChanges.subscribe(() => this.calculateTotalKm());
 
@@ -142,7 +142,7 @@ export class TravelExpenseComponent implements OnInit {
     this.isSubmitting = true;
     const formData = this.expenseForm.value;
   
-    // Vérifier si les heures de début et de fin sont renseignées
+    // Check that start and end times are correct
     if (!formData.startTime || !formData.endTime) {
       this.showToast("L'heure de début et de fin sont obligatoires.", true);
       return;
@@ -184,7 +184,7 @@ export class TravelExpenseComponent implements OnInit {
   }
   
   /**
-   * Met à jour un frais de déplacement existant
+   * Update an existing travel expense
    */
   private updateTravelExpense(userId: number, travelData: any): void {
     travelData.status = history.state.travelData.status;
@@ -193,7 +193,7 @@ export class TravelExpenseComponent implements OnInit {
     this.expenseService.updateUserTravelExpense(this.travelId, userId, travelData).subscribe({
       next: () => {
         this.shareDataService.validateTravelExpense();
-        // Vérifier si des frais de mission sont ajoutés
+        // Check if mission expenses are added
         this.shareDataService.missionExpensesProcessed$.subscribe(success => {
           this.showToast(`Frais de déplacement mis à jour avec succès. 🎉`);
         });
@@ -207,7 +207,7 @@ export class TravelExpenseComponent implements OnInit {
   }
   
   /**
-   * Crée un nouveau frais de déplacement
+   * Create a new travel expense
    */
   private createTravelExpense(userId: number, travelData: any): void {
     this.expenseService.createTravelExpense(userId, this.projectId, travelData)
@@ -216,7 +216,7 @@ export class TravelExpenseComponent implements OnInit {
           this.shareDataService.sendTravelId(travelexpense.travel_id);
           this.shareDataService.validateTravelExpense();
   
-          // Vérifier si des frais de mission sont ajoutés
+          // Check if mission expenses are added
           this.shareDataService.missionExpensesProcessed$.subscribe(success => {
             this.showToast(success
               ? 'Frais de déplacement créé avec succès.'
@@ -224,7 +224,7 @@ export class TravelExpenseComponent implements OnInit {
             );
           });
   
-          // Redirection après la création
+          // Redirection after creation
           this.router.navigate(['accueil/liste-frais-de-deplacement/']);
         },
         error: (error) => {
@@ -238,13 +238,13 @@ export class TravelExpenseComponent implements OnInit {
   formatDate(date: string, timeString?: string): string {
     if (!date) return '';
   
-    // Vérifie si la date est au format attendu (DD/MM/YYYY ou YYYY-MM-DD)
+    // Checks if date is in the expected format (DD/MM/YYYY or YYYY-MM-DD)
     let parsedDate = moment(date, ['DD/MM/YYYY', 'YYYY-MM-DD'], true);
   
     if (!parsedDate.isValid()) return '';
   
-    // Toujours retourner la date au format DD/MM/YYYY
-    // Si c'est une création, on ajoute les secondes ":00"
+    // Always return the date in DD/MM/YYYY format
+    // If it's a creation, we add the seconds “:00”.
     return this.isEditing
     ? `${parsedDate.format('DD/MM/YYYY')} ${timeString}`
     : `${parsedDate.format('DD/MM/YYYY')} ${timeString}:00`;
@@ -277,10 +277,10 @@ export class TravelExpenseComponent implements OnInit {
  
       const formatDateForInput = (dateString: string) => {
         const [day, month, year] = dateString.split('/');
-        return `${year}-${month}-${day}`; // Convertir en format YYYY-MM-DD
+        return `${year}-${month}-${day}`; // Convert to YYYY-MM-DD format
       };
   
-      // Pré-remplir le formulaire avec les données existantes
+      // Pre-fill the form with existing data
       this.expenseForm.patchValue({
  
         projectCode: state.travelData.project_code ,
@@ -314,9 +314,9 @@ export class TravelExpenseComponent implements OnInit {
     if (event instanceof KeyboardEvent) {
       const target = event.target as HTMLElement;
   
-      // Vérifier que le focus n'est pas sur un bouton
+      // Check that the focus is not on a button
       if (target.tagName !== 'BUTTON') {
-        event.preventDefault(); // Empêche la soumission du formulaire
+        event.preventDefault(); // Prevents form submission
       }
     }
   }

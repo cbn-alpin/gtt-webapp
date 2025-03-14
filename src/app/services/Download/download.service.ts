@@ -15,15 +15,15 @@ export class DownloadService {
   
     const headers = Object.keys(data[0]).join(';');
     
-    // Gérer correctement les valeurs qui contiennent des guillemets ou des points-virgules
+    // Correctly handle values containing quotation marks or semicolons
     const rows = data.map(row => 
       Object.values(row)
         .map(value => {
-          // Si la valeur contient déjà des guillemets, on la laisse telle quelle
+          // If the value already contains quotation marks, we leave it as is
           if (typeof value === 'string' && value.startsWith('"') && value.endsWith('"')) {
             return value;
           }
-          // Sinon, on échappe les guillemets existants et on entoure de guillemets
+          // Otherwise, escape the existing quotation marks and enclose them in quotation marks.
           return `"${String(value).replace(/"/g, '""')}"`;
         })
         .join(';')
@@ -31,7 +31,7 @@ export class DownloadService {
   
     const csvContent = [headers, ...rows].join('\n');
     
-    // Ajouter le BOM pour l'encodage UTF-8 correct
+    // Add BOM for correct UTF-8 encoding
     const blob = new Blob([`\uFEFF${csvContent}`], { 
       type: 'text/csv;charset=utf-8;'
     });

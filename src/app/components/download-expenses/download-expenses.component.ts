@@ -108,25 +108,25 @@ export class DownloadExpensesComponent {
       return [] ;
     }else{
       return data.map(row => {
-        // Création d'une chaîne pour les objets de frais de mission
+        // Creating a string for expense objects
         const expenseObjects = row.list_expenses
           .map((expense: any) => expense.name?.trim())
           .filter(Boolean)
           .join(', ');
     
-        // Création d'une chaîne pour les montants
+        // Creating a string for uprights
         const expenseAmounts = row.list_expenses
           .map((expense: any) => `${expense.amount} €`.trim())
           .filter(Boolean)
           .join(', ');
     
-        // Création d'une chaîne pour les commentaires
+        // Creating a string for comments
         const expenseComments = row.list_expenses
           .map((expense: any) => expense.comment?.trim() || '')
           .filter(Boolean)
           .join(', ');
     
-        // Calcul du total des kilomètres
+        // Calculating total kilometers
         const totalKm = `${(row.end_km - row.start_km)} KM`;
     
         return {

@@ -139,7 +139,7 @@ export class ProjectComponent implements OnInit{
     );
   
     this.projectForm.get('code')?.valueChanges.subscribe(value => {
-      if (value) { // Seulement si une valeur existe
+      if (value) { // Only if a value exists
         this.autocompleteByCode(value);
       }
     });
@@ -161,7 +161,7 @@ export class ProjectComponent implements OnInit{
   hideDropdownWithDelay() {
     setTimeout(() => {
       this.showDropdown = false;
-    }, 200); // Petit délai pour permettre le clic sur un élément
+    }, 200); // Short delay before clicking on an element
   }
   
   onProjectNameInput(event: Event) {
@@ -179,31 +179,31 @@ export class ProjectComponent implements OnInit{
     this.manuallyEditingCode = true;
     const inputElement = event.target as HTMLInputElement;
     const newCode = inputElement.value;
-    // Si le code a été modifié, chercher le projet correspondant
+    // If the code has been modified, search for the corresponding project
     if (newCode) {
       const foundProject = this.projectsGefiproj.find(proj => proj.code_p == newCode);
       if (foundProject) {
-        // Si on trouve un projet correspondant, mettre à jour le nom
+        // If a matching project is found, update the name
         this.isAutocompleting = true;
         this.projectForm.patchValue({ projectName: foundProject.nom_p });
         this.isAutocompleting = false;
       } else {
-        // Si le code ne correspond à aucun projet, effacer le nom du projet
-        // seulement si le nom actuel provenait d'une autocomplétion précédente
+       // If the code doesn't correspond to any project, delete the project name
+        // only if the current name came from a previous autocompletion
         const currentName = this.projectForm.get('projectName')?.value;
         const projectWithCurrentName = this.projectsGefiproj.find(
           proj => proj.nom_p === currentName && proj.code_p !== newCode
         );
         
         if (projectWithCurrentName) {
-          // Le nom actuel correspond à un autre projet, donc il doit être effacé
+          // The current name corresponds to another project, so it must be deleted.
           this.isAutocompleting = true;
           this.projectForm.patchValue({ projectName: '' });
           this.isAutocompleting = false;
         }
       }
     } else {
-      // Si le code est complètement vidé, effacer aussi le nom du projet
+      // If the code is completely emptied, also delete the project name.
       this.isAutocompleting = true;
       this.projectForm.patchValue({ projectName: '' });
       this.isAutocompleting = false;
