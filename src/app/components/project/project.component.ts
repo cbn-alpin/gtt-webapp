@@ -19,6 +19,9 @@ export class ProjectComponent implements OnInit{
   showDropdown = false;
   projectsGefiproj: any[] = [];
   filteredGefiprojProjects!: Observable<any[]>;
+  isAutocompleting: boolean = false;
+  manuallyEditingProjectName: boolean = false;
+  manuallyEditingCode: boolean = false;
 
   constructor(private readonly fb: FormBuilder , 
     private readonly dialogRef: MatDialogRef<ProjectComponent>, 
@@ -55,11 +58,6 @@ export class ProjectComponent implements OnInit{
         error: (error) => {
           console.error('Erreur lors du chargement des projets de Gefiproj:', error);
         }
-      });
-
-      // listen changements of "code" field
-      this.projectForm.get('code')?.valueChanges.subscribe(value => {
-        this.autocompleteProjectName(value);
       });
   }
 
@@ -122,20 +120,16 @@ export class ProjectComponent implements OnInit{
 
   autocompleteProjectName(code: string) {
     if (!code) {
-      this.projectForm.patchValue({ projectName: '' }); 
       return;
     }
-    // find the same project code
+  
+    this.isAutocompleting = true;
     const foundProject = this.projectsGefiproj.find(proj => proj.code_p == code);
     if (foundProject) {
-      // Auto-complete the project name
       this.projectForm.patchValue({ projectName: foundProject.nom_p });
-      // Afficher un message lorsqu'un projet est trouvé
       this.showToast(`Projet trouvé dans Gefiproj : "${foundProject.nom_p}"`, false);
     }
-    else {
-      this.projectForm.patchValue({ projectName: '' });
-    }
+    this.isAutocompleting = false;
   }
 
   initAutoComplete() {
@@ -145,22 +139,20 @@ export class ProjectComponent implements OnInit{
     );
   
     this.projectForm.get('code')?.valueChanges.subscribe(value => {
-      this.autocompleteByCode(value);
+      if (value) { // Seulement si une valeur existe
+        this.autocompleteByCode(value);
+      }
     });
   }  
 
   filterProjects(value: string): any[] {
     if (!value ) {
-      this.projectForm.get('code')?.setValue('', {emitEvent: false});
-      this.cdRef.detectChanges();
       return [];
     }
-  
     const filterValue = value.toLowerCase();
     const filteredProjects = this.projectsGefiproj.filter(proj =>
       proj.nom_p.toLowerCase().includes(filterValue) || proj.code_p.toString().includes(filterValue)
     );
-  
     this.showDropdown = filteredProjects.length > 0; 
     this.cdRef.detectChanges();
     return filteredProjects;
@@ -173,34 +165,75 @@ export class ProjectComponent implements OnInit{
   }
   
   onProjectNameInput(event: Event) {
+    if (this.isAutocompleting) return;
+    
+    this.manuallyEditingProjectName = true;
     const inputElement = event.target as HTMLInputElement;
     this.filterProjects(inputElement.value);
+    this.manuallyEditingProjectName = false;
   }
 
   onCodeInput(event: Event) {
+    if (this.isAutocompleting) return;
+    
+    this.manuallyEditingCode = true;
     const inputElement = event.target as HTMLInputElement;
-    this.autocompleteByCode(inputElement.value);
+    const newCode = inputElement.value;
+    // Si le code a été modifié, chercher le projet correspondant
+    if (newCode) {
+      const foundProject = this.projectsGefiproj.find(proj => proj.code_p == newCode);
+      if (foundProject) {
+        // Si on trouve un projet correspondant, mettre à jour le nom
+        this.isAutocompleting = true;
+        this.projectForm.patchValue({ projectName: foundProject.nom_p });
+        this.isAutocompleting = false;
+      } else {
+        // Si le code ne correspond à aucun projet, effacer le nom du projet
+        // seulement si le nom actuel provenait d'une autocomplétion précédente
+        const currentName = this.projectForm.get('projectName')?.value;
+        const projectWithCurrentName = this.projectsGefiproj.find(
+          proj => proj.nom_p === currentName && proj.code_p !== newCode
+        );
+        
+        if (projectWithCurrentName) {
+          // Le nom actuel correspond à un autre projet, donc il doit être effacé
+          this.isAutocompleting = true;
+          this.projectForm.patchValue({ projectName: '' });
+          this.isAutocompleting = false;
+        }
+      }
+    } else {
+      // Si le code est complètement vidé, effacer aussi le nom du projet
+      this.isAutocompleting = true;
+      this.projectForm.patchValue({ projectName: '' });
+      this.isAutocompleting = false;
+    }
+    this.manuallyEditingCode = false;
   }
 
   autocompleteByCode(code: string) {
     if (!code) {
-      this.projectForm.patchValue({ projectName: '' });
+      this.manuallyEditingCode = true;
       return;
     }
     const foundProject = this.projectsGefiproj.find(proj => proj.code_p == code);
     if (foundProject) {
+      this.isAutocompleting = true;
+      this.showToast(`Projet trouvé dans Gefiproj : "${foundProject.nom_p}"`, false);
       this.projectForm.patchValue({ projectName: foundProject.nom_p });
-    } else {
-      this.projectForm.patchValue({ projectName: '' });
-    }
+      this.isAutocompleting = false
+    } 
+    this.manuallyEditingCode = false;
   }
 
   selectGefiprojProject(project: any) {
+    this.isAutocompleting = true;
     this.projectForm.patchValue({
       code: project.code_p,
       projectName: project.nom_p
     });
     this.showDropdown = false;
+    this.isAutocompleting = false;
     this.cdRef.detectChanges();
   }
 
