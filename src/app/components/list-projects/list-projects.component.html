@@ -49,15 +49,19 @@
         <td mat-cell *matCellDef="let element">
             <mat-icon class="project-action" [matMenuTriggerFor]="menu" style="margin-right: 10px;" *ngIf="isAdmin">more_vert</mat-icon>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="archiveProject('archiver ce projet', element)">
+              <button mat-menu-item (click)="archiveOrUnArchiveProject('archiver ce projet', element, true)" *ngIf="element.is_archived === false">
                 <mat-icon class="project-action">archive</mat-icon>
                 <span>Archiver</span>
               </button>
-              <button mat-menu-item (click)="editProject(element)">
+              <button mat-menu-item (click)="archiveOrUnArchiveProject('désarchiver ce projet', element, false)" *ngIf="element.is_archived === true">
+                <mat-icon class="project-action">unarchive</mat-icon>
+                <span>Désarchiver</span>
+              </button>
+              <button mat-menu-item (click)="editProject(element)" [disabled]="element.is_archived === true">
                 <mat-icon class="project-action">edit</mat-icon>
                 <span>Modifier</span>
               </button>
-              <button mat-menu-item (click)="deleteProjectById('supprimer ce projet', element.id_project)">
+              <button mat-menu-item (click)="deleteProjectById('supprimer ce projet', element.id_project)" [disabled]="element.is_archived === true">
                 <mat-icon class="project-action">delete</mat-icon>
                 <span>Supprimer</span>
               </button>

@@ -136,7 +136,15 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  archiveProject(action: string, project: Project): void {
+  archiveOrUnArchiveProject(action: string, project: Project, is_archived : boolean): void {
+    const successMessage = is_archived 
+      ? `Projet "${project.name}" archivé avec succès 🎉` 
+      : `Projet "${project.name}" désarchivé avec succès ✅`;
+
+    const errorMessage = is_archived 
+      ? `Erreur : Impossible d'archiver le projet "${project.name}" ❌` 
+      : `Erreur : Impossible de désarchiver le projet "${project.name}" ❌`;
+
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       disableClose: true,
       width: '300px',
@@ -149,17 +157,17 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
 
         const updatedProject = {
           ...projectData,
-          is_archived: true
+          is_archived: is_archived
         };
 
         this.projectService.updateProjectById(project.id_project, updatedProject).subscribe({
           next: () => {
-            this.showToast(`Projet "${project.name}" archivé avec succès 🎉`);
+            this.showToast(successMessage,false);
             this.fetchProjects();
           },
           error: (error) => {
             console.log(error)
-            this.showToast(`Erreur : ${error.error || 'Archivage impossible'} ❌`, true);
+            this.showToast(errorMessage, true);
           }
         });
       }
