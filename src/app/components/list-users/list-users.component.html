@@ -8,7 +8,7 @@
         <ng-container *ngIf="dataSource.data.length > 0; else emptyState">
         <mat-form-field>
             <mat-label>Rechercher</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Saisir le nom ou prénom de l'agent">
+            <input matInput (keyup)="applyFilter($event)" placeholder="Saisir la valeur à rechercher">
         </mat-form-field>
         
         <table mat-table [dataSource]="dataSource">    
