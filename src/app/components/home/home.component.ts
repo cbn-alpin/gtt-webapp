@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit {
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
     this.isAdminChangedAccount = localStorage.getItem('isAdminChangedAccount') === 'true';
     this.userName = localStorage.getItem('user_name') || 'Utilisateur';
-    this.userImage = localStorage.getItem('user_photo') || 'assets/images/defaultProfil.png'; // Image par défaut si aucune image
+    this.userImage = localStorage.getItem('user_photo') || 'assets/images/defaultProfil.png'; // Default image if no image
     this.switched_user_name = localStorage.getItem('switched_user_name'); 
   }
 

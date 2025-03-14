@@ -51,12 +51,12 @@ export class ProjectActionsComponent implements OnInit {
 
   toggleAllRows() {
     if (this.isAllSelected()) {
-      // Désélectionner toutes les actions sélectionnées
+      // Deselect all selected actions
       const selectedActions = this.selection.selected.map(action => action.id_action);
       this.selection.clear();
       this.bulkDeleteUserActions(selectedActions);
     } else {
-      // Sélectionner toutes les actions et envoyer uniquement celles non encore sélectionnées
+      // Select all actions and send only those not yet selected
       const alreadySelected = new Set(this.selection.selected.map(a => a.id_action));
       const newlySelected = this.dataSource.data.filter(action => !alreadySelected.has(action.id_action));
   
@@ -89,17 +89,17 @@ export class ProjectActionsComponent implements OnInit {
 
   toggleSelection(action: Action) {
     this.selection.toggle(action);
-    const userId = Number(localStorage.getItem('id_user')); // Récupération de l’ID utilisateur
+    const userId = Number(localStorage.getItem('id_user')); // User ID retrieval
     console.error("token after check: ", localStorage.getItem('access_token'));
 
     if (this.selection.isSelected(action)) {
-      // Ajout de l'action utilisateur
+      // Add user action
       this.userActionService.createUserAction(userId, action.id_action).subscribe({
         next: (response) => console.log(`Action ${action.id_action} enregistrée`, response),
         error: (error) => console.error(' Erreur lors de l’enregistrement', localStorage.getItem('access_token') )
       });
     } else {
-      // Suppression de l'action utilisateur
+      // Delete user action
       this.userActionService.deleteUserAction(userId, action.id_action).subscribe({
         next: () => console.log(`Action ${action.id_action} supprimée`),
         error: (error) => console.error(' Erreur lors de la suppression', error)
@@ -159,23 +159,23 @@ export class ProjectActionsComponent implements OnInit {
       next: (project) => {
         this._list_action = Array.isArray(project.list_action) ? project.list_action : [];
        
-         // Appliquer le tri hiérarchique
+         //Apply hierarchical sorting
         this.dataSource.data = this.naturalSort([...this._list_action]);
   
         const userId = Number(localStorage.getItem('id_user'));
   
-        // Récupérer tous les projets où l'utilisateur a sélectionné des actions
+        // Retrieve all projects where the user has selected actions
         this.projectActionsService.getUserProjects(userId).subscribe({
           next: (projects: { id_project: number; list_action: Action[] }[]) => {
             const selectedActions = new Set<number>();
   
-            // Chercher si le projet actuel est dans la liste des projets du user
+            // Find out if the current project is in the user's project list
             const userProject = projects.find(p  => p.id_project === this.id_project);
             if (userProject && Array.isArray(userProject.list_action)) {
               userProject.list_action.forEach(action => selectedActions.add(action.id_action));
             }
   
-            // Sélectionner seulement les actions correspondant au projet
+            // Select only the actions corresponding to the project
             this.selection.clear();
             this.selection.select(...this.dataSource.data.filter(a => selectedActions.has(a.id_action)));
           },
@@ -190,18 +190,18 @@ export class ProjectActionsComponent implements OnInit {
     });
   }
 
-    // Ajouter cette fonction pour le tri des numéros de format hiérarchique (1.2.3.3)
+    // Add this function for sorting hierarchical format numbers (1.2.3.3)
   private naturalSort(list: Action[]): Action[] {
     return [...list].sort((a, b) => {
-      // Diviser les numéros en segments numériques
+      // Divide numbers into numeric segments
       const segmentsA = a.numero_action.split('.').map(segment => parseInt(segment, 10));
       const segmentsB = b.numero_action.split('.').map(segment => parseInt(segment, 10));
       
-      // Comparer segment par segment
+      // Compare segment by segment
       const maxLength = Math.max(segmentsA.length, segmentsB.length);
       
       for (let i = 0; i < maxLength; i++) {
-        // Si un segment n'existe pas, on le considère comme 0
+        // If a segment does not exist, it is considered to be 0
         const segA = i < segmentsA.length ? segmentsA[i] : 0;
         const segB = i < segmentsB.length ? segmentsB[i] : 0;
         
@@ -210,7 +210,7 @@ export class ProjectActionsComponent implements OnInit {
         }
       }
       
-      // Si tous les segments sont égaux jusqu'ici, la plus courte vient en premier
+      // If all segments are equal up to this point, the shortest comes first
       return segmentsA.length - segmentsB.length;
     });
   }

@@ -52,7 +52,7 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.id_travel = result.id_travel;
-        // Ajouter la dépense au tableau temporaire
+        // Add expense to temporary table
         this.pendingExpenses.push(result);
         this.cdr.detectChanges();
         this.dataSource.data = [...this.list_expenses, ...this.pendingExpenses];
@@ -60,7 +60,7 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
     });
   }
 
-  // Fonction pour envoyer toutes les dépenses à l'API après tous les ajouts
+  // Function to send all expenses to API after all additions
   sendAllExpensesToAPI(): void {
     const userId = Number(localStorage.getItem('id_user'));
 
@@ -72,15 +72,15 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
       next: (responses) => {
         this.shareDataService.notifyMissionExpensesProcessed(true);
     
-         // Ajouter les nouvelles dépenses à `list_expenses` et vider `pendingExpenses`
+         // Add new expenses to `list_expenses` and empty `pendingExpenses`.
          this.list_expenses = [...this.list_expenses, ...this.pendingExpenses];
          this.pendingExpenses = [];
  
-         // Rafraîchir la table
+         // Refresh the table
          this.dataSource.data = [...this.list_expenses];
          this.cdr.detectChanges();
     
-          // Recharger la page (pas optimal, mais fonctionne)
+          // Reload page (not optimal, but works)
           window.location.reload();
       },
       error: (error) => {
@@ -104,18 +104,18 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
         const pendingIndex = this.pendingExpenses.findIndex(e => e === expense);
   
         if (pendingIndex !== -1) {
-          // Modifier la dépense en pending sans appel API
+          // Modify pending expenditure without API call
           this.pendingExpenses[pendingIndex] = updatedExpense;
         }else{
-          // Appel API pour mettre à jour la dépense
+          // API call to update expense
         this.expenseService.updateMissionExpense(updatedExpense, userId, expense.id_expense).subscribe({
           next: (response) => {  
-            // Remplace l'ancienne dépense par la nouvelle version
+            // Replaces the old expense with the new version
             this.list_expenses = this.list_expenses.map(exp => 
               exp.id_expense === expense.id_expense ? response : exp
             );
   
-            this.dataSource.data = [...this.list_expenses]; // Mise à jour du tableau
+            this.dataSource.data = [...this.list_expenses]; // Table update
             this.cdr.detectChanges(); 
             
             this.showToast(`Frais de mission mis à jour avec succès ✅`);
@@ -144,13 +144,13 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
       dialogRef.afterClosed().subscribe((result: boolean) => {
         if (result) {
           if (!expense.id_expense) {
-            // Supprimer une dépense qui est encore en pending
+            // Eliminate a pending expense
             this.pendingExpenses = this.pendingExpenses.filter(e => e !== expense);
             this.showToast(`Frais de mission supprimé avec succès ✅`);
           }else{
             this.expenseService.deleteMissionExpense( userId, expense.id_expense).subscribe({
               next: () => {
-                 // Supprimer la dépense de la liste et mettre à jour la table
+                 // Remove expense from list and update table
                 this.list_expenses = this.list_expenses.filter(expense => expense.id_expense !== expense.id_expense);
                 this.dataSource.data = [...this.list_expenses]; 
                 this.cdr.detectChanges(); 
