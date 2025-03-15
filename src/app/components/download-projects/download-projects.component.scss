@@ -90,3 +90,12 @@
     }
 }
   
+.empty-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 540px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2f4050;
+}
