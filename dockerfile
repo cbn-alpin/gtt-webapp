@@ -20,8 +20,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copy built Angular files from the previous stage
 COPY --from=build /app/dist/gtt-webapp /usr/share/nginx/html
 
-# Copy the config.json file so it can be modified later
-# COPY src/assets/config.json /usr/share/nginx/html/assets/config.json
+# Copy the entrypoint script
+COPY entrypoint.sh /docker-entrypoint.d/40-env-replace.sh
 
 # Expose port 80
 EXPOSE 8080
