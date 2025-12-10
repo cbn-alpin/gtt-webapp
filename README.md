@@ -26,3 +26,14 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Docker
+
+To build an image localy use : `docker build -t gtt-webapp:develop --build-arg ANGULAR_ENV="development" .`
+
+When you run the image you can pass this environment variables with your own values :
+
+```
+API_URL="http://127.0.0.1:5000/api"
+GOOGLE_CLIENT_ID="apps.googleusercontent.com"
+```

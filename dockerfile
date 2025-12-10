@@ -1,4 +1,6 @@
 # Stage 1: Build Angular app
+ARG ANGULAR_ENV="production"
+
 FROM node:18-alpine AS build
 
 WORKDIR /app
@@ -9,7 +11,7 @@ RUN npm install
 
 # Copy the rest of the application files and build
 COPY . .
-RUN npm run build --configuration=development
+RUN npm run build --configuration=${ANGULAR_ENV}
 
 
 # Stage 2: Serve with Nginx

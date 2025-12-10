@@ -4,6 +4,6 @@
 
 export const environment = {
     production: false,
-    apiUrl:"${API_URL_DEV}",
-    googleClientId: "${GOOGLE_CLIENT_ID_DEV}"
+    apiUrl:"${API_URL}",
+    googleClientId: "${GOOGLE_CLIENT_ID}"
   };
