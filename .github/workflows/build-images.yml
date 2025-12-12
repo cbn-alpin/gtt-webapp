@@ -14,17 +14,6 @@ jobs:
       packages: write
       contents: read
     steps:
-      - name: Determine Docker build target
-        id: build_target
-        run: |
-          # Définit 'production' pour main, 'development' pour develop.
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "TARGET=production" >> $GITHUB_OUTPUT
-            echo "BUILD_TARGET: production"
-          else
-            echo "TARGET=development" >> $GITHUB_OUTPUT
-            echo "BUILD_TARGET: development"
-          fi
       - name: Set IMAGE_NAME env variable
         run: echo "IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
         shell: bash
@@ -59,7 +48,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          target: ${{ steps.build_target.outputs.TARGET }}
           context: "{{defaultContext}}"
           push: true
           tags: ${{ steps.meta.outputs.tags }}
