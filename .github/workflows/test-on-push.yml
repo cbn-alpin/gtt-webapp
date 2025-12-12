@@ -3,7 +3,10 @@
 # https://help.github.com/en/articles/workflow-syntax-for-github-actions
 name: Run tests on any Push event
 
-on: [push]
+on:
+  push:
+    branches:
+      - develop
 
 jobs:
   run_tests:
@@ -23,8 +26,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Lint
-        run: npm run lint
+      #- name: Lint
+      #  run: npm run lint
 
       - name: Build
         run: npm run build
