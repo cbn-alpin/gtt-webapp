@@ -60,16 +60,22 @@
               "sourceMap": true,
               "namedChunks": true
             },
-            "test": {
+            "local-dev": {
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local-dev.ts"
+                }
+              ]
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "local-dev"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -82,9 +88,12 @@
             },
             "test": {
               "browserTarget": "gtt-webapp:build:test"
+            },
+            "local-dev": {
+              "browserTarget": "gtt-webapp:build:local-dev"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "local-dev"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
