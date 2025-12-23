@@ -36,7 +36,7 @@
             ],
             "scripts": []
           },
-         "configurations": {
+          "configurations": {
             "production": {
               "budgets": [
                 {
@@ -120,6 +120,51 @@
             ],
             "scripts": []
           }
+        },
+        "cypress-run": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "gtt-webapp:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "gtt-webapp:serve:production"
+            }
+          }
+        },
+        "cypress-open": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "watch": true,
+            "headless": false
+          }
+        },
+        "ct": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "gtt-webapp:serve",
+            "watch": true,
+            "headless": false,
+            "testingType": "component"
+          },
+          "configurations": {
+            "development": {
+              "devServerTarget": "gtt-webapp:serve:development"
+            }
+          }
+        },
+        "e2e": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "gtt-webapp:serve",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "gtt-webapp:serve:production"
+            }
+          }
         }
       }
     }
@@ -128,6 +173,10 @@
     "analytics": "a849ef7e-95eb-4b32-8e54-195d7e913153",
     "cache": {
       "enabled": true
-    }
+    },
+    "schematicCollections": [
+      "@cypress/schematic",
+      "@schematics/angular"
+    ]
   }
 }

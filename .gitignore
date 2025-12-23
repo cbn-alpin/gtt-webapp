@@ -43,3 +43,11 @@ Thumbs.db
 
 # Docker
 .env
+
+# Cypress
+/cypress/downloads/
+/cypress/screenshots/
+/cypress/videos/
+/cypress/reports/
+/cypress/logs/
+/cypress.env.json
