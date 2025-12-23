@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: "http://localhost:5000/api",
-  // TO DO : See if we can generate a public google client id for local dev environment
-  googleClientId: "${GOOGLE_CLIENT_ID}"
+  apiUrl: 'http://localhost:5000/api',
+  // Google Client ID for local development: http://localhost:4200
+  googleClientId:
+    '192736314252-huss3p6co5lijseqkft5kdcf9cba1ber.apps.googleusercontent.com',
 };
