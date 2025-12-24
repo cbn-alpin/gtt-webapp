@@ -19,12 +19,15 @@ Navigate to the cloned project folder:
 cd gtt-webapp/
 ```
 
-Load Node and Npm recommended version:
+Load (or install) Node and Npm recommended version:
 ```bash
+# If they are not installed, use:
+nvm install
+# Enable the appropriate version of Node and npm:
 nvm use
 ```
 
-Install the depedencies:
+Install the dependencies:
 ```bash
 npm install
 ```
