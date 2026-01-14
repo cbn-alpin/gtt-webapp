@@ -154,6 +154,15 @@
               "devServerTarget": "gtt-webapp:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
@@ -164,6 +173,7 @@
       "enabled": true
     },
     "schematicCollections": [
+      "angular-eslint",
       "@cypress/schematic",
       "@schematics/angular"
     ]
