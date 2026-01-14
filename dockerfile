@@ -11,7 +11,7 @@ RUN npm install
 
 # Copy the rest of the application files and build
 COPY . .
-RUN npm run build --configuration=${ANGULAR_ENV}
+RUN npm run build -- --configuration=${ANGULAR_ENV}
 
 
 # Stage 2: Serve with Nginx
@@ -25,7 +25,7 @@ COPY --from=build /app/dist/gtt-webapp /usr/share/nginx/html
 # Copy the entrypoint script
 COPY entrypoint.sh /docker-entrypoint.d/40-env-replace.sh
 
-# Expose port 80
+# Expose port 8080
 EXPOSE 8080
 
 # Start Nginx

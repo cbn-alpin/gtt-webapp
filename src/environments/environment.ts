@@ -1,9 +1,10 @@
 // This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
+// `npm run build -- -c development` replaces `environment.ts` with `environment.development.ts`.
+// This previous command use internally: `ng build --configuration=development`
+// The list of environments can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  production: true,
   apiUrl: '${API_URL}',
   googleClientId: '${GOOGLE_CLIENT_ID}',
 };
