@@ -1,60 +1,127 @@
 <div class="form-container">
-    <button class="close-btn" (click)="onClose()">✖</button>
-    <h2 class="form-title">{{ isEditMode ? 'Modifier' : 'Ajouter' }} un projet</h2>
-    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+  <button
+    class="close-btn"
+    (click)="onClose()"
+  >
+    ✖
+  </button>
+  <h2 class="form-title">{{ isEditMode ? 'Modifier' : 'Ajouter' }} un projet</h2>
+  <form
+    [formGroup]="projectForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <div class="form-field">
+      <label
+        class="form-label"
+        for="code"
+      >
+        N° projet :
+      </label>
+      <input
+        class="form-input"
+        id="code"
+        type="number"
+        formControlName="code"
+        placeholder="(uniquement des chiffres)"
+        (input)="onCodeInput($event)"
+      />
+      <mat-error *ngIf="projectForm.get('code')?.invalid && projectForm.get('code')?.touched">
+        Veuillez saisir un numéro de projet valide.
+      </mat-error>
+    </div>
 
-      <div class="form-field">
-        <label class="form-label" for="code">N° projet :</label>
-        <input class="form-input" id="code" type="number" formControlName="code" placeholder="(uniquement des chiffres)" 
-        (input)="onCodeInput($event)" />
-        <mat-error *ngIf="projectForm.get('code')?.invalid && projectForm.get('code')?.touched">
-          Veuillez saisir un numéro de projet valide.
-        </mat-error>
-      </div>
-  
-      <div class="form-field">
-        <label class="form-label" for="projectName">Nom projet :</label>
-        <input class="form-input" id="projectName" type="text" formControlName="projectName" 
+    <div class="form-field">
+      <label
+        class="form-label"
+        for="projectName"
+      >
+        Nom projet :
+      </label>
+      <input
+        class="form-input"
+        id="projectName"
+        type="text"
+        formControlName="projectName"
         (input)="onProjectNameInput($event)"
-          (focus)="showDropdown = true"
-          (blur)="hideDropdownWithDelay()"/>
-        <div class="autocomplete-list" *ngIf="showDropdown && (filteredGefiprojProjects | async)">
-          <div 
-            *ngFor="let project of filteredGefiprojProjects | async" 
-            class="autocomplete-item" 
-            (mousedown)="selectGefiprojProject(project)">
-            {{ project.nom_p }} ({{ project.code_p }})
-          </div>
+        (focus)="showDropdown = true"
+        (blur)="hideDropdownWithDelay()"
+      />
+      <div
+        class="autocomplete-list"
+        *ngIf="showDropdown && (filteredGefiprojProjects | async)"
+      >
+        <div
+          *ngFor="let project of filteredGefiprojProjects | async"
+          class="autocomplete-item"
+          (mousedown)="selectGefiprojProject(project)"
+        >
+          {{ project.nom_p }} ({{ project.code_p }})
         </div>
-        <mat-error *ngIf="projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched">
-          Le nom du projet est requis.
-        </mat-error>
       </div>
-  
-      <div class="form-field">
-        <label class="form-label" for="startDate">Date début projet :</label>
-        <input class="form-input" id="startDate" type="date" formControlName="startDate" />
-        <mat-error *ngIf="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched">
-          La date de début est requise.
-        </mat-error>
-      </div>
-  
-      <div class="form-field">
-        <label class="form-label" for="endDate">Date fin projet :</label>
-        <input class="form-input" id="endDate" type="date" formControlName="endDate" />
-        <mat-error *ngIf="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched">
-          La date de fin est requise.
-        </mat-error>
-        <mat-error *ngIf="projectForm.get('endDate')?.errors?.['dateInvalid']">
-          La date de fin doit être supérieure ou égale à la date de début.
-        </mat-error>
-      </div>
-  
-      <div class="form-actions">
-        <button class="validate-btn" type="submit" [disabled]="!projectForm.valid || isSubmitting">
-          {{ isSubmitting ? (isEditMode ? 'Mise à jour...' : 'Création...') : (isEditMode ? 'Mettre à jour' : 'Valider') }}
-        </button>
-      </div>      
-    </form>
+      <mat-error
+        *ngIf="projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched"
+      >
+        Le nom du projet est requis.
+      </mat-error>
+    </div>
+
+    <div class="form-field">
+      <label
+        class="form-label"
+        for="startDate"
+      >
+        Date début projet :
+      </label>
+      <input
+        class="form-input"
+        id="startDate"
+        type="date"
+        formControlName="startDate"
+      />
+      <mat-error
+        *ngIf="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched"
+      >
+        La date de début est requise.
+      </mat-error>
+    </div>
+
+    <div class="form-field">
+      <label
+        class="form-label"
+        for="endDate"
+      >
+        Date fin projet :
+      </label>
+      <input
+        class="form-input"
+        id="endDate"
+        type="date"
+        formControlName="endDate"
+      />
+      <mat-error *ngIf="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched">
+        La date de fin est requise.
+      </mat-error>
+      <mat-error *ngIf="projectForm.get('endDate')?.errors?.['dateInvalid']">
+        La date de fin doit être supérieure ou égale à la date de début.
+      </mat-error>
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="validate-btn"
+        type="submit"
+        [disabled]="!projectForm.valid || isSubmitting"
+      >
+        {{
+          isSubmitting
+            ? isEditMode
+              ? 'Mise à jour...'
+              : 'Création...'
+            : isEditMode
+              ? 'Mettre à jour'
+              : 'Valider'
+        }}
+      </button>
+    </div>
+  </form>
 </div>
-  

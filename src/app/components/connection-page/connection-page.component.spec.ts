@@ -8,9 +8,8 @@ describe('ConnectionPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConnectionPageComponent ]
-    })
-    .compileComponents();
+      declarations: [ConnectionPageComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ConnectionPageComponent);
     component = fixture.componentInstance;

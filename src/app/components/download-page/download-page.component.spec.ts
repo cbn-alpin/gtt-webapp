@@ -8,9 +8,8 @@ describe('DownloadPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DownloadPageComponent ]
-    })
-    .compileComponents();
+      declarations: [DownloadPageComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DownloadPageComponent);
     component = fixture.componentInstance;

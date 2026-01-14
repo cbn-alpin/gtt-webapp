@@ -14,10 +14,8 @@ export class FrenchPaginatorIntl extends MatPaginatorIntl {
       return `0 sur ${length}`;
     }
     const startIndex = page * pageSize;
-    const endIndex = startIndex < length ? 
-      Math.min(startIndex + pageSize, length) : 
-      startIndex + pageSize;
+    const endIndex =
+      startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
     return `${startIndex + 1} - ${endIndex} sur ${length}`;
   };
 }
-

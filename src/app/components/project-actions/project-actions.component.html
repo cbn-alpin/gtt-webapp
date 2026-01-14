@@ -1,72 +1,163 @@
 <div class="project-action-container mat-elevation-z8">
-  <div class="add-action-space" *ngIf="!isAdmin && dataSource.data.length === 0"></div>
-  <div class="add-action" *ngIf="isAdmin">
+  <div
+    class="add-action-space"
+    *ngIf="!isAdmin && dataSource.data.length === 0"
+  ></div>
+  <div
+    class="add-action"
+    *ngIf="isAdmin"
+  >
     <a>
-      <mat-icon class="project-action" matTooltip="Ajouter une action" matTooltipPosition="left" (click)="createAction()">
-      add_circle_outline</mat-icon>
-    </a>  
+      <mat-icon
+        class="project-action"
+        matTooltip="Ajouter une action"
+        matTooltipPosition="left"
+        (click)="createAction()"
+      >
+        add_circle_outline
+      </mat-icon>
+    </a>
   </div>
-  
-  <table class="action-table" mat-table [dataSource]="dataSource" *ngIf="dataSource.data.length > 0">
-   
+
+  <table
+    class="action-table"
+    mat-table
+    [dataSource]="dataSource"
+    *ngIf="dataSource.data.length > 0"
+  >
     <ng-container matColumnDef="numAction">
-      <th mat-header-cell *matHeaderCellDef  class="num-cell">
-        <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                      [checked]="selection.hasValue() && isAllSelected()"
-                      [indeterminate]="selection.hasValue() && !isAllSelected()"
-                      [aria-label]="checkboxLabel()">
-        </mat-checkbox> N° action
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        class="num-cell"
+      >
+        <mat-checkbox
+          (change)="$event ? toggleAllRows() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+          [aria-label]="checkboxLabel()"
+        ></mat-checkbox>
+        N° action
       </th>
-      <td mat-cell *matCellDef="let element" class="num-cell">
-        <mat-checkbox (click)="$event.stopPropagation()"
-                      (change)="toggleSelection(element)"
-                      [checked]="selection.isSelected(element)"
-                      [aria-label]="checkboxLabel(element)">
-        </mat-checkbox>
-        {{element.numero_action}} 
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="num-cell"
+      >
+        <mat-checkbox
+          (click)="$event.stopPropagation()"
+          (change)="toggleSelection(element)"
+          [checked]="selection.isSelected(element)"
+          [aria-label]="checkboxLabel(element)"
+        ></mat-checkbox>
+        {{ element.numero_action }}
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="name" >
-      <th mat-header-cell *matHeaderCellDef class="name-cell">Nom action</th>
-      <td mat-cell *matCellDef="let element" class="name-cell">
-        {{element.name}}
-    </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="description" >
-      <th mat-header-cell *matHeaderCellDef class="description-cell"> Description </th>
-      <td mat-cell *matCellDef="let element" class="description-cell">
-      <span class="truncate" matTooltip="{{element.description}}" matTooltipPosition="above">{{element.description}}</span>
-      </td>
-    </ng-container>
-     
-    <ng-container matColumnDef="actions" *ngIf="isAdmin">
-      <th mat-header-cell *matHeaderCellDef aria-label="Actions">Actions</th>
-      <td mat-cell *matCellDef="let element">
-        <mat-icon class="project-action"
-        matTooltip="Modifier" matTooltipPosition="above"
-         (click)="editAction(element)">edit</mat-icon>
-        <mat-icon class="project-action"
-        matTooltip="Supprimer" matTooltipPosition="above"
-         (click)="deleteActionById('supprimer cette action', element.id_action)">delete</mat-icon>
+    <ng-container matColumnDef="name">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        class="name-cell"
+      >
+        Nom action
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="name-cell"
+      >
+        {{ element.name }}
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="actions" *ngIf="!isAdmin" >
-      <th mat-header-cell *matHeaderCellDef aria-label="Actions"></th>
-      <td mat-cell *matCellDef="let element">
+    <ng-container matColumnDef="description">
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        class="description-cell"
+      >
+        Description
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+        class="description-cell"
+      >
+        <span
+          class="truncate"
+          matTooltip="{{ element.description }}"
+          matTooltipPosition="above"
+        >
+          {{ element.description }}
+        </span>
       </td>
     </ng-container>
-      
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-        class="element-row"></tr>
+
+    <ng-container
+      matColumnDef="actions"
+      *ngIf="isAdmin"
+    >
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        aria-label="Actions"
+      >
+        Actions
+      </th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+      >
+        <mat-icon
+          class="project-action"
+          matTooltip="Modifier"
+          matTooltipPosition="above"
+          (click)="editAction(element)"
+        >
+          edit
+        </mat-icon>
+        <mat-icon
+          class="project-action"
+          matTooltip="Supprimer"
+          matTooltipPosition="above"
+          (click)="deleteActionById('supprimer cette action', element.id_action)"
+        >
+          delete
+        </mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container
+      matColumnDef="actions"
+      *ngIf="!isAdmin"
+    >
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        aria-label="Actions"
+      ></th>
+      <td
+        mat-cell
+        *matCellDef="let element"
+      ></td>
+    </ng-container>
+
+    <tr
+      mat-header-row
+      *matHeaderRowDef="displayedColumns; sticky: true"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      class="element-row"
+    ></tr>
   </table>
 
-  <div class="empty-container" *ngIf="dataSource.data.length === 0">
+  <div
+    class="empty-container"
+    *ngIf="dataSource.data.length === 0"
+  >
     <p>Aucune action trouvée pour ce projet.</p>
   </div>
 </div>
-
-  

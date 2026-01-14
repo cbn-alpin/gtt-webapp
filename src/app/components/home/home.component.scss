@@ -47,8 +47,8 @@
   }
 
   .user-avatar {
-    height: 4.40em;
-    width: 4.50em;
+    height: 4.4em;
+    width: 4.5em;
     border-radius: 50%;
     object-fit: cover;
   }
@@ -137,13 +137,12 @@
   flex-direction: row;
 }
 
-
 .user-menu-item span {
   flex: 1;
   text-align: center;
 }
 
-.user-modify-container{
+.user-modify-container {
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -151,17 +150,16 @@
   flex: 1;
 }
 
-.user-chevron-right{
+.user-chevron-right {
   align-items: flex-end;
-
 }
 
-.list-users-container{
+.list-users-container {
   height: 30em;
   width: 280px;
 }
 
-.password-container{
+.password-container {
   height: 17em;
   width: 243px;
 }
@@ -206,4 +204,3 @@ mat-drawer-content {
     width: 57px !important;
   }
 }
-

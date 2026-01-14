@@ -5,8 +5,6 @@ import { CalendarService } from 'src/app/services/calendar.service';
 @Component({
   selector: 'app-TimeSheet',
   templateUrl: './TimeSheet.component.html',
-  styleUrls: ['./TimeSheet.component.scss']
+  styleUrls: ['./TimeSheet.component.scss'],
 })
-export class TimeSheetComponent {
-
-}
+export class TimeSheetComponent {}

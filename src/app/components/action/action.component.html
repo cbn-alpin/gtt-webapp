@@ -1,33 +1,85 @@
 <div class="form-container">
-    <button class="close-btn" (click)="onClose()">✖</button>
-    <h2 class="form-title">{{ isEditMode ? 'Modifier' : 'Ajouter' }} une action</h2>
-    <form [formGroup]="actionForm" (ngSubmit)="onSubmit()">
-      <div class="form-field">
-        <label class="form-label" for="actionNum">N° action :</label>
-        <input class="form-input" id="actionNum" type="text" step="0.01" formControlName="actionNum"/>
-        <mat-error *ngIf="actionForm.get('actionNum')?.invalid && actionForm.get('actionNum')?.touched">
-          Veuillez saisir un numéro d'action valide.
-        </mat-error>
-      </div>
-  
-      <div class="form-field">
-        <label class="form-label" for="name">Nom action :</label>
-        <input class="form-input" id="name" type="text" formControlName="name" />
-        <mat-error *ngIf="actionForm.get('name')?.invalid && actionForm.get('name')?.touched">
-          Le nom de l'action est requis.
-        </mat-error>
-      </div>
-  
-      <div class="form-field">
-        <label class="form-label" for="description">Description de l'action :</label>
-        <input class="form-input" id="description" type="text" formControlName="description" />
-      </div>
-    
-      <div class="form-actions">
-        <button class="validate-btn" type="submit" [disabled]="!actionForm.valid || isSubmitting">
-          {{ isSubmitting ? (isEditMode ? 'Mise à jour...' : 'Création...') : (isEditMode ? 'Mettre à jour' : 'Valider') }}
-        </button>
-      </div>      
-    </form>
+  <button
+    class="close-btn"
+    (click)="onClose()"
+  >
+    ✖
+  </button>
+  <h2 class="form-title">{{ isEditMode ? 'Modifier' : 'Ajouter' }} une action</h2>
+  <form
+    [formGroup]="actionForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <div class="form-field">
+      <label
+        class="form-label"
+        for="actionNum"
+      >
+        N° action :
+      </label>
+      <input
+        class="form-input"
+        id="actionNum"
+        type="text"
+        step="0.01"
+        formControlName="actionNum"
+      />
+      <mat-error
+        *ngIf="actionForm.get('actionNum')?.invalid && actionForm.get('actionNum')?.touched"
+      >
+        Veuillez saisir un numéro d'action valide.
+      </mat-error>
+    </div>
+
+    <div class="form-field">
+      <label
+        class="form-label"
+        for="name"
+      >
+        Nom action :
+      </label>
+      <input
+        class="form-input"
+        id="name"
+        type="text"
+        formControlName="name"
+      />
+      <mat-error *ngIf="actionForm.get('name')?.invalid && actionForm.get('name')?.touched">
+        Le nom de l'action est requis.
+      </mat-error>
+    </div>
+
+    <div class="form-field">
+      <label
+        class="form-label"
+        for="description"
+      >
+        Description de l'action :
+      </label>
+      <input
+        class="form-input"
+        id="description"
+        type="text"
+        formControlName="description"
+      />
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="validate-btn"
+        type="submit"
+        [disabled]="!actionForm.valid || isSubmitting"
+      >
+        {{
+          isSubmitting
+            ? isEditMode
+              ? 'Mise à jour...'
+              : 'Création...'
+            : isEditMode
+              ? 'Mettre à jour'
+              : 'Valider'
+        }}
+      </button>
+    </div>
+  </form>
 </div>
-  

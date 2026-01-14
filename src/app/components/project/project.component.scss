@@ -65,7 +65,6 @@ body {
   cursor: not-allowed;
 }
 
-
 .close-btn {
   position: absolute;
   top: 10px;
@@ -91,12 +90,11 @@ body {
   text-align: center;
 }
 
-
 .mat-mdc-snack-bar-container {
   &.blue-snackbar {
-      --mdc-snackbar-container-color: #2f4050 !important;
-      --mat-mdc-snack-bar-button-color: #fff;
-      --mdc-snackbar-supporting-text-color: #fff;
+    --mdc-snackbar-container-color: #2f4050 !important;
+    --mat-mdc-snack-bar-button-color: #fff;
+    --mdc-snackbar-supporting-text-color: #fff;
   }
 }
 
@@ -118,4 +116,3 @@ body {
 .autocomplete-item:hover {
   background: #f0f0f0;
 }
-

@@ -1,6 +1,8 @@
-
 <div class="container">
-  <div class="loading-shade" *ngIf="isLoadingResults">
+  <div
+    class="loading-shade"
+    *ngIf="isLoadingResults"
+  >
     <mat-spinner></mat-spinner>
   </div>
   <div class="calendar-container">
@@ -9,13 +11,19 @@
         <div class="calendar-headline-month">
           {{ firstDayOfActiveMonth.value.monthShort }} {{ firstDayOfActiveMonth.value.year }}
         </div>
-        <div class="calendar-headline-control calendar-headline-control-today" (click)="goToToday()">
+        <div
+          class="calendar-headline-control calendar-headline-control-today"
+          (click)="goToToday()"
+        >
           Aujourd'hui
         </div>
       </div>
 
       <div class="calendar-weeks-grid">
-        <div *ngFor="let weekDay of weekDaysNames" class="calendar-weeks-grid-cell">
+        <div
+          *ngFor="let weekDay of weekDaysNames"
+          class="calendar-weeks-grid-cell"
+        >
           {{ weekDay }}
         </div>
       </div>
@@ -39,144 +47,249 @@
     </div>
 
     <div class="calendar-headline-controls">
-      <div class="calendar-headline-control week-scroll" (click)="goToPreviousWeek()">«</div>
+      <div
+        class="calendar-headline-control week-scroll"
+        (click)="goToPreviousWeek()"
+      >
+        «
+      </div>
       <div class="selectors">
         <div class="calendar-headline-control">
-          <mat-select class="select-months" [(ngModel)]="selectedMonth" (ngModelChange)="onMonthChange()">
-            <mat-option class="option-months"  *ngFor="let month of months" [value]="month.index">{{ month.name }}</mat-option>
+          <mat-select
+            class="select-months"
+            [(ngModel)]="selectedMonth"
+            (ngModelChange)="onMonthChange()"
+          >
+            <mat-option
+              class="option-months"
+              *ngFor="let month of months"
+              [value]="month.index"
+            >
+              {{ month.name }}
+            </mat-option>
           </mat-select>
         </div>
         <div class="calendar-headline-control">
-          <mat-select class="select-years" [(ngModel)]="selectedYear" (ngModelChange)="onYearChange()">
-            <mat-option class="option-years" *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+          <mat-select
+            class="select-years"
+            [(ngModel)]="selectedYear"
+            (ngModelChange)="onYearChange()"
+          >
+            <mat-option
+              class="option-years"
+              *ngFor="let year of years"
+              [value]="year"
+            >
+              {{ year }}
+            </mat-option>
           </mat-select>
         </div>
         <div class="calendar-headline-control">
-          <mat-select class="select-weeks" [(ngModel)]="selectedWeek" (ngModelChange)="onWeekChange()" >
-            <mat-option  class="option-weeks" *ngFor="let weekNumber of weeksNumbers" [value]="weekNumber"> Semaine {{ weekNumber }}</mat-option>
+          <mat-select
+            class="select-weeks"
+            [(ngModel)]="selectedWeek"
+            (ngModelChange)="onWeekChange()"
+          >
+            <mat-option
+              class="option-weeks"
+              *ngFor="let weekNumber of weeksNumbers"
+              [value]="weekNumber"
+            >
+              Semaine {{ weekNumber }}
+            </mat-option>
           </mat-select>
         </div>
       </div>
-      <div class="calendar-headline-control week-scroll" (click)="goToNextWeek()">»</div>
+      <div
+        class="calendar-headline-control week-scroll"
+        (click)="goToNextWeek()"
+      >
+        »
+      </div>
     </div>
-
   </div>
 
-
-
-  <div class="time-sheet ">
-
+  <div class="time-sheet">
     <div class="table-container">
-    <table mat-table class="mat-elevation-z8">
-      <thead >
-        <tr >
-          <th class="project-col">Projets/Actions</th>
-          <th *ngFor="let day of weekDays; trackBy: trackByDate" [class.weekend]="day.isWeekend" [class.today]="day.isToday">
-            {{ day.name }}<br>
-            {{ formatDate(day.date) }}
-          </th>
-          <th class="total-col">Total Semaine</th>
-          <th class="total-col">Total Année</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr   *ngIf="!projects || projects.length === 0">
-          <td colspan="10" class="no-projects-message">Aucune action n'a été sélectionnée.</td>
-        </tr>
-        <ng-container *ngFor="let project of projects; trackBy: trackById">
-          <!-- Project Row -->
+      <table
+        mat-table
+        class="mat-elevation-z8"
+      >
+        <thead>
           <tr>
-            <td class="project-name" colspan="10" >{{ project.name }}</td>
+            <th class="project-col">Projets/Actions</th>
+            <th
+              *ngFor="let day of weekDays; trackBy: trackByDate"
+              [class.weekend]="day.isWeekend"
+              [class.today]="day.isToday"
+            >
+              {{ day.name }}
+              <br />
+              {{ formatDate(day.date) }}
+            </th>
+            <th class="total-col">Total Semaine</th>
+            <th class="total-col">Total Année</th>
           </tr>
-
-          <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
+        </thead>
+        <tbody>
+          <tr *ngIf="!projects || projects.length === 0">
+            <td
+              colspan="10"
+              class="no-projects-message"
+            >
+              Aucune action n'a été sélectionnée.
+            </td>
+          </tr>
+          <ng-container *ngFor="let project of projects; trackBy: trackById">
+            <!-- Project Row -->
             <tr>
-              <td class="action-name" matTooltip="{{ action.description }}" matTooltipPosition="above" >
-              {{  action.numero_action  }}  {{action.name }}
-              </td>
-
-              <td *ngFor="let day of weekDays; trackBy: trackByDate">
-                <input
-                type="number"
-                [ngModel]="getTimeEntry(project.id_project,  action.id_action, formatApiDate(toLuxonDate(day.date))).hours"
-                (ngModelChange)="updateTimeEntryDelayed($event, project.id_project, project.end_date, action.id_action, formatApiDate(toLuxonDate(day.date)),
-                         inputRef, getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours)"
-                [id]="getInputId(project.id_project, action.id_action, day.date)"
-                step="0.25"
-                max="10"
-                min="0"
-                [ngClass]="{ 'weekend-input': day.isWeekend, 'holiday-input': isHoliday(day.date) }"
-                #inputRef
-                (focus)="onFocus(inputRef)"
-                (blur)="onBlur(inputRef)"
-                (keydown)="blockNegativeInput($event)"
+              <td
+                class="project-name"
+                colspan="10"
               >
-
-
-              </td>
-              <td class="total-week">
-                {{ calculateWeekTotal(project.id_project, action.id_action) }}
-              </td>
-              <td class="total-year">
-                {{  action.total_duration }}
+                {{ project.name }}
               </td>
             </tr>
+
+            <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
+              <tr>
+                <td
+                  class="action-name"
+                  matTooltip="{{ action.description }}"
+                  matTooltipPosition="above"
+                >
+                  {{ action.numero_action }} {{ action.name }}
+                </td>
+
+                <td *ngFor="let day of weekDays; trackBy: trackByDate">
+                  <input
+                    type="number"
+                    [ngModel]="
+                      getTimeEntry(
+                        project.id_project,
+                        action.id_action,
+                        formatApiDate(toLuxonDate(day.date))
+                      ).hours
+                    "
+                    (ngModelChange)="
+                      updateTimeEntryDelayed(
+                        $event,
+                        project.id_project,
+                        project.end_date,
+                        action.id_action,
+                        formatApiDate(toLuxonDate(day.date)),
+                        inputRef,
+                        getTimeEntry(
+                          project.id_project,
+                          action.id_action,
+                          formatApiDate(toLuxonDate(day.date))
+                        ).hours
+                      )
+                    "
+                    [id]="getInputId(project.id_project, action.id_action, day.date)"
+                    step="0.25"
+                    max="10"
+                    min="0"
+                    [ngClass]="{
+                      'weekend-input': day.isWeekend,
+                      'holiday-input': isHoliday(day.date)
+                    }"
+                    #inputRef
+                    (focus)="onFocus(inputRef)"
+                    (blur)="onBlur(inputRef)"
+                    (keydown)="blockNegativeInput($event)"
+                  />
+                </td>
+                <td class="total-week">
+                  {{ calculateWeekTotal(project.id_project, action.id_action) }}
+                </td>
+                <td class="total-year">
+                  {{ action.total_duration }}
+                </td>
+              </tr>
+            </ng-container>
           </ng-container>
-        </ng-container>
 
-        <!-- Fixed rows (e.g., Absence, Service, Formation) -->
+          <!-- Fixed rows (e.g., Absence, Service, Formation) -->
 
-        <ng-container *ngFor="let project of fixedRows; trackBy: trackById">
-
-          <tr>
-            <td  colspan="10" class="fixed-row-name" >Absences, Formations et Tâches internes</td>
-          </tr>
-          <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
+          <ng-container *ngFor="let project of fixedRows; trackBy: trackById">
             <tr>
-              <td class="fixed-action-name" >
-                {{ action.name }}
-              </td>
-
-              <td *ngFor="let day of weekDays; trackBy: trackByDate">
-                <input
-                type="number"
-                [ngModel]="getTimeEntry(project.id_project,  action.id_action, formatApiDate(toLuxonDate(day.date))).hours"
-                (ngModelChange)="updateTimeEntryDelayed($event, project.id_project,  project.end_date, action.id_action, formatApiDate(toLuxonDate(day.date)),
-                         inputRef2, getTimeEntry(project.id_project, action.id_action, formatApiDate(toLuxonDate(day.date))).hours)"
-                [id]="getInputId(project.id_project, action.id_action, day.date)"
-                step="0.25"
-                max="24"
-                min="0"
-                [ngClass]="{ 'weekend-input': day.isWeekend, 'holiday-input': isHoliday(day.date) }"
-                #inputRef2
-                (focus)="onFocus(inputRef2)"
-                (blur)="onBlur(inputRef2)"
-                (keydown)="blockNegativeInput($event)"
+              <td
+                colspan="10"
+                class="fixed-row-name"
               >
-
-
-              </td>
-              <td class="total-week">
-                {{ calculateWeekTotal(project.id_project, action.id_action) }}
-              </td>
-              <td class="total-year">
-               {{  action.total_duration }}
+                Absences, Formations et Tâches internes
               </td>
             </tr>
+            <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
+              <tr>
+                <td class="fixed-action-name">
+                  {{ action.name }}
+                </td>
+
+                <td *ngFor="let day of weekDays; trackBy: trackByDate">
+                  <input
+                    type="number"
+                    [ngModel]="
+                      getTimeEntry(
+                        project.id_project,
+                        action.id_action,
+                        formatApiDate(toLuxonDate(day.date))
+                      ).hours
+                    "
+                    (ngModelChange)="
+                      updateTimeEntryDelayed(
+                        $event,
+                        project.id_project,
+                        project.end_date,
+                        action.id_action,
+                        formatApiDate(toLuxonDate(day.date)),
+                        inputRef2,
+                        getTimeEntry(
+                          project.id_project,
+                          action.id_action,
+                          formatApiDate(toLuxonDate(day.date))
+                        ).hours
+                      )
+                    "
+                    [id]="getInputId(project.id_project, action.id_action, day.date)"
+                    step="0.25"
+                    max="24"
+                    min="0"
+                    [ngClass]="{
+                      'weekend-input': day.isWeekend,
+                      'holiday-input': isHoliday(day.date)
+                    }"
+                    #inputRef2
+                    (focus)="onFocus(inputRef2)"
+                    (blur)="onBlur(inputRef2)"
+                    (keydown)="blockNegativeInput($event)"
+                  />
+                </td>
+                <td class="total-week">
+                  {{ calculateWeekTotal(project.id_project, action.id_action) }}
+                </td>
+                <td class="total-year">
+                  {{ action.total_duration }}
+                </td>
+              </tr>
+            </ng-container>
           </ng-container>
-        </ng-container>
 
-
-        <!-- Totaux quotidiens -->
-        <tr class="daily-total-row">
-          <td>Total jour</td>
-          <td *ngFor="let day of weekDays; trackBy: trackByDate" [class.weekend]="day.isWeekend" [class.today]="day.isToday">
-            {{ calculateDayTotal(day.date) }}
-          </td>
-          <td colspan="2"></td>
-        </tr>
-      </tbody>
-    </table>
+          <!-- Totaux quotidiens -->
+          <tr class="daily-total-row">
+            <td>Total jour</td>
+            <td
+              *ngFor="let day of weekDays; trackBy: trackByDate"
+              [class.weekend]="day.isWeekend"
+              [class.today]="day.isToday"
+            >
+              {{ calculateDayTotal(day.date) }}
+            </td>
+            <td colspan="2"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

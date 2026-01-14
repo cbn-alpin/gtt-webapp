@@ -21,10 +21,7 @@ export class CalendarService {
   }
 
   getDaysOfMonth(date: DateTime): DateTime[] {
-    return Interval.fromDateTimes(
-      date.startOf('week'),
-      date.endOf('month').endOf('week')
-    )
+    return Interval.fromDateTimes(date.startOf('week'), date.endOf('month').endOf('week'))
       .splitBy({ days: 1 })
       .map((interval) => interval.start as DateTime);
   }
@@ -68,19 +65,13 @@ export class CalendarService {
     const start = currentWeek.start || DateTime.local().startOf('week');
     const end = currentWeek.end || DateTime.local().endOf('week');
 
-    return Interval.fromDateTimes(
-      start.minus({ weeks: 1 }),
-      end.minus({ weeks: 1 })
-    );
+    return Interval.fromDateTimes(start.minus({ weeks: 1 }), end.minus({ weeks: 1 }));
   }
 
   goToNextWeek(currentWeek: Interval): Interval {
     const start = currentWeek.start || DateTime.local().startOf('week');
     const end = currentWeek.end || DateTime.local().endOf('week');
 
-    return Interval.fromDateTimes(
-      start.plus({ weeks: 1 }),
-      end.plus({ weeks: 1 })
-    );
+    return Interval.fromDateTimes(start.plus({ weeks: 1 }), end.plus({ weeks: 1 }));
   }
 }

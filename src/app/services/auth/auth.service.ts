@@ -17,9 +17,8 @@ interface AuthResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class AuthService {
   baseUrl = environment.apiUrl;
 
@@ -37,16 +36,18 @@ export class AuthService {
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      })
+        Authorization: `Bearer ${token}`,
+      }),
     };
   }
 
-
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   // Service for native connection to gtt
-  nativeAuthenticate(credentials: { login: string, password: string }): Observable<any> {
+  nativeAuthenticate(credentials: { login: string; password: string }): Observable<any> {
     const url = `${this.baseUrl}/auth/gtt`;
     return this.http.post(url, credentials, this.getHttpOptions());
   }
@@ -82,20 +83,19 @@ export class AuthService {
    */
   loginWithGoogle(googleToken: string): Observable<AuthResponse> {
     const url = `${this.baseUrl}/auth/google`;
-    return this.http.post<AuthResponse>(url, { token: googleToken })
-      .pipe(
-        tap((response: AuthResponse) => {
-          this._token = response.access_token;
-          localStorage.setItem('access_token', response.access_token);
-          localStorage.setItem('user_email', response.email);
-          localStorage.setItem('user_name', `${response.first_name} ${response.last_name}`);
-          localStorage.setItem('is_admin', `${response.is_admin}`);
-          localStorage.setItem('id_user', `${response.id_user}`);
-          localStorage.setItem('user_photo', `${response.picture}`);
-          this.authSubject.next(true);
-          console.log("Google One Tap login response:", response);
-        })
-      );
+    return this.http.post<AuthResponse>(url, { token: googleToken }).pipe(
+      tap((response: AuthResponse) => {
+        this._token = response.access_token;
+        localStorage.setItem('access_token', response.access_token);
+        localStorage.setItem('user_email', response.email);
+        localStorage.setItem('user_name', `${response.first_name} ${response.last_name}`);
+        localStorage.setItem('is_admin', `${response.is_admin}`);
+        localStorage.setItem('id_user', `${response.id_user}`);
+        localStorage.setItem('user_photo', `${response.picture}`);
+        this.authSubject.next(true);
+        console.log('Google One Tap login response:', response);
+      })
+    );
   }
 
   /**
@@ -105,21 +105,18 @@ export class AuthService {
    */
   loginWithGoogleCode(googleCode: string): Observable<AuthResponse> {
     const url = `${this.baseUrl}/auth/google`;
-    return this.http.post<AuthResponse>(url, { code: googleCode })
-      .pipe(
-        tap((response: AuthResponse) => {
-          this._token = response.access_token;
-          localStorage.setItem('access_token', response.access_token);
-          localStorage.setItem('user_email', response.email);
-          localStorage.setItem('user_name', `${response.first_name} ${response.last_name}`);
-          localStorage.setItem('is_admin', `${response.is_admin}`);
-          localStorage.setItem('id_user', `${response.id_user}`);
-          localStorage.setItem('user_photo', `${response.picture}`);
-          this.authSubject.next(true);
-          console.log("Google popup login response:", response);
-        })
-      );
+    return this.http.post<AuthResponse>(url, { code: googleCode }).pipe(
+      tap((response: AuthResponse) => {
+        this._token = response.access_token;
+        localStorage.setItem('access_token', response.access_token);
+        localStorage.setItem('user_email', response.email);
+        localStorage.setItem('user_name', `${response.first_name} ${response.last_name}`);
+        localStorage.setItem('is_admin', `${response.is_admin}`);
+        localStorage.setItem('id_user', `${response.id_user}`);
+        localStorage.setItem('user_photo', `${response.picture}`);
+        this.authSubject.next(true);
+        console.log('Google popup login response:', response);
+      })
+    );
   }
-
-
 }

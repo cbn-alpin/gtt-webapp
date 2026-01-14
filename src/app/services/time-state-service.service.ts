@@ -3,13 +3,12 @@ import { BehaviorSubject } from 'rxjs';
 import { CalendarService } from './calendar.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TimeStateService {
-
   public selectedDate = new BehaviorSubject<Date>(new Date());
 
-  constructor(private calendarService: CalendarService) { }
+  constructor(private calendarService: CalendarService) {}
 
   // Observable to provide the selected date
   selectedDateSignal() {
@@ -59,7 +58,6 @@ export class TimeStateService {
         name: this.getDayName(day),
         isWeekend: day.getDay() === 0 || day.getDay() === 6,
         isToday: this.isToday(day),
-
       });
     }
     return days;
@@ -67,15 +65,17 @@ export class TimeStateService {
 
   // Helper function to get the name of the day
   getDayName(date: Date): string {
-    const days = ['Dim','Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+    const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
     return days[date.getDay()];
   }
 
   // Check if a given date is today
   isToday(date: Date): boolean {
     const today = new Date();
-    return date.getDate() === today.getDate() &&
+    return (
+      date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear();
+      date.getFullYear() === today.getFullYear()
+    );
   }
 }

@@ -2,44 +2,54 @@ import { Component, Injectable, OnInit } from '@angular/core';
 import { DateTime, Info, Interval } from 'luxon';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {  HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { TimeStateService } from 'src/app/services/time-state-service.service';
 import { PopupMessageComponent } from 'src/app/popup-message/popup-message.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TimeSheetService } from 'src/app/services/TimeSheet.service';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatSelectModule} from '@angular/material/select';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, MatSlideToggleModule, MatSelectModule,MatProgressSpinnerModule, MatTooltipModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule,
+  ],
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss']
+  styleUrls: ['./calendar.component.scss'],
 })
 @Injectable({
   providedIn: 'root',
 })
 export class CalendarComponent implements OnInit {
-  firstDayOfActiveMonth = new BehaviorSubject<DateTime>(this.calendarService.today().startOf('month'));
+  firstDayOfActiveMonth = new BehaviorSubject<DateTime>(
+    this.calendarService.today().startOf('month')
+  );
   holidays: { [date: string]: string } = {};
   weekDays = this.timeStateService.currentWeek;
   projects: any[] = [];
   userId: string = localStorage.getItem('id_user') || '0';
   fixedRows: any[] = [];
 
-
-
-  startDate: DateTime<boolean>= DateTime.local();
-  endDate: DateTime<boolean>= DateTime.local();
+  startDate: DateTime<boolean> = DateTime.local();
+  endDate: DateTime<boolean> = DateTime.local();
   isLoadingResults = false;
-  constructor(private calendarService: CalendarService,  private timeStateService: TimeStateService,
-    private dialog: MatDialog, private timeSheetService: TimeSheetService
+  constructor(
+    private calendarService: CalendarService,
+    private timeStateService: TimeStateService,
+    private dialog: MatDialog,
+    private timeSheetService: TimeSheetService
   ) {
     const activeMonth = this.firstDayOfActiveMonth.value;
     this.selectedMonth = activeMonth.month;
@@ -65,9 +75,9 @@ export class CalendarComponent implements OnInit {
     { name: 'Septembre', index: 9 },
     { name: 'Octobre', index: 10 },
     { name: 'Novembre', index: 11 },
-    { name: 'Décembre', index: 12 }
+    { name: 'Décembre', index: 12 },
   ];
-  weeksNumbers: number[]= Array.from({length: 52}, (_, i) => 1+i);
+  weeksNumbers: number[] = Array.from({ length: 52 }, (_, i) => 1 + i);
   years: number[] = Array.from({ length: 30 }, (_, i) => 2000 + i);
   selectedMonth: number = this.firstDayOfActiveMonth.getValue().month;
   selectedYear: number = this.firstDayOfActiveMonth.getValue().year;
@@ -92,7 +102,6 @@ export class CalendarComponent implements OnInit {
     this.timeStateService.selectedDateSignal().subscribe(() => {
       this.weekDays = this.timeStateService.currentWeek;
     });
-
   }
   updateStartEndDate() {
     const activeWeek = this.firstDayOfActiveMonth.value;
@@ -115,7 +124,6 @@ export class CalendarComponent implements OnInit {
 
     this.updateStartEndDate();
     this.loadProjects();
-
   }
 
   isToday(day: DateTime): boolean {
@@ -165,11 +173,12 @@ export class CalendarComponent implements OnInit {
   onWeekChange(): void {
     const selectedWeekNumber = this.selectedWeek;
     const firstDayOfYear = DateTime.local(this.selectedYear, 1, 1);
-    const startOfSelectedWeek = firstDayOfYear.plus({ weeks: selectedWeekNumber - 1 }).startOf('week');
+    const startOfSelectedWeek = firstDayOfYear
+      .plus({ weeks: selectedWeekNumber - 1 })
+      .startOf('week');
 
     this.currentWeek = this.calendarService.getCurrentWeek(startOfSelectedWeek);
     this.timeStateService.updateSelectedDate(startOfSelectedWeek.toJSDate());
-
 
     if (startOfSelectedWeek.month !== this.firstDayOfActiveMonth.getValue().month) {
       this.firstDayOfActiveMonth.next(startOfSelectedWeek.startOf('month'));
@@ -195,36 +204,37 @@ export class CalendarComponent implements OnInit {
     return this.calendarService.isHoliday(dateTime);
   }
   goToPreviousWeek(): void {
-    const previousWeekStart = this.timeStateService.goToPreviousWeek(this.timeStateService.selectedDate.value);
+    const previousWeekStart = this.timeStateService.goToPreviousWeek(
+      this.timeStateService.selectedDate.value
+    );
     this.currentWeek = this.calendarService.goToPreviousWeek(this.currentWeek);
-    if (this.currentWeek.start ) {
+    if (this.currentWeek.start) {
       this.selectedWeek = this.currentWeek.start.weekNumber;
       this.selectedMonth = this.currentWeek.start.month;
       this.selectedYear = this.currentWeek.start.year;
-      if( this.currentWeek.start.month !== this.firstDayOfActiveMonth.getValue().month){
+      if (this.currentWeek.start.month !== this.firstDayOfActiveMonth.getValue().month) {
         this.firstDayOfActiveMonth.next(this.currentWeek.start.startOf('month'));
         this.updateStartEndDate();
         this.loadProjects();
       }
     }
-
   }
 
   goToNextWeek(): void {
-    const nextWeekStart = this.timeStateService.goToNextWeek(this.timeStateService.selectedDate.value);
+    const nextWeekStart = this.timeStateService.goToNextWeek(
+      this.timeStateService.selectedDate.value
+    );
     this.currentWeek = this.calendarService.goToNextWeek(this.currentWeek);
-    if (this.currentWeek.start ) {
+    if (this.currentWeek.start) {
       this.selectedWeek = this.currentWeek.start.weekNumber;
       this.selectedMonth = this.currentWeek.start.month;
       this.selectedYear = this.currentWeek.start.year;
-      if( this.currentWeek.start.month !== this.firstDayOfActiveMonth.getValue().month){
+      if (this.currentWeek.start.month !== this.firstDayOfActiveMonth.getValue().month) {
         this.firstDayOfActiveMonth.next(this.currentWeek.start.startOf('month'));
         this.updateStartEndDate();
-    this.loadProjects();
+        this.loadProjects();
       }
     }
-
-
   }
 
   formatDate(date: Date): string {
@@ -240,7 +250,7 @@ export class CalendarComponent implements OnInit {
       source = this.projects;
     }
 
-    const project = source.find(p => p.id_project === projectId);
+    const project = source.find((p) => p.id_project === projectId);
     if (!project) return { hours: 0 };
 
     const action = project.list_action.find((a: any) => a.id_action === actionId);
@@ -250,14 +260,22 @@ export class CalendarComponent implements OnInit {
       return { hours: 0 };
     }
 
-    const timeEntry = action.list_time.find((t: any) =>
-      new Date(t.date).toISOString().split('T')[0] === formattedDate
+    const timeEntry = action.list_time.find(
+      (t: any) => new Date(t.date).toISOString().split('T')[0] === formattedDate
     );
 
     return timeEntry ? { hours: Number(timeEntry.duration) } : { hours: 0 };
-}
+  }
 
-  updateTimeEntry(value: number, projectId: number, end_date: Date , actionId: number, date: string,  inputRef: HTMLInputElement, initialValue: number) {
+  updateTimeEntry(
+    value: number,
+    projectId: number,
+    end_date: Date,
+    actionId: number,
+    date: string,
+    inputRef: HTMLInputElement,
+    initialValue: number
+  ) {
     const selectedDate = new Date(date);
     selectedDate.setHours(0, 0, 0, 0);
     const endDate = new Date(end_date);
@@ -265,14 +283,14 @@ export class CalendarComponent implements OnInit {
     console.log(selectedDate);
     console.log(endDate);
 
-
     if (projectId !== 0) {
       if (selectedDate > endDate) {
         this.dialog.open(PopupMessageComponent, {
-            data: {
-                title: 'Erreur',
-                message: 'Vous ne pouvez pas saisir un temps pour une date qui dépasse la date de fin du projet.'
-            }
+          data: {
+            title: 'Erreur',
+            message:
+              'Vous ne pouvez pas saisir un temps pour une date qui dépasse la date de fin du projet.',
+          },
         });
 
         inputRef.value = initialValue.toString();
@@ -282,25 +300,25 @@ export class CalendarComponent implements OnInit {
         this.dialog.open(PopupMessageComponent, {
           data: {
             title: 'Erreur',
-            message: 'Quota horaire journalier maximum atteint'
-          }
+            message: 'Quota horaire journalier maximum atteint',
+          },
         });
-         value = 0;
-         inputRef.value = initialValue.toString();
+        value = 0;
+        inputRef.value = initialValue.toString();
         return;
       }
 
-    if (value >= 7.50 && value <= 10.00) {
-      this.dialog.open(PopupMessageComponent, {
-        data: {
-          title: 'Avertissement',
-          message: 'Attention : saisie supérieure à 7,50h uniquement si déplacement'
-        }
-      });
+      if (value >= 7.5 && value <= 10.0) {
+        this.dialog.open(PopupMessageComponent, {
+          data: {
+            title: 'Avertissement',
+            message: 'Attention : saisie supérieure à 7,50h uniquement si déplacement',
+          },
+        });
+      }
     }
-  }
     if (isNaN(value) || value < 0 || value > 10) {
-      console.warn("Valeur invalide :", value);
+      console.warn('Valeur invalide :', value);
       return;
     }
 
@@ -313,14 +331,14 @@ export class CalendarComponent implements OnInit {
       source = this.projects;
     }
 
-    const project = source.find(p => p.id_project === projectId);
+    const project = source.find((p) => p.id_project === projectId);
     if (!project) return;
 
     const action = project.list_action.find((a: any) => a.id_action === actionId);
     if (!action) return;
 
-    let timeEntry = action.list_time.find((t: any) =>
-      new Date(t.date).toISOString().split('T')[0] === formattedDate
+    let timeEntry = action.list_time.find(
+      (t: any) => new Date(t.date).toISOString().split('T')[0] === formattedDate
     );
     if (timeEntry) {
       timeEntry.duration = value.toString();
@@ -330,7 +348,7 @@ export class CalendarComponent implements OnInit {
 
     this.timeSheetService.saveUserTime(this.userId, actionId, formattedDate, value).subscribe(
       (response) => {
-        console.log('Time saved successfully:',value, response);
+        console.log('Time saved successfully:', value, response);
         this.loadProjects();
       },
       (error) => {
@@ -339,7 +357,15 @@ export class CalendarComponent implements OnInit {
     );
   }
   timer: any = null;
-  updateTimeEntryDelayed(value: number, projectId: number, end_date: Date , actionId: number, date: string, inputRef: HTMLInputElement, initialValue: number) {
+  updateTimeEntryDelayed(
+    value: number,
+    projectId: number,
+    end_date: Date,
+    actionId: number,
+    date: string,
+    inputRef: HTMLInputElement,
+    initialValue: number
+  ) {
     if (this.timer) {
       clearTimeout(this.timer);
     }
@@ -354,75 +380,78 @@ export class CalendarComponent implements OnInit {
         this.dialog.open(PopupMessageComponent, {
           data: {
             title: 'Erreur',
-            message: 'Quota horaire journalier dépassé !'
-          }
+            message: 'Quota horaire journalier dépassé !',
+          },
         });
-
 
         inputRef.value = initialValue.toString();
         return;
       }
 
-      this.updateTimeEntry(value, projectId, end_date ,actionId, date, inputRef, initialValue);
+      this.updateTimeEntry(value, projectId, end_date, actionId, date, inputRef, initialValue);
     }, 500);
   }
-
 
   calculateWeekTotal(projectId: number, actionId: number): number {
     let total = 0;
 
+    this.weekDays.forEach((day) => {
+      const dateStr = this.formatApiDate(this.toLuxonDate(day.date));
+      const timeEntry = this.getTimeEntry(projectId, actionId, dateStr);
 
-    this.weekDays.forEach(day => {
-        const dateStr = this.formatApiDate(this.toLuxonDate(day.date));
-        const timeEntry = this.getTimeEntry(projectId, actionId, dateStr);
-
-        if (timeEntry && timeEntry.hours) {
-            total += timeEntry.hours;
-        }
+      if (timeEntry && timeEntry.hours) {
+        total += timeEntry.hours;
+      }
     });
     return total;
   }
 
   calculateDayTotal(date: Date): number {
-      let total = 0;
+    let total = 0;
 
-      const formattedDate = this.formatApiDate(this.toLuxonDate(date));
+    const formattedDate = this.formatApiDate(this.toLuxonDate(date));
 
+    if (!this.projects || !Array.isArray(this.projects)) {
+      console.warn("calculateDayTotal: this.projects est undefined ou n'est pas un tableau");
+      return total;
+    }
 
-      if (!this.projects || !Array.isArray(this.projects)) {
-          console.warn('calculateDayTotal: this.projects est undefined ou n\'est pas un tableau');
-          return total;
-      }
-
-      this.projects.forEach((project: { id_project: number; list_action: { id_action: number }[] }) => {
-          if (!project.list_action || !Array.isArray(project.list_action)) {
-              console.warn(`calculateDayTotal: project.list_action est undefined ou n'est pas un tableau pour project ${project.id_project}`);
-              return;
-          }
-
-          project.list_action.forEach((action: { id_action: number }) => {
-              const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
-              if (entry && typeof entry.hours === 'number') {
-                  total += entry.hours;
-              }
-          });
-      });
-      this.fixedRows.forEach((project: { id_project: number; list_action: { id_action: number }[] }) => {
+    this.projects.forEach(
+      (project: { id_project: number; list_action: { id_action: number }[] }) => {
         if (!project.list_action || !Array.isArray(project.list_action)) {
-            console.warn(`calculateDayTotal: project.list_action est undefined ou n'est pas un tableau pour project ${project.id_project}`);
-            return;
+          console.warn(
+            `calculateDayTotal: project.list_action est undefined ou n'est pas un tableau pour project ${project.id_project}`
+          );
+          return;
         }
 
         project.list_action.forEach((action: { id_action: number }) => {
-            const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
-            if (entry && typeof entry.hours === 'number') {
-                total += entry.hours;
-            }
+          const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
+          if (entry && typeof entry.hours === 'number') {
+            total += entry.hours;
+          }
         });
-    });
-      return total;
-  }
+      }
+    );
+    this.fixedRows.forEach(
+      (project: { id_project: number; list_action: { id_action: number }[] }) => {
+        if (!project.list_action || !Array.isArray(project.list_action)) {
+          console.warn(
+            `calculateDayTotal: project.list_action est undefined ou n'est pas un tableau pour project ${project.id_project}`
+          );
+          return;
+        }
 
+        project.list_action.forEach((action: { id_action: number }) => {
+          const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
+          if (entry && typeof entry.hours === 'number') {
+            total += entry.hours;
+          }
+        });
+      }
+    );
+    return total;
+  }
 
   getInputId(projectId: number | string, actionId: number, date: Date): string {
     return `input-${projectId}-${actionId}-${date.toISOString()}`;
@@ -436,29 +465,28 @@ export class CalendarComponent implements OnInit {
     return item?.id || item?.id_project || item?.id_action || index;
   }
 
-
   loadProjects(): void {
-
     this.isLoadingResults = true;
-    const formattedStartDate = this.startDate.toISODate() ;
+    const formattedStartDate = this.startDate.toISODate();
     const formattedEndDate = this.endDate.toISODate();
 
     if (formattedStartDate && formattedEndDate) {
-    this.timeSheetService.getUserProjects(this.userId, formattedStartDate, formattedEndDate).subscribe(
-
-      (data) => {
-
-        this.projects = data.filter((project: any) => project.id_project !== 0);
-        this.fixedRows = data.filter((project: any) => project.id_project === 0);
-        console.log('Fixed Rows:', this.fixedRows);
-        this.isLoadingResults = false;
-      },
-      (error) => {
-        console.error('Erreur lors du chargement des projets', error);
-        this.isLoadingResults = false;
-      }
-    );
-  }}
+      this.timeSheetService
+        .getUserProjects(this.userId, formattedStartDate, formattedEndDate)
+        .subscribe(
+          (data) => {
+            this.projects = data.filter((project: any) => project.id_project !== 0);
+            this.fixedRows = data.filter((project: any) => project.id_project === 0);
+            console.log('Fixed Rows:', this.fixedRows);
+            this.isLoadingResults = false;
+          },
+          (error) => {
+            console.error('Erreur lors du chargement des projets', error);
+            this.isLoadingResults = false;
+          }
+        );
+    }
+  }
 
   formatApiDate(date: DateTime): string {
     return date.toFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -482,5 +510,4 @@ export class CalendarComponent implements OnInit {
       event.preventDefault();
     }
   }
-
 }

@@ -10,7 +10,7 @@ declare const google: any;
 @Component({
   selector: 'app-connection-page',
   templateUrl: './connection-page.component.html',
-  styleUrls: ['./connection-page.component.scss']
+  styleUrls: ['./connection-page.component.scss'],
 })
 export class ConnectionPageComponent implements AfterViewInit {
   title = 'GESTEMPS';
@@ -28,13 +28,13 @@ export class ConnectionPageComponent implements AfterViewInit {
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.loginForm.get(fieldName);
-    return field ? (field.invalid && (field.dirty || field.touched)) : false;
+    return field ? field.invalid && (field.dirty || field.touched) : false;
   }
 
   nativeLogin() {
@@ -44,7 +44,7 @@ export class ConnectionPageComponent implements AfterViewInit {
 
       const credentials: any = {
         login: this.loginForm.value.email,
-        password: this.loginForm.value.password
+        password: this.loginForm.value.password,
       };
 
       this.authService.nativeAuthenticate(credentials).subscribe({
@@ -75,11 +75,10 @@ export class ConnectionPageComponent implements AfterViewInit {
           }
 
           this.showToast(`${this.errorMessage} ❌`, true);
-        }
+        },
       });
     }
   }
-
 
   ngAfterViewInit(): void {
     // Initialize the Google Identity Services
@@ -93,7 +92,7 @@ export class ConnectionPageComponent implements AfterViewInit {
     this.codeClient = google.accounts.oauth2.initCodeClient({
       client_id: environment.googleClientId,
       scope: 'profile email',
-      callback: this.handleCodeResponse.bind(this)
+      callback: this.handleCodeResponse.bind(this),
     });
   }
 
@@ -105,38 +104,38 @@ export class ConnectionPageComponent implements AfterViewInit {
    * Handle the response from the One Tap prompt (ID token flow).
    */
   handleCredentialResponse(response: any): void {
-    this.authService.loginWithGoogle(response.credential)
-      .subscribe({
-        next: () => {
-          this.router.navigate(['/accueil/saisie-des-temps']);
-        },
-        error: err => {
-          const detailedMessage = err.error && err.error.message
+    this.authService.loginWithGoogle(response.credential).subscribe({
+      next: () => {
+        this.router.navigate(['/accueil/saisie-des-temps']);
+      },
+      error: (err) => {
+        const detailedMessage =
+          err.error && err.error.message
             ? err.error.message
             : 'Échec de connexion via Google One Tap.';
-          console.error('Google One Tap login failed:', err);
-          this.showToast(detailedMessage, true);
-        }
-      });
+        console.error('Google One Tap login failed:', err);
+        this.showToast(detailedMessage, true);
+      },
+    });
   }
 
   /**
    * Handle the response from the popup (authorization code flow).
    */
   handleCodeResponse(response: any): void {
-    this.authService.loginWithGoogleCode(response.code)
-      .subscribe({
-        next: () => {
-          this.router.navigate(['/accueil/saisie-des-temps']);
-        },
-        error: err => {
-          const detailedMessage = err.error && err.error.message
-          ? err.error.message
-          : 'Échec de connexion via Google One Tap.';
-          console.error('Google One Tap login failed:', err);
-          this.showToast(detailedMessage, true);
-        }
-      });
+    this.authService.loginWithGoogleCode(response.code).subscribe({
+      next: () => {
+        this.router.navigate(['/accueil/saisie-des-temps']);
+      },
+      error: (err) => {
+        const detailedMessage =
+          err.error && err.error.message
+            ? err.error.message
+            : 'Échec de connexion via Google One Tap.';
+        console.error('Google One Tap login failed:', err);
+        this.showToast(detailedMessage, true);
+      },
+    });
   }
 
   showToast(message: string, isError: boolean = false) {
@@ -148,4 +147,3 @@ export class ConnectionPageComponent implements AfterViewInit {
     });
   }
 }
-

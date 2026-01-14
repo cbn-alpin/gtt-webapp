@@ -12,21 +12,20 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatCardModule} from '@angular/material/card';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { FRENCH_DATE_FORMATS } from './core/config/date-formats'; 
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-
+import { FRENCH_DATE_FORMATS } from './core/config/date-formats';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -73,8 +72,7 @@ import { FrenchPaginatorIntl } from './core/config/frenchPaginatorIntl';
     TravelExpenseComponent,
     ListTravelExpenseComponent,
     MissionExpenseComponent,
-    ListMissionExpenseComponent
-  
+    ListMissionExpenseComponent,
   ],
   imports: [
     BrowserModule,
@@ -106,14 +104,14 @@ import { FrenchPaginatorIntl } from './core/config/frenchPaginatorIntl';
     MatCardModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule
-],
-providers: [
-  { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' }, // Locale en français
-  { provide: DateAdapter, useClass: MomentDateAdapter }, // Utilisation de Moment pour la gestion des dates
-  { provide: MAT_DATE_FORMATS, useValue: FRENCH_DATE_FORMATS }, // Format personnalisé global
-  { provide: MatPaginatorIntl, useClass: FrenchPaginatorIntl },
-],
-  bootstrap: [AppComponent]
+    MatAutocompleteModule,
+  ],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' }, // Locale en français
+    { provide: DateAdapter, useClass: MomentDateAdapter }, // Utilisation de Moment pour la gestion des dates
+    { provide: MAT_DATE_FORMATS, useValue: FRENCH_DATE_FORMATS }, // Format personnalisé global
+    { provide: MatPaginatorIntl, useClass: FrenchPaginatorIntl },
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -10,9 +10,9 @@ import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
-  styleUrls: ['./project.component.scss']
+  styleUrls: ['./project.component.scss'],
 })
-export class ProjectComponent implements OnInit{
+export class ProjectComponent implements OnInit {
   projectForm: FormGroup;
   isSubmitting = false;
   isEditMode = false;
@@ -23,58 +23,63 @@ export class ProjectComponent implements OnInit{
   manuallyEditingProjectName: boolean = false;
   manuallyEditingCode: boolean = false;
 
-  constructor(private readonly fb: FormBuilder , 
-    private readonly dialogRef: MatDialogRef<ProjectComponent>, 
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly dialogRef: MatDialogRef<ProjectComponent>,
     private readonly projectService: ProjectsService,
-    private readonly snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any, private shareDateService : ShareDataService, private cdRef: ChangeDetectorRef) {
-      this.projectForm = this.fb.group(
-        {
-          code: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], 
-          projectName: ['', Validators.required],
-          startDate: ['', Validators.required],
-          endDate: ['', Validators.required]
-        },
-        { validators: this.dateValidation } 
-      );
+    private readonly snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private shareDateService: ShareDataService,
+    private cdRef: ChangeDetectorRef
+  ) {
+    this.projectForm = this.fb.group(
+      {
+        code: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+        projectName: ['', Validators.required],
+        startDate: ['', Validators.required],
+        endDate: ['', Validators.required],
+      },
+      { validators: this.dateValidation }
+    );
+  }
+
+  ngOnInit(): void {
+    if (this.data?.project) {
+      this.isEditMode = true;
+      this.projectForm.patchValue({
+        code: this.data.project.code,
+        projectName: this.data.project.name,
+        startDate: this.formatDateForForm(this.data.project.start_date),
+        endDate: this.formatDateForForm(this.data.project.end_date),
+      });
     }
 
-    ngOnInit(): void {
-      if (this.data?.project) {
-        this.isEditMode = true;
-        this.projectForm.patchValue({
-          code: this.data.project.code,
-          projectName: this.data.project.name,
-          startDate: this.formatDateForForm(this.data.project.start_date),
-          endDate: this.formatDateForForm(this.data.project.end_date),
-        });
-      }
-
-      // Retrieve list projects for auto-completion
-      this.projectService.getGefiprojAllProjects().subscribe({
-        next: (projects) => {
-          this.projectsGefiproj = projects;
-          this.initAutoComplete();
-        },
-        error: (error) => {
-          console.error('Erreur lors du chargement des projets de Gefiproj:', error);
-        }
-      });
+    // Retrieve list projects for auto-completion
+    this.projectService.getGefiprojAllProjects().subscribe({
+      next: (projects) => {
+        this.projectsGefiproj = projects;
+        this.initAutoComplete();
+      },
+      error: (error) => {
+        console.error('Erreur lors du chargement des projets de Gefiproj:', error);
+      },
+    });
   }
 
   dateValidation(group: AbstractControl) {
     const startDate = group.get('startDate')?.value;
     const endDate = group.get('endDate')?.value;
     if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-      group.get('endDate')?.setErrors({ dateInvalid: true }); 
+      group.get('endDate')?.setErrors({ dateInvalid: true });
       return { dateInvalid: true };
     }
-    return null; 
+    return null;
   }
 
   onSubmit() {
     if (this.projectForm.valid) {
       this.isSubmitting = true;
-      const projectData : any = {
+      const projectData: any = {
         code: this.projectForm.value.code,
         name: this.projectForm.value.projectName,
         start_date: this.formatDateForBackend(this.projectForm.value.startDate),
@@ -97,7 +102,7 @@ export class ProjectComponent implements OnInit{
       error: (error) => {
         this.showToast(`Erreur : ${error.message || 'Impossible de créer le projet'}`, true);
         this.isSubmitting = false;
-      }
+      },
     });
   }
 
@@ -110,7 +115,7 @@ export class ProjectComponent implements OnInit{
       error: (error) => {
         this.showToast(`Erreur : ${error.message || 'Mise à jour impossible'}`, true);
         this.isSubmitting = false;
-      }
+      },
     });
   }
 
@@ -122,9 +127,9 @@ export class ProjectComponent implements OnInit{
     if (!code) {
       return;
     }
-  
+
     this.isAutocompleting = true;
-    const foundProject = this.projectsGefiproj.find(proj => proj.code_p == code);
+    const foundProject = this.projectsGefiproj.find((proj) => proj.code_p == code);
     if (foundProject) {
       this.projectForm.patchValue({ projectName: foundProject.nom_p });
       this.showToast(`Projet trouvé dans Gefiproj : "${foundProject.nom_p}"`, false);
@@ -135,38 +140,43 @@ export class ProjectComponent implements OnInit{
   initAutoComplete() {
     this.filteredGefiprojProjects = this.projectForm.get('projectName')!.valueChanges.pipe(
       startWith(''),
-      map(value => (typeof value === 'string' ? this.filterProjects(value) : this.projectsGefiproj))
+      map((value) =>
+        typeof value === 'string' ? this.filterProjects(value) : this.projectsGefiproj
+      )
     );
-  
-    this.projectForm.get('code')?.valueChanges.subscribe(value => {
-      if (value) { // Only if a value exists
+
+    this.projectForm.get('code')?.valueChanges.subscribe((value) => {
+      if (value) {
+        // Only if a value exists
         this.autocompleteByCode(value);
       }
     });
-  }  
+  }
 
   filterProjects(value: string): any[] {
-    if (!value ) {
+    if (!value) {
       return [];
     }
     const filterValue = value.toLowerCase();
-    const filteredProjects = this.projectsGefiproj.filter(proj =>
-      proj.nom_p.toLowerCase().includes(filterValue) || proj.code_p.toString().includes(filterValue)
+    const filteredProjects = this.projectsGefiproj.filter(
+      (proj) =>
+        proj.nom_p.toLowerCase().includes(filterValue) ||
+        proj.code_p.toString().includes(filterValue)
     );
-    this.showDropdown = filteredProjects.length > 0; 
+    this.showDropdown = filteredProjects.length > 0;
     this.cdRef.detectChanges();
     return filteredProjects;
   }
-  
+
   hideDropdownWithDelay() {
     setTimeout(() => {
       this.showDropdown = false;
     }, 200); // Short delay before clicking on an element
   }
-  
+
   onProjectNameInput(event: Event) {
     if (this.isAutocompleting) return;
-    
+
     this.manuallyEditingProjectName = true;
     const inputElement = event.target as HTMLInputElement;
     this.filterProjects(inputElement.value);
@@ -175,26 +185,26 @@ export class ProjectComponent implements OnInit{
 
   onCodeInput(event: Event) {
     if (this.isAutocompleting) return;
-    
+
     this.manuallyEditingCode = true;
     const inputElement = event.target as HTMLInputElement;
     const newCode = inputElement.value;
     // If the code has been modified, search for the corresponding project
     if (newCode) {
-      const foundProject = this.projectsGefiproj.find(proj => proj.code_p == newCode);
+      const foundProject = this.projectsGefiproj.find((proj) => proj.code_p == newCode);
       if (foundProject) {
         // If a matching project is found, update the name
         this.isAutocompleting = true;
         this.projectForm.patchValue({ projectName: foundProject.nom_p });
         this.isAutocompleting = false;
       } else {
-       // If the code doesn't correspond to any project, delete the project name
+        // If the code doesn't correspond to any project, delete the project name
         // only if the current name came from a previous autocompletion
         const currentName = this.projectForm.get('projectName')?.value;
         const projectWithCurrentName = this.projectsGefiproj.find(
-          proj => proj.nom_p === currentName && proj.code_p !== newCode
+          (proj) => proj.nom_p === currentName && proj.code_p !== newCode
         );
-        
+
         if (projectWithCurrentName) {
           // The current name corresponds to another project, so it must be deleted.
           this.isAutocompleting = true;
@@ -216,13 +226,13 @@ export class ProjectComponent implements OnInit{
       this.manuallyEditingCode = true;
       return;
     }
-    const foundProject = this.projectsGefiproj.find(proj => proj.code_p == code);
+    const foundProject = this.projectsGefiproj.find((proj) => proj.code_p == code);
     if (foundProject) {
       this.isAutocompleting = true;
       this.showToast(`Projet trouvé dans Gefiproj : "${foundProject.nom_p}"`, false);
       this.projectForm.patchValue({ projectName: foundProject.nom_p });
-      this.isAutocompleting = false
-    } 
+      this.isAutocompleting = false;
+    }
     this.manuallyEditingCode = false;
   }
 
@@ -230,7 +240,7 @@ export class ProjectComponent implements OnInit{
     this.isAutocompleting = true;
     this.projectForm.patchValue({
       code: project.code_p,
-      projectName: project.nom_p
+      projectName: project.nom_p,
     });
     this.showDropdown = false;
     this.isAutocompleting = false;
@@ -256,5 +266,5 @@ export class ProjectComponent implements OnInit{
       verticalPosition: 'top',
       horizontalPosition: 'center',
     });
-  } 
+  }
 }

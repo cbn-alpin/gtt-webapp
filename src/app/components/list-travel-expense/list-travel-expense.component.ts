@@ -14,25 +14,29 @@ import { ShareDataService } from 'src/app/services/shareData/share-data.service'
 @Component({
   selector: 'app-list-travel-expense',
   templateUrl: './list-travel-expense.component.html',
-  styleUrls: ['./list-travel-expense.component.scss']
+  styleUrls: ['./list-travel-expense.component.scss'],
 })
 export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
-
-  displayedColumns: string[] = ['date', 'project', 'purpose', 'amount','status','actions'];
+  displayedColumns: string[] = ['date', 'project', 'purpose', 'amount', 'status', 'actions'];
   statusOptions = ['A Traiter', 'En cours', 'Traité', 'Problème'];
   dataSource = new MatTableDataSource<any>([]);
   isLoadingResults = false;
   isError = false;
   isAdmin: boolean = false;
-  userId : number;
+  userId: number;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private readonly dialog: MatDialog,
-    private readonly snackBar: MatSnackBar, private router: Router, private readonly expensesService: ExpensesService, private shareDataService : ShareDataService){
-      this.isAdmin = localStorage.getItem('is_admin') === 'true';
-      this.userId = Number(localStorage.getItem('id_user'));
+  constructor(
+    private readonly dialog: MatDialog,
+    private readonly snackBar: MatSnackBar,
+    private router: Router,
+    private readonly expensesService: ExpensesService,
+    private shareDataService: ShareDataService
+  ) {
+    this.isAdmin = localStorage.getItem('is_admin') === 'true';
+    this.userId = Number(localStorage.getItem('id_user'));
   }
 
   ngOnInit(): void {
@@ -67,7 +71,7 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
         console.error('Erreur lors du chargement des frais de déplacement :', error);
         this.isLoadingResults = false;
         this.isError = true;
-      }
+      },
     });
   }
 
@@ -82,29 +86,29 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
   }
 
   editExpense(travel: any): void {
-    this.router.navigate(['accueil/frais-de-deplacement/'], { 
-      state: { travelData: travel }  
+    this.router.navigate(['accueil/frais-de-deplacement/'], {
+      state: { travelData: travel },
     });
-    this.shareDataService.sendTravelId(travel.travel_id)
+    this.shareDataService.sendTravelId(travel.travel_id);
   }
 
   deleteTravelExpense(action: string, travelId: number): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       disableClose: true,
       width: '300px',
-      data: { message: `${action}?` }
+      data: { message: `${action}?` },
     });
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
-        this.expensesService.deleteUserTravelExpense(travelId,this.userId).subscribe({
+        this.expensesService.deleteUserTravelExpense(travelId, this.userId).subscribe({
           next: () => {
             this.loadUserTravelExpenses();
             this.showToast(`Frais de déplacement supprimé avec succès ✅`);
           },
           error: (error) => {
             this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);
-          }
+          },
         });
       }
     });
@@ -113,57 +117,66 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
   updateStatus(element: any, newStatus: string): void {
     if (!element || !this.userId) return;
 
-   // Check if status has changed
-   if (element.status === newStatus) return;
+    // Check if status has changed
+    if (element.status === newStatus) return;
 
-   // Create the object as expected
-   const travelData = {
-     start_date: element.start_date,
-     end_date: element.end_date,
-     start_place: element.start_place,
-     return_place: element.return_place,
-     status: newStatus,
-     purpose: element.purpose,
-     start_municipality: element.start_municipality,
-     end_municipality: element.end_municipality,
-     night_municipality: element.night_municipality,
-     destination: element.destination,
-     night_count: element.night_count || 0,
-     meal_count: element.meal_count || 0,
-     comment: element.comment || '',
-     license_vehicle: element.license_vehicle || '',
-     comment_vehicle: element.comment_vehicle || '',
-     start_km: element.start_km || 0,
-     end_km: element.end_km || 0
-   };
+    // Create the object as expected
+    const travelData = {
+      start_date: element.start_date,
+      end_date: element.end_date,
+      start_place: element.start_place,
+      return_place: element.return_place,
+      status: newStatus,
+      purpose: element.purpose,
+      start_municipality: element.start_municipality,
+      end_municipality: element.end_municipality,
+      night_municipality: element.night_municipality,
+      destination: element.destination,
+      night_count: element.night_count || 0,
+      meal_count: element.meal_count || 0,
+      comment: element.comment || '',
+      license_vehicle: element.license_vehicle || '',
+      comment_vehicle: element.comment_vehicle || '',
+      start_km: element.start_km || 0,
+      end_km: element.end_km || 0,
+    };
 
     this.isLoadingResults = true;
 
-    this.expensesService.updateUserTravelExpense(element.id_travel, this.userId, travelData)
+    this.expensesService
+      .updateUserTravelExpense(element.id_travel, this.userId, travelData)
       .subscribe({
         next: () => {
           this.showToast('Statut mis à jour avec succès ✅');
-          element.status = newStatus; 
+          element.status = newStatus;
           this.isLoadingResults = false;
         },
         error: (error) => {
-          this.showToast(`Erreur lors de la mise à jour du statut : ${error.message || 'Erreur inconnue'} ❌`, true);
+          this.showToast(
+            `Erreur lors de la mise à jour du statut : ${error.message || 'Erreur inconnue'} ❌`,
+            true
+          );
           this.isLoadingResults = false;
-        }
-    });
+        },
+      });
   }
 
   getFilteredStatusOptions(currentStatus: string): string[] {
-    return this.statusOptions.filter(status => status !== currentStatus);
+    return this.statusOptions.filter((status) => status !== currentStatus);
   }
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'En cours': return 'in-progress';
-      case 'Traité': return 'completed';
-      case 'À traiter': return 'pending';
-      case 'Problème': return 'problem';
-      default: return '';
+      case 'En cours':
+        return 'in-progress';
+      case 'Traité':
+        return 'completed';
+      case 'À traiter':
+        return 'pending';
+      case 'Problème':
+        return 'problem';
+      default:
+        return '';
     }
   }
 
@@ -175,5 +188,4 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
       horizontalPosition: 'center',
     });
   }
-
 }

@@ -6,28 +6,32 @@ import { ShareDataService } from 'src/app/services/shareData/share-data.service'
 @Component({
   selector: 'app-mission-expense',
   templateUrl: './mission-expense.component.html',
-  styleUrls: ['./mission-expense.component.scss']
+  styleUrls: ['./mission-expense.component.scss'],
 })
 export class MissionExpenseComponent implements OnInit {
   missionForm: FormGroup;
   isSubmitting = false;
-  id_travel? : Number;
+  id_travel?: Number;
   isEditMode = false;
 
   ngOnInit(): void {
-    this.shareDataService.newTravelId$.subscribe(id => {
+    this.shareDataService.newTravelId$.subscribe((id) => {
       this.id_travel = id;
     });
   }
 
-  constructor(private readonly fb: FormBuilder, private readonly dialogRef: MatDialogRef<MissionExpenseComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id_travel: number, expense?: any }, private shareDataService : ShareDataService ){
-      this.missionForm = this.fb.group({
-        name: [data.expense ? data.expense.name : ''], 
-        comment: [data.expense ? data.expense.comment : ''],
-        amount: [data.expense ? data.expense.amount : ''],
-      });
-      this.isEditMode = !!this.data.expense;
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly dialogRef: MatDialogRef<MissionExpenseComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { id_travel: number; expense?: any },
+    private shareDataService: ShareDataService
+  ) {
+    this.missionForm = this.fb.group({
+      name: [data.expense ? data.expense.name : ''],
+      comment: [data.expense ? data.expense.comment : ''],
+      amount: [data.expense ? data.expense.amount : ''],
+    });
+    this.isEditMode = !!this.data.expense;
   }
 
   onClose(): void {

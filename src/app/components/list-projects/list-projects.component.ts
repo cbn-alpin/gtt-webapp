@@ -16,8 +16,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./list-projects.component.scss'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
@@ -25,16 +25,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ListProjectsComponent implements OnInit, AfterViewInit {
   isAdmin: boolean = false;
   displayedColumns: string[] = ['code', 'name', 'startDate', 'endDate'];
-  columnsToDisplayWithExpand = [...this.displayedColumns, 'actions']
+  columnsToDisplayWithExpand = [...this.displayedColumns, 'actions'];
   dataSource = new MatTableDataSource<Project>([]);
   expandedElement: Project | null = null;
   isLoadingResults = false;
   isError = false;
   showArchived: boolean = false;
 
-  constructor(private readonly dialog: MatDialog,
-  private projectService: ProjectsService,
-  private readonly snackBar: MatSnackBar){
+  constructor(
+    private readonly dialog: MatDialog,
+    private projectService: ProjectsService,
+    private readonly snackBar: MatSnackBar
+  ) {
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
   }
 
@@ -64,15 +66,12 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       next: (projects) => {
         setTimeout(() => {
           const filteredProjects = projects
-          .filter((p: Project) =>
-            p.is_archived === this.showArchived &&
-            p.id_project !== 0
-          )
-          .sort((a: Project, b: Project) => {
-            const codeA = Number(a.code) || 0;
-            const codeB = Number(b.code) || 0;
-            return codeB - codeA;
-          });
+            .filter((p: Project) => p.is_archived === this.showArchived && p.id_project !== 0)
+            .sort((a: Project, b: Project) => {
+              const codeA = Number(a.code) || 0;
+              const codeB = Number(b.code) || 0;
+              return codeB - codeA;
+            });
 
           this.dataSource.data = filteredProjects;
           this.isLoadingResults = false;
@@ -86,7 +85,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
       error: (error) => {
         this.isLoadingResults = false;
         this.isError = true;
-      }
+      },
     });
 
     this.dataSource.sortingDataAccessor = (item: any, property: string) => {
@@ -96,9 +95,9 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
         case 'name':
           return item.name?.toLowerCase().trim() || '';
         case 'startDate':
-          return new Date(this.formatDateForForm(item.start_date)).getTime(); 
+          return new Date(this.formatDateForForm(item.start_date)).getTime();
         case 'endDate':
-          return new Date(this.formatDateForForm(item.end_date)).getTime(); 
+          return new Date(this.formatDateForForm(item.end_date)).getTime();
         default:
           return (item as any)[property];
       }
@@ -109,7 +108,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       disableClose: true,
       width: '300px',
-      data: { message: `${action}?` }
+      data: { message: `${action}?` },
     });
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
@@ -121,14 +120,14 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
           },
           error: (error) => {
             this.showToast(`Erreur : ${error.error.message || 'Suppression impossible'} ❌`, true);
-          }
+          },
         });
       }
     });
   }
 
   createProject() {
-    const dialogRef = this.dialog.open(ProjectComponent,{disableClose: true});
+    const dialogRef = this.dialog.open(ProjectComponent, { disableClose: true });
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         this.fetchProjects();
@@ -136,19 +135,19 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  archiveOrUnArchiveProject(action: string, project: Project, is_archived : boolean): void {
-    const successMessage = is_archived 
-      ? `Projet "${project.name}" archivé avec succès 🎉` 
+  archiveOrUnArchiveProject(action: string, project: Project, is_archived: boolean): void {
+    const successMessage = is_archived
+      ? `Projet "${project.name}" archivé avec succès 🎉`
       : `Projet "${project.name}" désarchivé avec succès ✅`;
 
-    const errorMessage = is_archived 
-      ? `Erreur : Impossible d'archiver le projet "${project.name}" ❌` 
+    const errorMessage = is_archived
+      ? `Erreur : Impossible d'archiver le projet "${project.name}" ❌`
       : `Erreur : Impossible de désarchiver le projet "${project.name}" ❌`;
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       disableClose: true,
       width: '300px',
-      data: { message: `${action}?` }
+      data: { message: `${action}?` },
     });
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
@@ -157,18 +156,18 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
 
         const updatedProject = {
           ...projectData,
-          is_archived: is_archived
+          is_archived: is_archived,
         };
 
         this.projectService.updateProjectById(project.id_project, updatedProject).subscribe({
           next: () => {
-            this.showToast(successMessage,false);
+            this.showToast(successMessage, false);
             this.fetchProjects();
           },
           error: (error) => {
-            console.log(error)
+            console.log(error);
             this.showToast(errorMessage, true);
-          }
+          },
         });
       }
     });
@@ -182,7 +181,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
   editProject(project: Project) {
     const dialogRef = this.dialog.open(ProjectComponent, {
       disableClose: true,
-      data: { project }
+      data: { project },
     });
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
@@ -207,4 +206,3 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
     });
   }
 }
-

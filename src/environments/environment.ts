@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-    production: false,
-    apiUrl:"${API_URL}",
-    googleClientId: "${GOOGLE_CLIENT_ID}"
-  };
+  production: false,
+  apiUrl: '${API_URL}',
+  googleClientId: '${GOOGLE_CLIENT_ID}',
+};

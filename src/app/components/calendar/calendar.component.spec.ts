@@ -11,11 +11,9 @@ describe('CalendarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-
-      imports: [ FormsModule, CalendarComponent, MatDialogModule ],
-      providers: [MatDialog]
-    })
-    .compileComponents();
+      imports: [FormsModule, CalendarComponent, MatDialogModule],
+      providers: [MatDialog],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CalendarComponent);
     component = fixture.componentInstance;
@@ -30,7 +28,7 @@ describe('CalendarComponent', () => {
 
     component.weekDays = [
       { date: new Date(), isWeekend: false, isToday: false, name: 'Lundi' },
-      { date: new Date(), isWeekend: false, isToday: false, name: 'Mardi' }
+      { date: new Date(), isWeekend: false, isToday: false, name: 'Mardi' },
     ];
 
     const total = component.calculateWeekTotal(1, 1);
@@ -38,9 +36,7 @@ describe('CalendarComponent', () => {
   });
 
   it('should calculate the total hours for a day', () => {
-    component.projects = [
-      { id_project: 1, list_action: [{ id_action: 1 }] }
-    ];
+    component.projects = [{ id_project: 1, list_action: [{ id_action: 1 }] }];
 
     spyOn(component, 'getTimeEntry').and.returnValue({ hours: 3 });
 
@@ -71,7 +67,9 @@ describe('CalendarComponent', () => {
   });
 
   it('should apply weekend style to weekend days', () => {
-    component.weekDays = [{ date: new Date('2024-02-10'), isWeekend: true, isToday: false, name: 'Mardi' }];
+    component.weekDays = [
+      { date: new Date('2024-02-10'), isWeekend: true, isToday: false, name: 'Mardi' },
+    ];
     fixture.detectChanges();
 
     const weekendCell = fixture.debugElement.query(By.css('.weekend-input'));

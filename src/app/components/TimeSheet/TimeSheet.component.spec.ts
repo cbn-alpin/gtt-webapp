@@ -8,9 +8,8 @@ describe('TimeSheetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TimeSheetComponent ]
-    })
-    .compileComponents();
+      declarations: [TimeSheetComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TimeSheetComponent);
     component = fixture.componentInstance;

@@ -1,84 +1,167 @@
-
 <div class="download-container">
-    <div class="loading-shade-download" *ngIf="isLoadingResults">
-      <mat-spinner></mat-spinner>
-    </div>
-    <section class="table-container mat-elevation-z8" tabindex="0">  
-        <ng-container *ngIf="dataSource.data.length > 0; else emptyState">
-          <mat-form-field>
-            <mat-label>Rechercher</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Saisir la valeur à rechercher">
-          </mat-form-field>
-        
-          <table mat-table [dataSource]="dataSource" class="download-table">
-    
-            <ng-container matColumnDef="selection">
-              <th mat-header-cell *matHeaderCellDef class="selection-cell"> Sélection
-              </th>
-              <td mat-cell *matCellDef="let row" class="selection-cell">
-                <mat-checkbox (click)="$event.stopPropagation()"
-                              (change)="toggleSelection(row)"
-                              [checked]="selection.isSelected(row)">
-                </mat-checkbox>
-              </td>
-            </ng-container>
-        
-            <ng-container matColumnDef="nom">
-              <th mat-header-cell *matHeaderCellDef class="code-cell"> Nom</th>
-              <td mat-cell *matCellDef="let element" class="code-cell"> {{element.last_name}} </td>
-            </ng-container>
-        
-            <ng-container matColumnDef="prenom">
-              <th mat-header-cell *matHeaderCellDef>Prénom </th>
-              <td mat-cell *matCellDef="let element"> {{element.first_name}} </td>
-            </ng-container>
-          
-            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-            (click)="toggleSelection(row)">
-            </tr>
-          </table>
-      
-          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons class="sticky-paginator"></mat-paginator>
-        </ng-container> 
-    
-        <ng-template #emptyState>
-          <div class="empty-container" *ngIf="!isLoadingResults && !isError">
-            <p>Aucun agent trouvé.</p>
-          </div>
-          <div class="empty-container" *ngIf="isError && !isLoadingResults">
-            <p>Une erreur est survenue lors de la récupération des agents.</p>
-          </div>
-        </ng-template>
-    </section>
+  <div
+    class="loading-shade-download"
+    *ngIf="isLoadingResults"
+  >
+    <mat-spinner></mat-spinner>
+  </div>
+  <section
+    class="table-container mat-elevation-z8"
+    tabindex="0"
+  >
+    <ng-container *ngIf="dataSource.data.length > 0; else emptyState">
+      <mat-form-field>
+        <mat-label>Rechercher</mat-label>
+        <input
+          matInput
+          (keyup)="applyFilter($event)"
+          placeholder="Saisir la valeur à rechercher"
+        />
+      </mat-form-field>
 
-    <div class="date-filter-section  mat-elevation-z2">
-      <div class="date-filter-label">
-        <h3>Choisir une période des frais</h3>
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="download-table"
+      >
+        <ng-container matColumnDef="selection">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="selection-cell"
+          >
+            Sélection
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let row"
+            class="selection-cell"
+          >
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="toggleSelection(row)"
+              [checked]="selection.isSelected(row)"
+            ></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nom">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="code-cell"
+          >
+            Nom
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="code-cell"
+          >
+            {{ element.last_name }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="prenom">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+          >
+            Prénom
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+          >
+            {{ element.first_name }}
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          (click)="toggleSelection(row)"
+        ></tr>
+      </table>
+
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+        class="sticky-paginator"
+      ></mat-paginator>
+    </ng-container>
+
+    <ng-template #emptyState>
+      <div
+        class="empty-container"
+        *ngIf="!isLoadingResults && !isError"
+      >
+        <p>Aucun agent trouvé.</p>
       </div>
-    
-      <div class="form-row ">
-        <div class="form-field-expense">
-          <label class="form-label" for="startDate">Date début</label>
-          <input class="form-input-expense" id="startDate" type="date" [disabled]="(isButtonDisabled$ | async) === false"
-          (change)="onStartDateChange($event)"/>
-        </div>
-    
-        <div class="form-field-expense">
-          <label class="form-label" for="endDate">Date fin</label>
-          <input class="form-input-expense" id="endDate" type="date" [disabled]="(isButtonDisabled$ | async) === false" 
-          (change)="onEndDateChange($event)"/>
-        </div>
+      <div
+        class="empty-container"
+        *ngIf="isError && !isLoadingResults"
+      >
+        <p>Une erreur est survenue lors de la récupération des agents.</p>
+      </div>
+    </ng-template>
+  </section>
+
+  <div class="date-filter-section mat-elevation-z2">
+    <div class="date-filter-label">
+      <h3>Choisir une période des frais</h3>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field-expense">
+        <label
+          class="form-label"
+          for="startDate"
+        >
+          Date début
+        </label>
+        <input
+          class="form-input-expense"
+          id="startDate"
+          type="date"
+          [disabled]="(isButtonDisabled$ | async) === false"
+          (change)="onStartDateChange($event)"
+        />
+      </div>
+
+      <div class="form-field-expense">
+        <label
+          class="form-label"
+          for="endDate"
+        >
+          Date fin
+        </label>
+        <input
+          class="form-input-expense"
+          id="endDate"
+          type="date"
+          [disabled]="(isButtonDisabled$ | async) === false"
+          (change)="onEndDateChange($event)"
+        />
       </div>
     </div>
-      
-    <div class="download-project-button">
-      <button mat-elevation-z8 class="download-expense" (click)="exportProjectData('état_des_frais_de_déplacement_de')" [disabled]="(isButtonDisabled$ | async) === false" 
-      [matTooltip]="'Sélectionner d\'abord un agent'" [matTooltipDisabled]="(isButtonDisabled$ | async)" matTooltipPosition="above">
-        Télécharger les frais 
-      </button>
-    </div>
+  </div>
+
+  <div class="download-project-button">
+    <button
+      mat-elevation-z8
+      class="download-expense"
+      (click)="exportProjectData('état_des_frais_de_déplacement_de')"
+      [disabled]="(isButtonDisabled$ | async) === false"
+      [matTooltip]="'Sélectionner d\'abord un agent'"
+      [matTooltipDisabled]="isButtonDisabled$ | async"
+      matTooltipPosition="above"
+    >
+      Télécharger les frais
+    </button>
+  </div>
 </div>
-  
-  
-    

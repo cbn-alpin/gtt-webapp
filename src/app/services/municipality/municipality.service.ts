@@ -3,10 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MunicipalityService {
-
   // private apiUrl = 'https://nominatim.openstreetmap.org/search';
 
   // getCommunes(query: string): Observable<any[]> {
@@ -27,5 +26,4 @@ export class MunicipalityService {
   getCommunes(nom: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}?nom=${nom}&fields=nom,codesPostaux&limit=10`);
   }
-
 }

@@ -22,13 +22,13 @@ const routes: Routes = [
       { path: 'telechargement', component: DownloadPageComponent },
       { path: 'frais-de-deplacement', component: TravelExpenseComponent },
       { path: '**', redirectTo: 'liste-des-projets', pathMatch: 'full' },
-    ]
+    ],
   },
- { path: '**', redirectTo: '/connexion', pathMatch: 'full' },
+  { path: '**', redirectTo: '/connexion', pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

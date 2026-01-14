@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
 }
-.archivedProjects{
+.archivedProjects {
   font-size: 16px;
   font-weight: bold;
   color: #2f4050;
@@ -29,7 +29,7 @@
   overflow: auto;
   position: relative;
 }
-.add-project{
+.add-project {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
@@ -38,7 +38,7 @@
   border-radius: 5px;
 }
 
-.project-action{
+.project-action {
   cursor: pointer;
   color: #2f4050;
 }
@@ -52,7 +52,7 @@
 }
 
 table {
-    width: 100%;
+  width: 100%;
 }
 
 .loading-shade {
@@ -70,46 +70,46 @@ table {
   border-radius: 8px;
 }
 
-  tr.detail-row {
-    height: 0;
-  }
+tr.detail-row {
+  height: 0;
+}
 
-  tr.element-row:not(.expanded-row):hover {
-    background: whitesmoke;
-  }
+tr.element-row:not(.expanded-row):hover {
+  background: whitesmoke;
+}
 
-  tr.element-row:not(.expanded-row):active {
-    background: #efefef;
-  }
+tr.element-row:not(.expanded-row):active {
+  background: #efefef;
+}
 
-  .element-row td {
-    border-bottom-width: 0;
-  }
+.element-row td {
+  border-bottom-width: 0;
+}
 
-  .element-diagram {
-    border: 2px solid #2f4050;
-    font-weight: lighter;
-    max-height: 300px;
-    min-height: 80px;
-  }
+.element-diagram {
+  border: 2px solid #2f4050;
+  font-weight: lighter;
+  max-height: 300px;
+  min-height: 80px;
+}
 
-  .element-description-attribution {
-    opacity: 0.5;
-  }
+.element-description-attribution {
+  opacity: 0.5;
+}
 
-  .element-detail {
-    overflow: hidden;
-  }
+.element-detail {
+  overflow: hidden;
+}
 
-  .empty-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 540px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #2f4050;
- }
+.empty-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 540px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #2f4050;
+}
 
 .mat-mdc-slide-toggle.mat-accent {
   --mdc-switch-selected-focus-state-layer-color: #2f4050;
@@ -126,12 +126,12 @@ table {
 }
 
 button[mat-menu-item][disabled] {
-  color: rgba(0, 0, 0, 0.38);  
+  color: rgba(0, 0, 0, 0.38);
   cursor: not-allowed;
 }
 
 button[mat-menu-item][disabled] mat-icon {
-  color: rgba(0, 0, 0, 0.38); 
+  color: rgba(0, 0, 0, 0.38);
 }
 
 @media (max-width: 7480px) {
@@ -139,7 +139,8 @@ button[mat-menu-item][disabled] mat-icon {
     min-width: 100%;
   }
 
-  .mat-header-cell, .mat-cell {
+  .mat-header-cell,
+  .mat-cell {
     font-size: 12px;
   }
 }

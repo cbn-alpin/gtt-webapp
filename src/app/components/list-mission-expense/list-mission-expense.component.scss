@@ -1,94 +1,89 @@
-
 .expense-container {
-    display: flex;
-    flex-direction: column;
-    max-height: 300px; /* Ajuste selon ton besoin */
-    overflow: hidden; /* Empêche le dépassement */
+  display: flex;
+  flex-direction: column;
+  max-height: 300px; /* Ajuste selon ton besoin */
+  overflow: hidden; /* Empêche le dépassement */
 }
 
 .table-wrapper {
-    overflow-y: auto; /* Active le scroll vertical */
-    overflow-x: hidden;
-    max-height: 250px; /* Ajuste selon ton besoin */
-    border: 1px solid #ddd; /* Ajoute une bordure si nécessaire */
+  overflow-y: auto; /* Active le scroll vertical */
+  overflow-x: hidden;
+  max-height: 250px; /* Ajuste selon ton besoin */
+  border: 1px solid #ddd; /* Ajoute une bordure si nécessaire */
 }
 
 .expense-table {
-    width: 100%;
-    border-collapse: collapse; 
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.add-expense{
-    display: flex;
-    justify-content: flex-end;
-    padding: 0.5em 3em 0 0;
-    height: 2em;
-    min-height: 2em;
-}
- 
-.expense-table th, .expense-table td {
-    padding: 8px;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.add-expense {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5em 3em 0 0;
+  height: 2em;
+  min-height: 2em;
 }
 
-.comment-cell{
-    text-align: left;
-    white-space: nowrap; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 23em; 
-    max-width: 23em;
+.expense-table th,
+.expense-table td {
+  padding: 8px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.comment-cell {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 23em;
+  max-width: 23em;
 }
 
 .amount-cell {
-    width: 8em; 
-    max-width: 8em;
+  width: 8em;
+  max-width: 8em;
 }
 
 .object-cell {
-    width: 12em; 
-    max-width: 12em;
-    white-space: nowrap; 
-    overflow: hidden;
-    text-overflow: ellipsis;
+  width: 12em;
+  max-width: 12em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .truncate {
-    display: inline-block;
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 tr.element-row:not(.expanded-row):hover {
-background: whitesmoke;
+  background: whitesmoke;
 }
 
-.project-expense{
-    cursor: pointer;
-    color: #2f4050;
-    margin-right: 5px;
+.project-expense {
+  cursor: pointer;
+  color: #2f4050;
+  margin-right: 5px;
 }
 
 .empty-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: bold;
-    color: #2f4050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #2f4050;
 }
 
-.mission-action{
-    cursor: pointer;
-    color: #2f4050;
+.mission-action {
+  cursor: pointer;
+  color: #2f4050;
 }
-  
-
-
-
-  

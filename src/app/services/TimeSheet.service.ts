@@ -4,24 +4,22 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class TimeSheetService  {
-
-  constructor(private http: HttpClient) { }
+export class TimeSheetService {
+  constructor(private http: HttpClient) {}
   private apiUrl = environment.apiUrl;
 
-   private getHttpOptions() {
-      const token = localStorage.getItem('access_token'); 
-      
-      return {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
-        })
-      };
-    }
-  
+  private getHttpOptions() {
+    const token = localStorage.getItem('access_token');
+
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }),
+    };
+  }
 
   getUserProjects(userId: string, dateStart: String, dateEnd: String): Observable<any[]> {
     const url = `${this.apiUrl}/user/${userId}/projects/times?date_start=${dateStart}&date_end=${dateEnd}`;
@@ -29,16 +27,14 @@ export class TimeSheetService  {
   }
 
   saveUserTime(userId: string, actionId: number, date: string, duration: number): Observable<any> {
-
     const url = `${this.apiUrl}/user/${userId}/projects/times`;
 
     const body = {
       date: date,
       duration: duration,
-      id_action: actionId
+      id_action: actionId,
     };
 
     return this.http.post<any>(url, body, this.getHttpOptions());
   }
-
 }

@@ -1,10 +1,10 @@
-import { Component, HostListener, OnInit} from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   currentTitle: any = '';
@@ -12,23 +12,22 @@ export class HomeComponent implements OnInit {
   showPasswordChange = false;
   isMobile: boolean = false;
   isSidenavOpened: boolean = true;
-  isAdminChangedAccount : boolean = false;
-  userName : any = '';
-  userImage :any = '';
-  switched_user_name : any = '';
+  isAdminChangedAccount: boolean = false;
+  userName: any = '';
+  userImage: any = '';
+  switched_user_name: any = '';
   isAdmin: boolean = false;
 
   ngOnInit() {
-    this.currentTitle = localStorage.getItem('newTitle') || '' ;
+    this.currentTitle = localStorage.getItem('newTitle') || '';
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
     this.isAdminChangedAccount = localStorage.getItem('isAdminChangedAccount') === 'true';
     this.userName = localStorage.getItem('user_name') || 'Utilisateur';
     this.userImage = localStorage.getItem('user_photo') || 'assets/images/defaultProfil.png'; // Default image if no image
-    this.switched_user_name = localStorage.getItem('switched_user_name'); 
+    this.switched_user_name = localStorage.getItem('switched_user_name');
   }
 
-  constructor(private authService: AuthService) {
-  }
+  constructor(private authService: AuthService) {}
 
   updateTitle(newTitle: string) {
     this.currentTitle = newTitle;
@@ -67,5 +66,5 @@ export class HomeComponent implements OnInit {
 
   setDefaultImage() {
     this.userImage = 'assets/images/defaultProfil.png';
-  }  
+  }
 }

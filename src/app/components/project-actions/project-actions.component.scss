@@ -1,94 +1,91 @@
-.project-action-container{
-    max-height: 300px;
-    min-height: 80px;
-    overflow: auto;
+.project-action-container {
+  max-height: 300px;
+  min-height: 80px;
+  overflow: auto;
 }
 
-.add-action-space{
-    height: 2em;
-    min-height: 2em;
+.add-action-space {
+  height: 2em;
+  min-height: 2em;
 }
 
-.add-action{
-    display: flex;
-    justify-content: flex-end;
-    padding: 0.5em 3em 0 0;
-    height: 2em;
-    min-height: 2em;
+.add-action {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5em 3em 0 0;
+  height: 2em;
+  min-height: 2em;
 }
- 
+
 .action-table {
-    overflow: auto;
-    border-collapse: collapse; 
-    border-spacing: 0; 
+  overflow: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
 
-    th, td {
-        padding: 8px; 
-        text-align: left;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-}
-
-.description-cell{
-    padding: 10px;
+  th,
+  td {
+    padding: 8px;
     text-align: left;
-    white-space: nowrap; 
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 41em; 
-    max-width: 41em;
+  }
+}
+
+.description-cell {
+  padding: 10px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 41em;
+  max-width: 41em;
 }
 
 .num-cell {
-    width: 18em; 
-    max-width: 18em;
+  width: 18em;
+  max-width: 18em;
 }
 
 .name-cell {
-    width: 25em; 
-    max-width: 25em;
+  width: 25em;
+  max-width: 25em;
 }
 
 .truncate {
-    display: inline-block;
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 ::ng-deep .mat-mdc-checkbox.mat-accent {
-    --mdc-checkbox-selected-icon-color: #2f4050 !important;
-    --mdc-checkbox-selected-hover-icon-color: #2f4050 !important;
-    --mdc-checkbox-selected-focus-icon-color: #2f4050 !important;
-    --mdc-checkbox-selected-pressed-icon-color: #2f4050 !important;
+  --mdc-checkbox-selected-icon-color: #2f4050 !important;
+  --mdc-checkbox-selected-hover-icon-color: #2f4050 !important;
+  --mdc-checkbox-selected-focus-icon-color: #2f4050 !important;
+  --mdc-checkbox-selected-pressed-icon-color: #2f4050 !important;
 }
 
-::ng-deep .mat-mdc-checkbox.mat-accent .mdc-checkbox--selected~.mdc-checkbox__ripple {
-    background-color: rgba(47, 64, 80, 0.3) !important;
+::ng-deep .mat-mdc-checkbox.mat-accent .mdc-checkbox--selected ~ .mdc-checkbox__ripple {
+  background-color: rgba(47, 64, 80, 0.3) !important;
 }
 
 tr.element-row:not(.expanded-row):hover {
-background: whitesmoke;
+  background: whitesmoke;
 }
 
-.project-action{
-    cursor: pointer;
-    color: #2f4050;
-    margin-right: 5px;
+.project-action {
+  cursor: pointer;
+  color: #2f4050;
+  margin-right: 5px;
 }
 
 .empty-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: bold;
-    color: #2f4050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #2f4050;
 }
-
-
-
-  

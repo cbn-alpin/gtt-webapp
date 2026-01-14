@@ -13,53 +13,57 @@ import { UserService } from 'src/app/services/user/user.service';
 @Component({
   selector: 'app-download-expenses',
   templateUrl: './download-expenses.component.html',
-  styleUrls: ['./download-expenses.component.scss']
+  styleUrls: ['./download-expenses.component.scss'],
 })
 export class DownloadExpensesComponent {
-
- private selectionState = new BehaviorSubject<boolean>(false);
+  private selectionState = new BehaviorSubject<boolean>(false);
   isButtonDisabled$ = this.selectionState.asObservable();
   displayedColumns: string[] = ['selection', 'nom', 'prenom'];
   dataSource = new MatTableDataSource<UserInfos>([]);
   selection = new SelectionModel<UserInfos>(false, []);
-  selectedUserId : any = null;
-  selectedUserLastName : any = null;
-  selectedUserFirstName : any = null;
+  selectedUserId: any = null;
+  selectedUserLastName: any = null;
+  selectedUserFirstName: any = null;
   isLoadingResults = false;
   isError = false;
   startDateFilter: string = '';
-  endDateFilter: string  = '';
-  userId :  any;
+  endDateFilter: string = '';
+  userId: any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private userService: UserService, private downloadServivce : DownloadService,
-     private readonly expensesService: ExpensesService, private readonly snackBar: MatSnackBar, private shareDateService : ShareDataService) {
-      this.userId = Number(localStorage.getItem('id_user'));
-     }
+  constructor(
+    private userService: UserService,
+    private downloadServivce: DownloadService,
+    private readonly expensesService: ExpensesService,
+    private readonly snackBar: MatSnackBar,
+    private shareDateService: ShareDataService
+  ) {
+    this.userId = Number(localStorage.getItem('id_user'));
+  }
 
   ngOnInit(): void {
     this.fetchUsers();
   }
-   
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
- 
+
   toggleSelection(row: UserInfos): void {
     if (this.selection.isSelected(row)) {
       this.selection.clear();
       this.selectedUserId = null;
       this.selectedUserLastName = null;
-      this.selectedUserFirstName  = null;
+      this.selectedUserFirstName = null;
       this.selectionState.next(false);
     } else {
       this.selection.clear();
       this.selection.select(row);
       this.selectedUserId = row.id_user;
       this.selectedUserLastName = row.last_name;
-      this.selectedUserFirstName  = row.first_name;
-      this.selectionState.next(true); 
+      this.selectedUserFirstName = row.first_name;
+      this.selectionState.next(true);
     }
   }
 
@@ -68,18 +72,18 @@ export class DownloadExpensesComponent {
     this.isError = false;
     this.userService.getAllUsers().subscribe({
       next: (users) => {
-        setTimeout(() => { 
+        setTimeout(() => {
           this.dataSource.data = users;
           this.isLoadingResults = false;
-          setTimeout(() => { 
-            this.dataSource.paginator = this.paginator;   
+          setTimeout(() => {
+            this.dataSource.paginator = this.paginator;
           }, 100);
         }, 1000);
       },
       error: () => {
         this.isLoadingResults = false;
         this.isError = true;
-      }
+      },
     });
   }
 
@@ -88,83 +92,85 @@ export class DownloadExpensesComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  exportProjectData(exportFileName : string): void {
-    this.expensesService.getUserAllTravelsExpenses(this.selectedUserId,this.startDateFilter,this.endDateFilter).subscribe({
-      next: (usersTravelsExpenses) => {
-        if (usersTravelsExpenses.length == 0) {
-          this.showToast(`Aucun frais de déplacement trouvé pour cet agent.`);
-          return;
-        }
-        const fileName = `${exportFileName}_${this.selectedUserFirstName}_${this.selectedUserLastName}`;
-        const formattedData = this.formatUserExpensesForCSV(usersTravelsExpenses);  
-        this.downloadServivce.downloadCSV(formattedData, fileName);
-        console.error('expenses du user', formattedData);
-
-        //Update the status to “In progress” for each travel with a status other than In progress or To be processed.
-        usersTravelsExpenses.forEach((travel: any) => {
-          const travelId = travel.id_travel;
-          if (travel.status !== "En cours" && travel.status !== "Traité") {
-            travel.status = "En cours";
-            // delete no needed field for update travel status
-            delete travel.list_expenses;
-            delete travel.total_expense;
-            delete travel.project_code;
-            delete travel.id_user;
-            delete travel.id_travel;
-            delete travel.id_project;
-            this.updateTravelStatus(travelId, this.userId , travel);
+  exportProjectData(exportFileName: string): void {
+    this.expensesService
+      .getUserAllTravelsExpenses(this.selectedUserId, this.startDateFilter, this.endDateFilter)
+      .subscribe({
+        next: (usersTravelsExpenses) => {
+          if (usersTravelsExpenses.length == 0) {
+            this.showToast(`Aucun frais de déplacement trouvé pour cet agent.`);
+            return;
           }
-        });},
-      error: () => {
-        console.error('Erreur lors du chargement des expenses du user');
-      }
-    });
+          const fileName = `${exportFileName}_${this.selectedUserFirstName}_${this.selectedUserLastName}`;
+          const formattedData = this.formatUserExpensesForCSV(usersTravelsExpenses);
+          this.downloadServivce.downloadCSV(formattedData, fileName);
+          console.error('expenses du user', formattedData);
+
+          //Update the status to “In progress” for each travel with a status other than In progress or To be processed.
+          usersTravelsExpenses.forEach((travel: any) => {
+            const travelId = travel.id_travel;
+            if (travel.status !== 'En cours' && travel.status !== 'Traité') {
+              travel.status = 'En cours';
+              // delete no needed field for update travel status
+              delete travel.list_expenses;
+              delete travel.total_expense;
+              delete travel.project_code;
+              delete travel.id_user;
+              delete travel.id_travel;
+              delete travel.id_project;
+              this.updateTravelStatus(travelId, this.userId, travel);
+            }
+          });
+        },
+        error: () => {
+          console.error('Erreur lors du chargement des expenses du user');
+        },
+      });
   }
 
   updateTravelStatus(travelId: number, userId: number, travelData: any): void {
     if (!travelId || !userId) return;
-  
-    this.expensesService.updateUserTravelExpense(travelId, userId, travelData)
-      .subscribe({
-        next: () => {
-          console.log(`Statut du travel ${travelId} mis à jour après téléchargement ✅`);
-        },
-        error: (error) => {
-          console.error(`Erreur lors de la mise à jour du statut du travel ${travelId} :`, error);
-        }
-      });
+
+    this.expensesService.updateUserTravelExpense(travelId, userId, travelData).subscribe({
+      next: () => {
+        console.log(`Statut du travel ${travelId} mis à jour après téléchargement ✅`);
+      },
+      error: (error) => {
+        console.error(`Erreur lors de la mise à jour du statut du travel ${travelId} :`, error);
+      },
+    });
   }
 
   formatUserExpensesForCSV(data: any[]): any[] {
-    if(!data){
+    if (!data) {
       this.showToast(`Aucun frais de déplacement trouvé pour cet agent.`);
-      return [] ;
-    }else{
-      return data.map(row => {
+      return [];
+    } else {
+      return data.map((row) => {
         // Creating a string for expense objects
         const expenseObjects = row.list_expenses
           .map((expense: any) => expense.name?.trim())
           .filter(Boolean)
           .join(', ');
-    
+
         // Creating a string for uprights
         const expenseAmounts = row.list_expenses
           .map((expense: any) => `${expense.amount} €`.trim())
           .filter(Boolean)
           .join(', ');
-    
+
         // Creating a string for comments
         const expenseComments = row.list_expenses
           .map((expense: any) => expense.comment?.trim() || '')
           .filter(Boolean)
           .join(', ');
-    
+
         // Calculating total kilometers
-        const totalKm = `${(row.end_km - row.start_km)} KM`;
-    
+        const totalKm = `${row.end_km - row.start_km} KM`;
+
         return {
           'Objet déplacement réalisé': row.purpose,
-          'Projet': row.project_code,
+          Projet: row.project_code,
           'Destination déplacement réalisé': row.destination,
           'Résidence début': row.start_place,
           'Résidence fin': row.return_place,
@@ -183,7 +189,6 @@ export class DownloadExpensesComponent {
         };
       });
     }
-   
   }
 
   onStartDateChange(event: Event): void {
@@ -191,26 +196,25 @@ export class DownloadExpensesComponent {
     if (input.value) {
       this.startDateFilter = this.shareDateService.formatDate(input.value);
     } else {
-      this.startDateFilter = ''; 
+      this.startDateFilter = '';
     }
   }
-  
+
   onEndDateChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.value) {
-      this.endDateFilter = this.shareDateService.formatDate(input.value); 
+      this.endDateFilter = this.shareDateService.formatDate(input.value);
     } else {
-      this.endDateFilter = ''; 
+      this.endDateFilter = '';
     }
   }
 
   showToast(message: string, isError: boolean = false) {
     this.snackBar.open(message, '', {
-      duration: 5000, 
-      panelClass: [isError ? 'error-toast' : 'success-toast'], 
-      verticalPosition: 'top', 
-      horizontalPosition: 'center', 
+      duration: 5000,
+      panelClass: [isError ? 'error-toast' : 'success-toast'],
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
     });
   }
 }
-

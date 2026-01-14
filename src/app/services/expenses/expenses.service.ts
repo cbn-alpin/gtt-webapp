@@ -1,30 +1,29 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExpensesService {
-
   baseUrl = environment.apiUrl;
 
   private getHttpOptions() {
-    const token = localStorage.getItem('access_token'); 
-    
+    const token = localStorage.getItem('access_token');
+
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
-      })
+        Authorization: `Bearer ${token}`,
+      }),
     };
   }
 
-  constructor(private http : HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-  createTravelExpense(userId: number, project_id : number,  travelData: any): Observable<any> {
-    const url = `${this.baseUrl}/user/${userId}/project/${project_id}/travels/`; 
+  createTravelExpense(userId: number, project_id: number, travelData: any): Observable<any> {
+    const url = `${this.baseUrl}/user/${userId}/project/${project_id}/travels/`;
     return this.http.post(url, travelData, this.getHttpOptions());
   }
 
@@ -36,25 +35,25 @@ export class ExpensesService {
   updateUserTravelExpense(travelId: number, userId: number, travelData: any): Observable<any> {
     const url = `${this.baseUrl}/travels/${travelId}/user/${userId}`;
     return this.http.put(url, travelData, this.getHttpOptions());
-  }  
+  }
 
   deleteUserTravelExpense(travelId: number, userId: number): Observable<any> {
-    const url = `${this.baseUrl}/travels/${travelId}/user/${userId}`; 
+    const url = `${this.baseUrl}/travels/${travelId}/user/${userId}`;
     return this.http.delete(url, this.getHttpOptions());
   }
 
-  createMissionExpense( missionData: any, user_id : number, travel_id: any): Observable<any> {
-    const url = `${this.baseUrl}/expenses/user/${user_id}/travel/${travel_id}`; 
+  createMissionExpense(missionData: any, user_id: number, travel_id: any): Observable<any> {
+    const url = `${this.baseUrl}/expenses/user/${user_id}/travel/${travel_id}`;
     return this.http.post(url, missionData, this.getHttpOptions());
   }
 
-  updateMissionExpense( missionData: any, user_id : number, expense_id: number): Observable<any> {
-    const url = `${this.baseUrl}/expenses/${expense_id}/user/${user_id}`; 
+  updateMissionExpense(missionData: any, user_id: number, expense_id: number): Observable<any> {
+    const url = `${this.baseUrl}/expenses/${expense_id}/user/${user_id}`;
     return this.http.put(url, missionData, this.getHttpOptions());
   }
 
-  deleteMissionExpense( user_id : number, expense_id: number): Observable<any> {
-    const url = `${this.baseUrl}/expenses/${expense_id}/user/${user_id}`; 
-    return this.http.delete(url,  this.getHttpOptions());
+  deleteMissionExpense(user_id: number, expense_id: number): Observable<any> {
+    const url = `${this.baseUrl}/expenses/${expense_id}/user/${user_id}`;
+    return this.http.delete(url, this.getHttpOptions());
   }
 }
