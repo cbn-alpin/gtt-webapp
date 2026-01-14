@@ -1,7 +1,4 @@
-# GitHub Actions docs
-# https://help.github.com/en/articles/about-github-actions
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
-name: Run tests on any Push event
+name: Run code format check, build and unit tests on any Push event on develop branch
 
 on:
   push:
@@ -10,29 +7,30 @@ on:
 
 jobs:
   run_tests:
-    # Machine environment:
-    # https://help.github.com/en/articles/software-in-virtual-environments-for-github-actions#ubuntu-1804-lts
-    # We specify the Node.js version manually below, and use versioned Chrome from Puppeteer.
     runs-on: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v6
 
-      - name: Use Node.js 16
+      - name: Use Node.js v18
         uses: actions/setup-node@v6
         with:
-          node-version: 16
+          node-version: 18
+          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install dependencies with lockfile
+        run: npm ci
 
-      #- name: Lint
-      #  run: npm run lint
+      - name: Code formatting check (Prettier)
+        run: npm run format:check
 
-      - name: Build
+      - name: Static code analysis (ESLint)
+        run: npm run lint
+
+      - name: Building application
         run: npm run build
 
-      - name: Unit tests
+      - name: Runnning Unit tests
         run: npm run test
 
       # - name: E2E
