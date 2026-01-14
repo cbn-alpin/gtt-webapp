@@ -1,0 +1,20 @@
+{
+  "singleQuote": true,
+  "useTabs": false,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "printWidth": 100,
+  "semi": true,
+  "bracketSpacing": true,
+  "singleAttributePerLine": true,
+  "bracketSameLine": false,
+  "htmlWhitespaceSensitivity": "ignore",
+  "overrides": [
+    {
+      "files": ["*.html"],
+      "options": {
+        "trailingComma": "none"
+      }
+    }
+  ]
+}

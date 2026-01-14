@@ -1,0 +1,9 @@
+# Fichiers de build et dépendances
+build
+coverage
+dist
+node_modules
+.angular/cache
+
+# Fichiers de configuration de l'IDE
+.vscode
