@@ -41,17 +41,25 @@ npm start
 
 Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
+
 ## Code scaffolding
 
 Run `npm run ng -- generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
 
 ## Build
 
 Run `npm run build` to use `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
+Specify the `environment` (`production` by default or `development`) to use, like this: `npm run build -- --configuration production`
+
+For hot-reloading, use the command: `npm run watch`
+
+
 ## Running unit tests
 
 Run `npm run test` to use `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
 
 ## Running end-to-end tests
 
@@ -66,9 +74,21 @@ npm run cypress:open
 npm run cypress:run
 ```
 
+## Coding conventions and static code analysis
+
+We use Prettier, EditorConfig and Eslint.
+
+To check the code source format use: `npm run format:check`
+
+To format the code use: `npm run format`
+
+To run lint use : `npm run lint`
+
+
 ## Further help
 
 To get more help on the Angular CLI use `npm run ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
 
 ## Docker
 
