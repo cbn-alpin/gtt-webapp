@@ -1,4 +1,4 @@
-name: Run code format check, build and unit tests on any Push event on develop branch
+name: Check source code
 
 on:
   push:
@@ -24,11 +24,11 @@ jobs:
       - name: Code formatting check (Prettier)
         run: npm run format:check
 
-      - name: Static code analysis (ESLint)
-        run: npm run lint
-
       - name: Building application
         run: npm run build
+
+      - name: Static code analysis (ESLint)
+        run: npm run lint
 
       - name: Runnning Unit tests
         run: npm run test
