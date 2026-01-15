@@ -25,7 +25,7 @@ export class TravelExpenseComponent implements OnInit {
   filteredCommunesNight!: Observable<any[]>;
   vehicleOptions = ['Service', 'Personnel', 'Location', 'Covoiturage'];
   residenceOptions = ['Résidence Administrative', 'Résidence Familiale'];
-  isEditing: boolean = false;
+  isEditing = false;
   isSubmitting = false;
   travelId!: number;
   savedProjectCode: any;
@@ -241,7 +241,7 @@ export class TravelExpenseComponent implements OnInit {
     if (!date) return '';
 
     // Checks if date is in the expected format (DD/MM/YYYY or YYYY-MM-DD)
-    let parsedDate = moment(date, ['DD/MM/YYYY', 'YYYY-MM-DD'], true);
+    const parsedDate = moment(date, ['DD/MM/YYYY', 'YYYY-MM-DD'], true);
 
     if (!parsedDate.isValid()) return '';
 
@@ -342,7 +342,7 @@ export class TravelExpenseComponent implements OnInit {
     return match ? { nom: match[1], codesPostaux: [match[2]] } : null;
   }
 
-  showToast(message: string, isError: boolean = false) {
+  showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',

@@ -26,7 +26,7 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
 
   displayedColumns: string[] = ['name', 'comment', 'amount', 'actions'];
   dataSource = new MatTableDataSource<MissionExpense>([]);
-  id_travel?: Number;
+  id_travel?: number;
   pendingExpenses: any[] = [];
 
   ngOnInit(): void {
@@ -181,7 +181,7 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
     });
   }
 
-  showToast(message: string, isError: boolean = false) {
+  showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',

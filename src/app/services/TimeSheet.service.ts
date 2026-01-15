@@ -21,7 +21,7 @@ export class TimeSheetService {
     };
   }
 
-  getUserProjects(userId: string, dateStart: String, dateEnd: String): Observable<any[]> {
+  getUserProjects(userId: string, dateStart: string, dateEnd: string): Observable<any[]> {
     const url = `${this.apiUrl}/user/${userId}/projects/times?date_start=${dateStart}&date_end=${dateEnd}`;
     return this.http.get<any[]>(url, this.getHttpOptions());
   }

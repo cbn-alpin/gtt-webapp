@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CalendarService {
-  holidays: { [date: string]: string } = {};
+  holidays: Record<string, string> = {};
 
   constructor(private http: HttpClient) {}
 
@@ -38,8 +38,8 @@ export class CalendarService {
     return currentWeek.contains(day);
   }
 
-  fetchHolidays(): Observable<{ [date: string]: string }> {
-    return this.http.get<{ [date: string]: string }>(
+  fetchHolidays(): Observable<Record<string, string>> {
+    return this.http.get<Record<string, string>>(
       'https://calendrier.api.gouv.fr/jours-feries/metropole.json'
     );
   }
@@ -49,7 +49,7 @@ export class CalendarService {
     return dateString ? this.holidays.hasOwnProperty(dateString) : false;
   }
 
-  setHolidays(data: { [date: string]: string }): void {
+  setHolidays(data: Record<string, string>): void {
     this.holidays = data;
   }
 

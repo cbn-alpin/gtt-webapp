@@ -14,7 +14,7 @@ export class ModifyPasswordComponent {
   passwordForm: FormGroup;
   isLoading = false;
   isPasswordChanged = false;
-  passwordError: string = '';
+  passwordError = '';
 
   constructor(
     private fb: FormBuilder,
@@ -84,7 +84,7 @@ export class ModifyPasswordComponent {
     return '';
   }
 
-  showToast(message: string, isError: boolean = false) {
+  showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',

@@ -36,7 +36,7 @@ export class CalendarComponent implements OnInit {
   firstDayOfActiveMonth = new BehaviorSubject<DateTime>(
     this.calendarService.today().startOf('month')
   );
-  holidays: { [date: string]: string } = {};
+  holidays: Record<string, string> = {};
   weekDays = this.timeStateService.currentWeek;
   projects: any[] = [];
   userId: string = localStorage.getItem('id_user') || '0';
@@ -337,7 +337,7 @@ export class CalendarComponent implements OnInit {
     const action = project.list_action.find((a: any) => a.id_action === actionId);
     if (!action) return;
 
-    let timeEntry = action.list_time.find(
+    const timeEntry = action.list_time.find(
       (t: any) => new Date(t.date).toISOString().split('T')[0] === formattedDate
     );
     if (timeEntry) {

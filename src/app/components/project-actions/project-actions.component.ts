@@ -19,7 +19,7 @@ export class ProjectActionsComponent implements OnInit {
   displayedColumns: string[] = ['numAction', 'name', 'description', 'actions'];
   dataSource = new MatTableDataSource<Action>([]);
   selection = new SelectionModel<Action>(true, []);
-  isAdmin: boolean = false;
+  isAdmin = false;
 
   constructor(
     private readonly dialog: MatDialog,
@@ -222,7 +222,7 @@ export class ProjectActionsComponent implements OnInit {
     });
   }
 
-  showToast(message: string, isError: boolean = false) {
+  showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',

@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,7 +15,7 @@ import { UserService } from 'src/app/services/user/user.service';
   templateUrl: './download-expenses.component.html',
   styleUrls: ['./download-expenses.component.scss'],
 })
-export class DownloadExpensesComponent {
+export class DownloadExpensesComponent implements OnInit, AfterViewInit {
   private selectionState = new BehaviorSubject<boolean>(false);
   isButtonDisabled$ = this.selectionState.asObservable();
   displayedColumns: string[] = ['selection', 'nom', 'prenom'];
@@ -26,8 +26,8 @@ export class DownloadExpensesComponent {
   selectedUserFirstName: any = null;
   isLoadingResults = false;
   isError = false;
-  startDateFilter: string = '';
-  endDateFilter: string = '';
+  startDateFilter = '';
+  endDateFilter = '';
   userId: any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -209,7 +209,7 @@ export class DownloadExpensesComponent {
     }
   }
 
-  showToast(message: string, isError: boolean = false) {
+  showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: [isError ? 'error-toast' : 'success-toast'],

@@ -83,7 +83,7 @@ export class ActionComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  showToast(message: string, isError: boolean = false) {
+  showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: [isError ? 'error-toast' : 'success-toast'],

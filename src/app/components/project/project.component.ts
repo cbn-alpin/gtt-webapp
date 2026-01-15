@@ -19,9 +19,9 @@ export class ProjectComponent implements OnInit {
   showDropdown = false;
   projectsGefiproj: any[] = [];
   filteredGefiprojProjects!: Observable<any[]>;
-  isAutocompleting: boolean = false;
-  manuallyEditingProjectName: boolean = false;
-  manuallyEditingCode: boolean = false;
+  isAutocompleting = false;
+  manuallyEditingProjectName = false;
+  manuallyEditingCode = false;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -259,7 +259,7 @@ export class ProjectComponent implements OnInit {
     return `${year}-${month}-${day}`; // "yyyy-MM-dd"
   }
 
-  showToast(message: string, isError: boolean = false) {
+  showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',

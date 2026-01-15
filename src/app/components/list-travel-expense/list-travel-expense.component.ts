@@ -22,7 +22,7 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<any>([]);
   isLoadingResults = false;
   isError = false;
-  isAdmin: boolean = false;
+  isAdmin = false;
   userId: number;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -180,7 +180,7 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
     }
   }
 
-  showToast(message: string, isError: boolean = false) {
+  showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',

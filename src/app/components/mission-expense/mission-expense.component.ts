@@ -11,7 +11,7 @@ import { ShareDataService } from 'src/app/services/shareData/share-data.service'
 export class MissionExpenseComponent implements OnInit {
   missionForm: FormGroup;
   isSubmitting = false;
-  id_travel?: Number;
+  id_travel?: number;
   isEditMode = false;
 
   ngOnInit(): void {

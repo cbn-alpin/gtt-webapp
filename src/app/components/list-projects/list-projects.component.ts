@@ -23,14 +23,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   ],
 })
 export class ListProjectsComponent implements OnInit, AfterViewInit {
-  isAdmin: boolean = false;
+  isAdmin = false;
   displayedColumns: string[] = ['code', 'name', 'startDate', 'endDate'];
   columnsToDisplayWithExpand = [...this.displayedColumns, 'actions'];
   dataSource = new MatTableDataSource<Project>([]);
   expandedElement: Project | null = null;
   isLoadingResults = false;
   isError = false;
-  showArchived: boolean = false;
+  showArchived = false;
 
   constructor(
     private readonly dialog: MatDialog,
@@ -197,7 +197,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
     return `${year}-${month}-${day}`; // "yyyy-MM-dd"
   }
 
-  showToast(message: string, isError: boolean = false) {
+  showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',

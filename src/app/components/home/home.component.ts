@@ -10,13 +10,13 @@ export class HomeComponent implements OnInit {
   currentTitle: any = '';
   showUsers = false;
   showPasswordChange = false;
-  isMobile: boolean = false;
-  isSidenavOpened: boolean = true;
-  isAdminChangedAccount: boolean = false;
+  isMobile = false;
+  isSidenavOpened = true;
+  isAdminChangedAccount = false;
   userName: any = '';
   userImage: any = '';
   switched_user_name: any = '';
-  isAdmin: boolean = false;
+  isAdmin = false;
 
   ngOnInit() {
     this.currentTitle = localStorage.getItem('newTitle') || '';
