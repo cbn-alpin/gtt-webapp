@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { User } from 'src/app/models/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   baseUrl = environment.apiUrl;
+  private http = inject(HttpClient);
 
   private getHttpOptions() {
     const token = localStorage.getItem('access_token');
@@ -20,15 +22,13 @@ export class UserService {
     };
   }
 
-  constructor(private http: HttpClient) {}
-
-  getAllUsers(): Observable<any> {
+  getAllUsers(): Observable<User[]> {
     const url = `${this.baseUrl}/users`;
-    return this.http.get(url, this.getHttpOptions());
+    return this.http.get<User[]>(url, this.getHttpOptions());
   }
 
-  updateUserById(userId: number, userData: any): Observable<any> {
+  updateUserById(userId: number, userData: Partial<User>): Observable<User> {
     const url = `${this.baseUrl}/users/${userId}`;
-    return this.http.put(url, userData, this.getHttpOptions());
+    return this.http.put<User>(url, userData, this.getHttpOptions());
   }
 }
