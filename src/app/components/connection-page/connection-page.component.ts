@@ -13,7 +13,7 @@ declare const google: any;
   styleUrls: ['./connection-page.component.scss'],
 })
 export class ConnectionPageComponent implements AfterViewInit {
-  title = 'GESTEMPS';
+  title = 'Potemps-Tille';
   isLoading = false;
   errorMessage = '';
   loginForm: FormGroup;
