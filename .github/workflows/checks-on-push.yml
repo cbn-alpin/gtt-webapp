@@ -6,11 +6,12 @@ on:
       - develop
 
 jobs:
-  run_tests:
+  run_checks:
     runs-on: [ubuntu-latest]
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout code
+        uses: actions/checkout@v6
 
       - name: Use Node.js v18
         uses: actions/setup-node@v6
