@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { UserInfos } from 'src/app/models/UserInfos';
+import { UserInfos } from 'src/app/models/user-infos.model';
 import { ShareDataService } from 'src/app/services/shareData/share-data.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -12,7 +12,7 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class ListUsersComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['user_first_name', 'user_last_name'];
-  dataSource = new MatTableDataSource<UserInfos>([]);
+  dataSource = new MatTableDataSource<Partial<UserInfos>>([]);
   selectedProjectData: any = null;
   isLoadingResults = false;
   isError = false;

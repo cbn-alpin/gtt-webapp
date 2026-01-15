@@ -2,7 +2,7 @@ import { AfterViewInit, Component, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UserInfos } from 'src/app/models/UserInfos';
+import { UserInfos } from 'src/app/models/user-infos.model';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { environment } from 'src/environments/environment';
 declare const google: any;

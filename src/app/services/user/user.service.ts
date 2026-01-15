@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { User } from 'src/app/models/user.model';
+import { UserInfos } from 'src/app/models/user-infos.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,13 +22,13 @@ export class UserService {
     };
   }
 
-  getAllUsers(): Observable<User[]> {
+  getAllUsers(): Observable<Partial<UserInfos>[]> {
     const url = `${this.baseUrl}/users`;
-    return this.http.get<User[]>(url, this.getHttpOptions());
+    return this.http.get<Partial<UserInfos>[]>(url, this.getHttpOptions());
   }
 
-  updateUserById(userId: number, userData: Partial<User>): Observable<User> {
+  updateUserById(userId: number, userData: Partial<UserInfos>): Observable<UserInfos> {
     const url = `${this.baseUrl}/users/${userId}`;
-    return this.http.put<User>(url, userData, this.getHttpOptions());
+    return this.http.put<UserInfos>(url, userData, this.getHttpOptions());
   }
 }
