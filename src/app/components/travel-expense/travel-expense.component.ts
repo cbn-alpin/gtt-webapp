@@ -8,7 +8,7 @@ import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { MunicipalityService } from 'src/app/services/municipality/municipality.service';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { ShareDataService } from 'src/app/services/shareData/share-data.service';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Component({
   selector: 'app-travel-expense',
