@@ -269,7 +269,12 @@
                 <td class="total-week">
                   {{ calculateWeeklyTotalByAction(project.id_project, action.id_action) }}
                 </td>
-                <td class="total-year">
+                <td
+                  class="total-year"
+                  matTooltip="~ {{ transformToWorkingDays(action.total_duration) }} jours de {{
+                    STANDARD_DAILY_WORKING_HOURS
+                  }}h"
+                >
                   {{ action.total_duration }}
                 </td>
               </tr>
@@ -278,15 +283,25 @@
 
           <!-- Totaux quotidiens -->
           <tr class="daily-total-row">
-            <td>Total jour</td>
-            <td
+            <th>Total jour</th>
+            <th
               *ngFor="let day of weekDays; trackBy: trackByDate"
-              [class.weekend]="day.isWeekend"
-              [class.today]="day.isToday"
+              [ngClass]="{
+                'weekend-input': day.isWeekend,
+                'holiday-input': isHoliday(day.date),
+                today: day.isToday
+              }"
             >
               {{ calculateDayTotal(day.date) }}
-            </td>
-            <td colspan="2"></td>
+            </th>
+            <th
+              matTooltip="Total hebdomadaire des actions affichées (~ {{
+                calculateWeeklyTotal({ byDay: true })
+              }} jours de {{ STANDARD_DAILY_WORKING_HOURS }}h)"
+            >
+              {{ calculateWeeklyTotal() }}
+            </th>
+            <th>&nbsp;</th>
           </tr>
         </tbody>
       </table>

@@ -413,6 +413,39 @@ export class CalendarComponent implements OnInit {
     return total;
   }
 
+  calculateWeeklyTotal(options: { byDay?: boolean } = { byDay: false }): number {
+    let total = 0;
+    this.weekDays.forEach((day) => {
+      const dateStr = this.formatApiDate(this.toLuxonDate(day.date));
+      this.projects.forEach((project) => {
+        project.list_action.forEach((action: any) => {
+          const timeEntry = this.getTimeEntry(project.id_project, action.id_action, dateStr);
+          if (timeEntry && timeEntry.hours) {
+            total += timeEntry.hours;
+          }
+        });
+      });
+      this.fixedRows.forEach((project) => {
+        project.list_action.forEach((action: any) => {
+          const timeEntry = this.getTimeEntry(project.id_project, action.id_action, dateStr);
+          if (timeEntry && timeEntry.hours) {
+            total += timeEntry.hours;
+          }
+        });
+      });
+    });
+
+    if (options.byDay) {
+      total = this.transformToWorkingDays(total);
+    }
+
+    return total;
+  }
+
+  transformToWorkingDays(totalHours: number): number {
+    return Math.round(totalHours / this.STANDARD_DAILY_WORKING_HOURS);
+  }
+
   calculateDayTotal(date: Date): number {
     let total = 0;
 
