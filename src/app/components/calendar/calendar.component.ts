@@ -1,4 +1,4 @@
-import { Component, Injectable, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DateTime, Info, Interval } from 'luxon';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -29,9 +29,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-@Injectable({
-  providedIn: 'root',
-})
 export class CalendarComponent implements OnInit {
   firstDayOfActiveMonth = new BehaviorSubject<DateTime>(
     this.calendarService.today().startOf('month')
@@ -45,19 +42,7 @@ export class CalendarComponent implements OnInit {
   startDate: DateTime<boolean> = DateTime.local();
   endDate: DateTime<boolean> = DateTime.local();
   isLoadingResults = false;
-  constructor(
-    private calendarService: CalendarService,
-    private timeStateService: TimeStateService,
-    private dialog: MatDialog,
-    private timeSheetService: TimeSheetService
-  ) {
-    const activeMonth = this.firstDayOfActiveMonth.value;
-    this.selectedMonth = activeMonth.month;
-    this.selectedYear = activeMonth.year;
-    this.selectedWeek = activeMonth.weekNumber;
 
-    this.updateStartEndDate();
-  }
   today = this.calendarService.today();
   activeDay = new BehaviorSubject<DateTime | null>(null);
   weekDaysNames = Info.weekdays('short');
@@ -82,6 +67,22 @@ export class CalendarComponent implements OnInit {
   selectedMonth: number = this.firstDayOfActiveMonth.getValue().month;
   selectedYear: number = this.firstDayOfActiveMonth.getValue().year;
   selectedWeek: number = this.firstDayOfActiveMonth.getValue().weekNumber;
+
+  timer: any = null;
+
+  constructor(
+    private calendarService: CalendarService,
+    private timeStateService: TimeStateService,
+    private dialog: MatDialog,
+    private timeSheetService: TimeSheetService
+  ) {
+    const activeMonth = this.firstDayOfActiveMonth.value;
+    this.selectedMonth = activeMonth.month;
+    this.selectedYear = activeMonth.year;
+    this.selectedWeek = activeMonth.weekNumber;
+
+    this.updateStartEndDate();
+  }
 
   ngOnInit(): void {
     this.loadProjects();
@@ -170,6 +171,7 @@ export class CalendarComponent implements OnInit {
     this.updateStartEndDate();
     this.loadProjects();
   }
+
   onWeekChange(): void {
     const selectedWeekNumber = this.selectedWeek;
     const firstDayOfYear = DateTime.local(this.selectedYear, 1, 1);
@@ -188,6 +190,7 @@ export class CalendarComponent implements OnInit {
     this.updateStartEndDate();
     this.loadProjects();
   }
+
   updateToFirstWeekOfMonth(date: DateTime): void {
     const firstDayOfMonth = date.startOf('month');
     this.currentWeek = this.calendarService.getCurrentWeek(firstDayOfMonth);
@@ -203,6 +206,7 @@ export class CalendarComponent implements OnInit {
     const dateTime = date instanceof Date ? DateTime.fromJSDate(date) : date;
     return this.calendarService.isHoliday(dateTime);
   }
+
   goToPreviousWeek(): void {
     const previousWeekStart = this.timeStateService.goToPreviousWeek(
       this.timeStateService.selectedDate.value
@@ -356,7 +360,7 @@ export class CalendarComponent implements OnInit {
       }
     );
   }
-  timer: any = null;
+
   updateTimeEntryDelayed(
     value: number,
     projectId: number,
@@ -392,7 +396,7 @@ export class CalendarComponent implements OnInit {
     }, 500);
   }
 
-  calculateWeekTotal(projectId: number, actionId: number): number {
+  calculateWeeklyTotalByAction(projectId: number, actionId: number): number {
     let total = 0;
 
     this.weekDays.forEach((day) => {
@@ -491,9 +495,11 @@ export class CalendarComponent implements OnInit {
   formatApiDate(date: DateTime): string {
     return date.toFormat("yyyy-MM-dd'T'HH:mm:ss");
   }
+
   toLuxonDate(date: Date): DateTime {
     return DateTime.fromJSDate(date);
   }
+
   onFocus(inputRef: HTMLInputElement) {
     if (inputRef.value === '0') {
       inputRef.value = '';
@@ -505,6 +511,7 @@ export class CalendarComponent implements OnInit {
       inputRef.value = '0';
     }
   }
+
   blockNegativeInput(event: KeyboardEvent): void {
     if (event.key === '-') {
       event.preventDefault();

@@ -31,7 +31,7 @@ describe('CalendarComponent', () => {
       { date: new Date(), isWeekend: false, isToday: false, name: 'Mardi' },
     ];
 
-    const total = component.calculateWeekTotal(1, 1);
+    const total = component.calculateWeeklyTotalByAction(1, 1);
     expect(total).toBe(4);
   });
 
