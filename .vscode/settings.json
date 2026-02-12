@@ -1,0 +1,15 @@
+{
+  // Définit Prettier comme le formateur par défaut pour tous les fichiers
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // Active le formatage automatique lors de la sauvegarde
+  "editor.formatOnSave": true,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
