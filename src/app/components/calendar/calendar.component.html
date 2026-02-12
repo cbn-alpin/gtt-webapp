@@ -117,7 +117,19 @@
       >
         <thead>
           <tr>
-            <th class="project-col">Projets/Actions</th>
+            <th class="project-col">
+              <div class="project-col-header">
+                <button
+                  mat-icon-button
+                  (click)="toggleAllProjects()"
+                  matTooltip="Tout déplier/replier"
+                >
+                  <mat-icon *ngIf="!areAllProjectsExpanded()">unfold_more</mat-icon>
+                  <mat-icon *ngIf="areAllProjectsExpanded()">unfold_less</mat-icon>
+                </button>
+                <span>Projets/Actions</span>
+              </div>
+            </th>
             <th
               *ngFor="let day of weekDays; trackBy: trackByDate"
               [ngClass]="{
@@ -145,17 +157,26 @@
           </tr>
           <ng-container *ngFor="let project of projects; trackBy: trackById">
             <!-- Project Row -->
-            <tr>
-              <td
-                class="project-name"
-                colspan="10"
-              >
-                {{ project.name }}
-              </td>
+            <tr
+              class="project-name"
+              matTooltip="{{ project.description }}"
+              matTooltipPosition="above"
+              (click)="toggleProject(project); $event.stopPropagation()"
+            >
+              <th colspan="10">
+                <mat-icon [@rotate]="isProjectExpanded(project) ? 'up' : 'down'">
+                  keyboard_arrow_down
+                </mat-icon>
+                <span>{{ project.name }}</span>
+              </th>
             </tr>
 
-            <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
-              <tr>
+            <ng-container *ngIf="isProjectExpanded(project)">
+              <tr
+                *ngFor="let action of project.list_action; trackBy: trackById"
+                class="action-row"
+                [@slideInOut]="'in'"
+              >
                 <td
                   class="action-name"
                   matTooltip="{{ action.description }}"
@@ -224,19 +245,33 @@
           <!-- Fixed rows (e.g., Absence, Service, Formation) -->
 
           <ng-container *ngFor="let project of fixedRows; trackBy: trackById">
-            <tr>
-              <td
-                colspan="10"
-                class="fixed-row-name"
-              >
-                Absences, Formations et Tâches internes
-              </td>
+            <tr
+              class="project-name fixed-row-name"
+              matTooltip="{{ project.description }}"
+              matTooltipPosition="above"
+              (click)="toggleProject(project)"
+            >
+              <th colspan="10">
+                <mat-icon [@rotate]="isProjectExpanded(project) ? 'up' : 'down'">
+                  keyboard_arrow_down
+                </mat-icon>
+                <span>Absences, formations et tâches internes</span>
+              </th>
             </tr>
-            <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
-              <tr>
-                <td class="fixed-action-name">
+
+            <ng-container *ngIf="isProjectExpanded(project)">
+              <tr
+                *ngFor="let action of project.list_action; trackBy: trackById"
+                class="action-row"
+                [@slideInOut]="'in'"
+              >
+                <th
+                  class="fixed-action-name"
+                  matTooltip="{{ action.description }}"
+                  matTooltipPosition="above"
+                >
                   {{ action.name }}
-                </td>
+                </th>
 
                 <td
                   *ngFor="let day of weekDays; trackBy: trackByDate"

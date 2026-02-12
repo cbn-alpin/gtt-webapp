@@ -9,10 +9,13 @@ import { TimeStateService } from 'src/app/services/time-state-service.service';
 import { PopupMessageComponent } from 'src/app/popup-message/popup-message.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TimeSheetService } from 'src/app/services/TimeSheet.service';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-calendar',
@@ -21,12 +24,27 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
     FormsModule,
     HttpClientModule,
-    MatSlideToggleModule,
-    MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
+    MatSlideToggleModule,
     MatTooltipModule,
   ],
   templateUrl: './calendar.component.html',
+  animations: [
+    trigger('slideInOut', [
+      state('out', style({ height: '0px', visibility: 'hidden' })),
+      state('in', style({ height: '*', visibility: 'visible' })),
+      transition('in => out', animate('225ms ease-out')),
+      transition('out => in', animate('225ms ease-in')),
+    ]),
+    trigger('rotate', [
+      state('down', style({ transform: 'rotate(0deg)' })),
+      state('up', style({ transform: 'rotate(180deg)' })),
+      transition('down <=> up', animate('225ms ease-in-out')),
+    ]),
+  ],
   styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent implements OnInit {
@@ -73,6 +91,9 @@ export class CalendarComponent implements OnInit {
 
   timer: any = null;
 
+  expandedProjects = new Set<number>();
+  private readonly EXPANDED_PROJECTS_KEY = 'expandedProjectsState';
+
   constructor(
     private calendarService: CalendarService,
     private timeStateService: TimeStateService,
@@ -107,6 +128,7 @@ export class CalendarComponent implements OnInit {
       this.weekDays = this.timeStateService.currentWeek;
     });
   }
+
   updateStartEndDate() {
     const activeWeek = this.firstDayOfActiveMonth.value;
     this.startDate = activeWeek.minus({ weeks: 1 }).startOf('month');
@@ -128,6 +150,52 @@ export class CalendarComponent implements OnInit {
 
     this.updateStartEndDate();
     this.loadProjects();
+  }
+
+  toggleProject(project: any): void {
+    if (!project || project.id_project === undefined) {
+      return;
+    }
+    const projectId = project.id_project;
+    if (this.expandedProjects.has(projectId)) {
+      this.expandedProjects.delete(projectId);
+      this.saveExpandedState();
+    } else {
+      this.expandedProjects.add(projectId);
+      this.saveExpandedState();
+    }
+  }
+
+  isProjectExpanded(project: any): boolean {
+    return (
+      project && project.id_project !== undefined && this.expandedProjects.has(project.id_project)
+    );
+  }
+
+  toggleAllProjects(): void {
+    if (this.areAllProjectsExpanded()) {
+      this.expandedProjects.clear();
+      this.saveExpandedState();
+    } else {
+      this.projects.forEach((project) => this.expandedProjects.add(project.id_project));
+      this.fixedRows.forEach((project) => this.expandedProjects.add(project.id_project));
+      this.saveExpandedState();
+    }
+  }
+
+  areAllProjectsExpanded(): boolean {
+    const totalProjects = this.projects.concat(this.fixedRows);
+    if (!totalProjects || totalProjects.length === 0) {
+      return false;
+    }
+    return this.expandedProjects.size === totalProjects.length;
+  }
+
+  private saveExpandedState(): void {
+    localStorage.setItem(
+      this.EXPANDED_PROJECTS_KEY,
+      JSON.stringify(Array.from(this.expandedProjects))
+    );
   }
 
   isToday(day: DateTime): boolean {
@@ -518,6 +586,7 @@ export class CalendarComponent implements OnInit {
             this.projects = data.filter((project: any) => project.id_project !== 0);
             this.fixedRows = data.filter((project: any) => project.id_project === 0);
             console.log('Fixed Rows:', this.fixedRows);
+            this.initializeExpandedProjects();
             this.isLoadingResults = false;
           },
           (error) => {
@@ -525,6 +594,23 @@ export class CalendarComponent implements OnInit {
             this.isLoadingResults = false;
           }
         );
+    }
+  }
+
+  private initializeExpandedProjects(): void {
+    const savedState = localStorage.getItem(this.EXPANDED_PROJECTS_KEY);
+    if (savedState) {
+      try {
+        const expandedIds = JSON.parse(savedState);
+        this.expandedProjects = new Set<number>(expandedIds);
+      } catch (e) {
+        console.error('Error parsing expanded projects state from localStorage', e);
+        this.projects.forEach((project) => this.expandedProjects.add(project.id_project));
+        this.fixedRows.forEach((project) => this.expandedProjects.add(project.id_project));
+      }
+    } else {
+      this.projects.forEach((project) => this.expandedProjects.add(project.id_project));
+      this.fixedRows.forEach((project) => this.expandedProjects.add(project.id_project));
     }
   }
 

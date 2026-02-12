@@ -240,6 +240,10 @@ tbody .daily-total-row {
     font-weight: bold;
   }
 
+  .action-row {
+    overflow: hidden; /* Empêche le contenu de déborder pendant l'animation */
+  }
+
   .action-name {
     font-weight: bold;
     background-color: #f0f8ff;
@@ -302,7 +306,7 @@ thead th,
   justify-content: center;
   z-index: 4;
 }
-.project-col,
+thead th.project-col,
 .project-name,
 .action-name,
 .fixed-action-name {
@@ -310,6 +314,16 @@ thead th,
   left: 0;
   background: white;
   z-index: 2;
+  text-align: left;
+}
+
+.project-col span {
+  vertical-align: super;
+}
+
+tr.project-name span {
+  text-align: left;
+  vertical-align: super;
 }
 
 /* Media Queries for Mobile Devices */
