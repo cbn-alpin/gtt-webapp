@@ -30,6 +30,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent implements OnInit {
+  private readonly MAX_DAILY_HOURS = 10;
+  readonly STANDARD_DAILY_WORKING_HOURS = 7.5;
+
   firstDayOfActiveMonth = new BehaviorSubject<DateTime>(
     this.calendarService.today().startOf('month')
   );
@@ -300,7 +303,7 @@ export class CalendarComponent implements OnInit {
         inputRef.value = initialValue.toString();
         return;
       }
-      if (value > 10.25) {
+      if (value > this.MAX_DAILY_HOURS) {
         this.dialog.open(PopupMessageComponent, {
           data: {
             title: 'Erreur',
@@ -312,7 +315,7 @@ export class CalendarComponent implements OnInit {
         return;
       }
 
-      if (value >= 7.5 && value <= 10.0) {
+      if (value > this.STANDARD_DAILY_WORKING_HOURS && value <= this.MAX_DAILY_HOURS) {
         this.dialog.open(PopupMessageComponent, {
           data: {
             title: 'Avertissement',
@@ -380,7 +383,7 @@ export class CalendarComponent implements OnInit {
       const currentTotal = this.calculateDayTotal(formattedDate);
       const newTotal = currentTotal + value - initialValue;
 
-      if (newTotal > 10) {
+      if (newTotal > this.MAX_DAILY_HOURS) {
         this.dialog.open(PopupMessageComponent, {
           data: {
             title: 'Erreur',
