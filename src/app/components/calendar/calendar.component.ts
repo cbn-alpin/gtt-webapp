@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DateTime, Info, Interval } from 'luxon';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -50,6 +50,12 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 export class CalendarComponent implements OnInit {
   private readonly MAX_DAILY_HOURS = 10;
   readonly STANDARD_DAILY_WORKING_HOURS = 7.5;
+  private readonly EXPANDED_PROJECTS_KEY = 'expandedProjectsState';
+
+  private calendarService = inject(CalendarService);
+  private dialog = inject(MatDialog);
+  private timeSheetService = inject(TimeSheetService);
+  private timeStateService = inject(TimeStateService);
 
   firstDayOfActiveMonth = new BehaviorSubject<DateTime>(
     this.calendarService.today().startOf('month')
@@ -83,7 +89,6 @@ export class CalendarComponent implements OnInit {
     { name: 'Novembre', index: 11 },
     { name: 'Décembre', index: 12 },
   ];
-  weeksNumbers: number[] = Array.from({ length: 52 }, (_, i) => 1 + i);
   years: number[] = Array.from({ length: 30 }, (_, i) => 2000 + i);
   selectedMonth: number = this.firstDayOfActiveMonth.getValue().month;
   selectedYear: number = this.firstDayOfActiveMonth.getValue().year;
@@ -92,20 +97,39 @@ export class CalendarComponent implements OnInit {
   timer: any = null;
 
   expandedProjects = new Set<number>();
-  private readonly EXPANDED_PROJECTS_KEY = 'expandedProjectsState';
 
-  constructor(
-    private calendarService: CalendarService,
-    private timeStateService: TimeStateService,
-    private dialog: MatDialog,
-    private timeSheetService: TimeSheetService
-  ) {
+  constructor() {
     const activeMonth = this.firstDayOfActiveMonth.value;
     this.selectedMonth = activeMonth.month;
     this.selectedYear = activeMonth.year;
     this.selectedWeek = activeMonth.weekNumber;
 
-    this.updateStartEndDate();
+    this.updateStartEndDates();
+  }
+
+  get weeksNumbers(): number[] {
+    return Array.from({ length: this.weeksInYear }, (_, i) => 1 + i);
+  }
+
+  get weeksInYear(): number {
+    const year: number = this.firstDayOfActiveMonth.getValue().year;
+    // First january of current year
+    const firstDayOfYear = new Date(year, 0, 1);
+
+    // getDay() return 0 for Sunday, 1 for monday...s
+    // Adjustement for monday = 1, sunday = 7 (ISO 8601 standard)
+    let dayOfWeek = firstDayOfYear.getDay();
+    if (dayOfWeek === 0) dayOfWeek = 7;
+
+    // Check if we have a bisextile year
+    const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+
+    // Apply ISO 8601 standard
+    return dayOfWeek === 4 || (isLeapYear && dayOfWeek === 3) ? 53 : 52;
+  }
+
+  get daysOfMonth() {
+    return this.calendarService.getDaysOfMonth(this.firstDayOfActiveMonth.getValue());
   }
 
   ngOnInit(): void {
@@ -123,7 +147,6 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  updateStartEndDate() {
   private fetchHolidays() {
     this.calendarService.fetchHolidays().subscribe({
       next: (data) => {
@@ -135,25 +158,21 @@ export class CalendarComponent implements OnInit {
     });
   }
 
+  updateStartEndDates() {
     const activeWeek = this.firstDayOfActiveMonth.value;
     this.startDate = activeWeek.minus({ weeks: 1 }).startOf('month');
     this.endDate = activeWeek.endOf('month').plus({ weeks: 1 });
-  }
-
-  get daysOfMonth() {
-    return this.calendarService.getDaysOfMonth(this.firstDayOfActiveMonth.getValue());
   }
 
   setActiveDay(day: DateTime): void {
     this.activeDay.next(day);
     this.currentWeek = this.calendarService.getCurrentWeek(day);
     this.timeStateService.updateSelectedDate(day.toJSDate());
-    this.timeStateService.updateSelectedDate(day.toJSDate());
     this.selectedWeek = day.weekNumber;
     this.selectedMonth = day.month;
     this.selectedYear = day.year;
 
-    this.updateStartEndDate();
+    this.updateStartEndDates();
     this.loadProjects();
   }
 
@@ -220,7 +239,7 @@ export class CalendarComponent implements OnInit {
     this.selectedYear = today.year;
     this.timeStateService.updateSelectedDate(today.toJSDate());
 
-    this.updateStartEndDate();
+    this.updateStartEndDates();
     this.loadProjects();
   }
 
@@ -234,7 +253,7 @@ export class CalendarComponent implements OnInit {
     this.selectedWeek = newDate.weekNumber;
     this.selectedYear = newDate.year;
     this.updateToFirstWeekOfMonth(newDate);
-    this.updateStartEndDate();
+    this.updateStartEndDates();
     this.loadProjects();
   }
 
@@ -244,37 +263,51 @@ export class CalendarComponent implements OnInit {
     this.selectedMonth = newDate.month;
     this.selectedWeek = newDate.weekNumber;
     this.updateToFirstWeekOfMonth(newDate);
-    this.updateStartEndDate();
+    this.updateStartEndDates();
     this.loadProjects();
   }
 
   onWeekChange(): void {
-    const selectedWeekNumber = this.selectedWeek;
     const firstDayOfYear = DateTime.local(this.selectedYear, 1, 1);
-    const startOfSelectedWeek = firstDayOfYear
-      .plus({ weeks: selectedWeekNumber - 1 })
-      .startOf('week');
+    const selectedWeekNumber = this.selectedWeek - 1;
+    const selectedWeek = firstDayOfYear.plus({ weeks: selectedWeekNumber });
+    const startOfSelectedWeek = selectedWeek.startOf('week');
+    const endOfSelectedWeek = selectedWeek.endOf('week');
 
     this.currentWeek = this.calendarService.getCurrentWeek(startOfSelectedWeek);
     this.timeStateService.updateSelectedDate(startOfSelectedWeek.toJSDate());
 
     if (startOfSelectedWeek.month !== this.firstDayOfActiveMonth.getValue().month) {
-      this.firstDayOfActiveMonth.next(startOfSelectedWeek.startOf('month'));
-      this.selectedMonth = startOfSelectedWeek.month;
-      this.selectedYear = startOfSelectedWeek.year;
+      if (selectedWeekNumber === 0) {
+        this.firstDayOfActiveMonth.next(endOfSelectedWeek.startOf('month'));
+        this.selectedMonth = endOfSelectedWeek.month;
+        this.selectedYear = endOfSelectedWeek.year;
+      } else {
+        this.firstDayOfActiveMonth.next(startOfSelectedWeek.startOf('month'));
+        this.selectedMonth = startOfSelectedWeek.month;
+        this.selectedYear = startOfSelectedWeek.year;
+      }
+      this.updateStartEndDates();
+      this.loadProjects();
     }
-    this.updateStartEndDate();
-    this.loadProjects();
   }
 
   updateToFirstWeekOfMonth(date: DateTime): void {
     const firstDayOfMonth = date.startOf('month');
     this.currentWeek = this.calendarService.getCurrentWeek(firstDayOfMonth);
     this.timeStateService.updateSelectedDate(firstDayOfMonth.toJSDate());
-    if (this.currentWeek.start) {
-      this.selectedWeek = this.currentWeek.start.weekNumber;
-      this.selectedMonth = this.currentWeek.start.month;
-      this.selectedYear = this.currentWeek.start.year;
+    if (date.weekNumber === 1) {
+      if (this.currentWeek.end) {
+        this.selectedWeek = this.currentWeek.end.weekNumber;
+        this.selectedMonth = this.currentWeek.end.month;
+        this.selectedYear = this.currentWeek.end.year;
+      }
+    } else {
+      if (this.currentWeek.start) {
+        this.selectedWeek = this.currentWeek.start.weekNumber;
+        this.selectedMonth = this.currentWeek.start.month;
+        this.selectedYear = this.currentWeek.start.year;
+      }
     }
   }
 
@@ -284,34 +317,36 @@ export class CalendarComponent implements OnInit {
   }
 
   goToPreviousWeek(): void {
-    const previousWeekStart = this.timeStateService.goToPreviousWeek(
-      this.timeStateService.selectedDate.value
-    );
     this.currentWeek = this.calendarService.goToPreviousWeek(this.currentWeek);
-    if (this.currentWeek.start) {
-      this.selectedWeek = this.currentWeek.start.weekNumber;
-      this.selectedMonth = this.currentWeek.start.month;
-      this.selectedYear = this.currentWeek.start.year;
-      if (this.currentWeek.start.month !== this.firstDayOfActiveMonth.getValue().month) {
-        this.firstDayOfActiveMonth.next(this.currentWeek.start.startOf('month'));
-        this.updateStartEndDate();
+    if (this.currentWeek.start && this.currentWeek.end) {
+      const currentWeekNumber = this.currentWeek.start.weekNumber;
+      const selectedWeekDay =
+        currentWeekNumber == 1 ? this.currentWeek.end : this.currentWeek.start;
+      this.timeStateService.updateSelectedDate(this.currentWeek.start.toJSDate());
+      this.selectedWeek = selectedWeekDay.weekNumber;
+      this.selectedMonth = selectedWeekDay.month;
+      this.selectedYear = selectedWeekDay.year;
+      if (selectedWeekDay.month !== this.firstDayOfActiveMonth.getValue().month) {
+        this.firstDayOfActiveMonth.next(selectedWeekDay.startOf('month'));
+        this.updateStartEndDates();
         this.loadProjects();
       }
     }
   }
 
   goToNextWeek(): void {
-    const nextWeekStart = this.timeStateService.goToNextWeek(
-      this.timeStateService.selectedDate.value
-    );
     this.currentWeek = this.calendarService.goToNextWeek(this.currentWeek);
-    if (this.currentWeek.start) {
-      this.selectedWeek = this.currentWeek.start.weekNumber;
-      this.selectedMonth = this.currentWeek.start.month;
-      this.selectedYear = this.currentWeek.start.year;
-      if (this.currentWeek.start.month !== this.firstDayOfActiveMonth.getValue().month) {
-        this.firstDayOfActiveMonth.next(this.currentWeek.start.startOf('month'));
-        this.updateStartEndDate();
+    if (this.currentWeek.start && this.currentWeek.end) {
+      const currentWeekNumber = this.currentWeek.start.weekNumber;
+      const selectedWeekDay =
+        currentWeekNumber == 1 ? this.currentWeek.end : this.currentWeek.start;
+      this.timeStateService.updateSelectedDate(this.currentWeek.start.toJSDate());
+      this.selectedWeek = selectedWeekDay.weekNumber;
+      this.selectedMonth = selectedWeekDay.month;
+      this.selectedYear = selectedWeekDay.year;
+      if (selectedWeekDay.month !== this.firstDayOfActiveMonth.getValue().month) {
+        this.firstDayOfActiveMonth.next(selectedWeekDay.startOf('month'));
+        this.updateStartEndDates();
         this.loadProjects();
       }
     }
@@ -406,7 +441,6 @@ export class CalendarComponent implements OnInit {
         });
       }
     }
-
 
     if (value == null || value == undefined) {
       console.warn(`Value (${value}) null or undefined set to 0.`);
