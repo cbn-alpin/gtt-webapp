@@ -360,11 +360,19 @@ export class CalendarComponent implements OnInit {
     selectedDate.setHours(0, 0, 0, 0);
     const endDate = new Date(end_date);
     endDate.setHours(0, 0, 0, 0);
-    console.log(selectedDate);
-    console.log(endDate);
+
+    let source;
+    if (projectId === 0) {
+      source = this.fixedRows;
+    } else {
+      source = this.projects;
+    }
+
+    const project = source.find((p) => p.id_project === projectId);
+    if (!project) return;
 
     if (projectId !== 0) {
-      if (selectedDate > endDate) {
+      if (end_date && selectedDate > endDate) {
         this.dialog.open(PopupMessageComponent, {
           data: {
             title: 'Erreur',
@@ -376,11 +384,12 @@ export class CalendarComponent implements OnInit {
         inputRef.value = initialValue.toString();
         return;
       }
+
       if (value > this.MAX_DAILY_HOURS) {
         this.dialog.open(PopupMessageComponent, {
           data: {
             title: 'Erreur',
-            message: 'Quota horaire journalier maximum atteint',
+            message: `Quota horaire journalier maximum (${this.MAX_DAILY_HOURS}h) atteint.`,
           },
         });
         value = 0;
@@ -388,31 +397,29 @@ export class CalendarComponent implements OnInit {
         return;
       }
 
-      if (value > this.STANDARD_DAILY_WORKING_HOURS && value <= this.MAX_DAILY_HOURS) {
+      if (project.hours_limit && value > project.hours_limit && value <= this.MAX_DAILY_HOURS) {
         this.dialog.open(PopupMessageComponent, {
           data: {
             title: 'Avertissement',
-            message: 'Attention : saisie supérieure à 7,50h uniquement si déplacement',
+            message: `Attention : saisie supérieure à ${project.hours_limit}h uniquement si déplacement`,
           },
         });
       }
     }
-    if (isNaN(value) || value < 0 || value > 10) {
-      console.warn('Valeur invalide :', value);
-      return;
+
+
+    if (value == null || value == undefined) {
+      console.warn(`Value (${value}) null or undefined set to 0.`);
+      value = 0;
+      inputRef.value = '0';
+    }
+    if (isNaN(value) || value < 0 || value > this.MAX_DAILY_HOURS) {
+      console.warn(`Invalid value (${value})`);
+      value = initialValue;
+      inputRef.value = initialValue.toString();
     }
 
     const formattedDate = new Date(date).toISOString().split('T')[0];
-
-    let source;
-    if (projectId === 0) {
-      source = this.fixedRows;
-    } else {
-      source = this.projects;
-    }
-
-    const project = source.find((p) => p.id_project === projectId);
-    if (!project) return;
 
     const action = project.list_action.find((a: any) => a.id_action === actionId);
     if (!action) return;
@@ -426,15 +433,33 @@ export class CalendarComponent implements OnInit {
       action.list_time.push({ date: formattedDate, duration: value.toString() });
     }
 
-    this.timeSheetService.saveUserTime(this.userId, actionId, formattedDate, value).subscribe(
-      (response) => {
-        console.log('Time saved successfully:', value, response);
-        this.loadProjects();
-      },
-      (error) => {
+    this.timeSheetService.saveUserTime(this.userId, actionId, formattedDate, value).subscribe({
+      error: (error) => {
         console.error('Error saving time:', error);
+      },
+      complete: () => {
+        this.loadProjects();
+        this.applySaveAnimation(inputRef);
+      },
+    });
+  }
+
+  private applySaveAnimation(inputRef: HTMLInputElement) {
+    if (inputRef) {
+      inputRef.style.transition = 'box-shadow 0.3s ease';
+      inputRef.style.boxShadow = '0 0 0 2px #80bdff';
+
+      if ((inputRef as any)._saveTimeout) {
+        clearTimeout((inputRef as any)._saveTimeout);
       }
-    );
+
+      (inputRef as any)._saveTimeout = setTimeout(() => {
+        inputRef.style.boxShadow = '';
+        setTimeout(() => {
+          inputRef.style.transition = '';
+        }, 300);
+      }, 1000);
+    }
   }
 
   updateTimeEntryDelayed(
@@ -454,13 +479,25 @@ export class CalendarComponent implements OnInit {
       const formattedDate = new Date(date);
 
       const currentTotal = this.calculateDayTotal(formattedDate);
+      const hoursLimit = this.computeMinHoursLimit(projectId, formattedDate);
       const newTotal = currentTotal + value - initialValue;
 
       if (newTotal > this.MAX_DAILY_HOURS) {
         this.dialog.open(PopupMessageComponent, {
           data: {
             title: 'Erreur',
-            message: 'Quota horaire journalier dépassé !',
+            message: `Quota horaire journalier (${this.MAX_DAILY_HOURS}h) dépassé !`,
+          },
+        });
+
+        inputRef.value = initialValue.toString();
+        return;
+      }
+      if (hoursLimit && newTotal > hoursLimit) {
+        this.dialog.open(PopupMessageComponent, {
+          data: {
+            title: 'Avertissement',
+            message: `Attention : saisie supérieure à ${hoursLimit}h uniquement si déplacement`,
           },
         });
 
@@ -566,6 +603,41 @@ export class CalendarComponent implements OnInit {
     return total;
   }
 
+  private computeMinHoursLimit(projectId: number, date: Date): number | null {
+    let minHoursLimit: number | null = null;
+    const formattedDate = this.formatApiDate(this.toLuxonDate(date));
+
+    if (!this.projects || !Array.isArray(this.projects)) {
+      console.warn("computeMinHousLimit: this.projects est undefined ou n'est pas un tableau");
+      return minHoursLimit;
+    }
+
+    this.projects.forEach(
+      (project: {
+        id_project: number;
+        hours_limit: number;
+        list_action: { id_action: number }[];
+      }) => {
+        if (project.hours_limit != null) {
+          project.list_action.forEach((action: { id_action: number }) => {
+            const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
+            if (
+              projectId === project.id_project ||
+              (entry && entry.hours > 0 && typeof entry.hours === 'number')
+            ) {
+              if (minHoursLimit == null) {
+                minHoursLimit = project.hours_limit;
+              } else if (project.hours_limit < minHoursLimit) {
+                minHoursLimit = project.hours_limit;
+              }
+            }
+          });
+        }
+      }
+    );
+    return minHoursLimit;
+  }
+
   getInputId(projectId: number | string, actionId: number, date: Date): string {
     return `input-${projectId}-${actionId}-${date.toISOString()}`;
   }
@@ -586,19 +658,20 @@ export class CalendarComponent implements OnInit {
     if (formattedStartDate && formattedEndDate) {
       this.timeSheetService
         .getUserProjects(this.userId, formattedStartDate, formattedEndDate)
-        .subscribe(
-          (data) => {
+        .subscribe({
+          next: (data: any) => {
             this.projects = data.filter((project: any) => project.id_project !== 0);
             this.fixedRows = data.filter((project: any) => project.id_project === 0);
-            console.log('Fixed Rows:', this.fixedRows);
             this.initializeExpandedProjects();
-            this.isLoadingResults = false;
           },
-          (error) => {
+          error: (error) => {
             console.error('Erreur lors du chargement des projets', error);
+          },
+          complete: () => {
             this.isLoadingResults = false;
-          }
-        );
+            console.info('Projects loaded successfully');
+          },
+        });
     }
   }
 
