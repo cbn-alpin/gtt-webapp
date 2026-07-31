@@ -110,13 +110,7 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProjects();
-    this.calendarService.fetchHolidays().subscribe(
-      (data) => {
-        this.calendarService.setHolidays(data);
-        this.holidays = data;
-      },
-      (error) => console.error('Error fetching holidays:', error)
-    );
+    this.fetchHolidays();
 
     const today = this.calendarService.today();
     this.selectedWeek = today.weekNumber;
@@ -130,6 +124,17 @@ export class CalendarComponent implements OnInit {
   }
 
   updateStartEndDate() {
+  private fetchHolidays() {
+    this.calendarService.fetchHolidays().subscribe({
+      next: (data) => {
+        this.calendarService.setHolidays(data);
+        this.holidays = data;
+      },
+      error: (error) => console.error('Error fetching holidays:', error),
+      complete: () => console.info('Holidays fetched successfully'),
+    });
+  }
+
     const activeWeek = this.firstDayOfActiveMonth.value;
     this.startDate = activeWeek.minus({ weeks: 1 }).startOf('month');
     this.endDate = activeWeek.endOf('month').plus({ weeks: 1 });
