@@ -37,7 +37,8 @@ export class ProjectComponent implements OnInit {
         code: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         projectName: ['', Validators.required],
         startDate: ['', Validators.required],
-        endDate: ['', Validators.required],
+        endDate: [''],
+        hoursLimit: [''],
       },
       { validators: this.dateValidation }
     );
@@ -51,6 +52,7 @@ export class ProjectComponent implements OnInit {
         projectName: this.data.project.name,
         startDate: this.formatDateForForm(this.data.project.start_date),
         endDate: this.formatDateForForm(this.data.project.end_date),
+        hoursLimit: this.data.project.hours_limit,
       });
     }
 
@@ -83,8 +85,15 @@ export class ProjectComponent implements OnInit {
         code: this.projectForm.value.code,
         name: this.projectForm.value.projectName,
         start_date: this.formatDateForBackend(this.projectForm.value.startDate),
-        end_date: this.formatDateForBackend(this.projectForm.value.endDate),
       };
+      const end_date = this.formatDateForBackend(this.projectForm.value.endDate);
+      if (end_date) {
+        projectData['end_date'] = end_date;
+      }
+      if (this.projectForm.value.hoursLimit) {
+        projectData['hours_limit'] = this.projectForm.value.hoursLimit;
+      }
+
       if (this.isEditMode) {
         this.updateProject(projectData);
       } else {
@@ -247,8 +256,8 @@ export class ProjectComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  formatDateForBackend(dateStr: string): string {
-    if (!dateStr) return '';
+  formatDateForBackend(dateStr: string): string | null {
+    if (!dateStr) return null;
     const [year, month, day] = dateStr.split('-'); // "yyyy-MM-dd"
     return `${day}/${month}/${year}`; // "dd/MM/yyyy"
   }

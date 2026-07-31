@@ -98,12 +98,26 @@
         type="date"
         formControlName="endDate"
       />
-      <mat-error *ngIf="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched">
-        La date de fin est requise.
-      </mat-error>
       <mat-error *ngIf="projectForm.get('endDate')?.errors?.['dateInvalid']">
         La date de fin doit être supérieure ou égale à la date de début.
       </mat-error>
+    </div>
+
+    <div class="form-field">
+      <label
+        class="form-label"
+        for="hoursLimit"
+      >
+        Limite horaire :
+      </label>
+      <input
+        class="form-input"
+        id="hoursLimit"
+        type="number"
+        min="0"
+        step="0.1"
+        formControlName="hoursLimit"
+      />
     </div>
 
     <div class="form-actions">
