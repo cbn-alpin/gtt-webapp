@@ -102,17 +102,20 @@ export class CalendarComponent implements OnInit {
     const activeMonth = this.firstDayOfActiveMonth.value;
     this.selectedMonth = activeMonth.month;
     this.selectedYear = activeMonth.year;
+    this.weeksNumbers = this.getWeeksArray(activeMonth.year);
     this.selectedWeek = activeMonth.weekNumber;
 
     this.updateStartEndDates();
   }
 
-  get weeksNumbers(): number[] {
-    return Array.from({ length: this.weeksInYear }, (_, i) => 1 + i);
+  weeksNumbers: number[];
+
+  private getWeeksArray(year: number): number[] {
+    const weeksInYear = this.getWeeksInYear(year);
+    return Array.from({ length: weeksInYear }, (_, i) => 1 + i);
   }
 
-  get weeksInYear(): number {
-    const year: number = this.firstDayOfActiveMonth.getValue().year;
+  private getWeeksInYear(year: number): number {
     // First january of current year
     const firstDayOfYear = new Date(year, 0, 1);
 
@@ -243,72 +246,62 @@ export class CalendarComponent implements OnInit {
     this.loadProjects();
   }
 
-  trackByIndex(index: number, item: any): number {
-    return index;
-  }
-
   onMonthChange(): void {
-    const newDate = this.firstDayOfActiveMonth.getValue().set({ month: this.selectedMonth });
-    this.firstDayOfActiveMonth.next(newDate);
-    this.selectedWeek = newDate.weekNumber;
-    this.selectedYear = newDate.year;
-    this.updateToFirstWeekOfMonth(newDate);
-    this.updateStartEndDates();
-    this.loadProjects();
+    this.updateToFirstWeekOfMonth();
   }
 
   onYearChange(): void {
-    const newDate = this.firstDayOfActiveMonth.getValue().set({ year: this.selectedYear });
-    this.firstDayOfActiveMonth.next(newDate);
-    this.selectedMonth = newDate.month;
-    this.selectedWeek = newDate.weekNumber;
-    this.updateToFirstWeekOfMonth(newDate);
+    this.updateToFirstWeekOfMonth();
+  }
+
+  private updateToFirstWeekOfMonth(): void {
+    const newDate = this.firstDayOfActiveMonth
+      .getValue()
+      .set({ year: this.selectedYear, month: this.selectedMonth });
+
+    const date =
+      this.getWeeksInYear(newDate.year) !== 53 && newDate.weekNumber === 53 && newDate.month === 1
+        ? this.getFirstDayOfMonth(newDate)
+        : newDate;
+
+    this.firstDayOfActiveMonth.next(date);
+    this.selectedWeek = date.weekNumber;
+    this.weeksNumbers = this.getWeeksArray(date.year);
+
+    this.currentWeek = this.calendarService.getCurrentWeek(date);
+    this.timeStateService.updateSelectedDate(date.toJSDate());
+    if (date.weekNumber >= 52) {
+      if (this.currentWeek.start) {
+        this.weeksNumbers = this.getWeeksArray(this.currentWeek.start.year);
+        this.selectedWeek = this.currentWeek.start.weekNumber;
+      }
+    } else {
+      if (this.currentWeek.end) {
+        this.weeksNumbers = this.getWeeksArray(this.currentWeek.end.year);
+        this.selectedWeek = this.currentWeek.end.weekNumber;
+      }
+    }
     this.updateStartEndDates();
     this.loadProjects();
   }
 
-  onWeekChange(): void {
-    const firstDayOfYear = DateTime.local(this.selectedYear, 1, 1);
-    const selectedWeekNumber = this.selectedWeek - 1;
-    const selectedWeek = firstDayOfYear.plus({ weeks: selectedWeekNumber });
-    const startOfSelectedWeek = selectedWeek.startOf('week');
-    const endOfSelectedWeek = selectedWeek.endOf('week');
-
-    this.currentWeek = this.calendarService.getCurrentWeek(startOfSelectedWeek);
-    this.timeStateService.updateSelectedDate(startOfSelectedWeek.toJSDate());
-
-    if (startOfSelectedWeek.month !== this.firstDayOfActiveMonth.getValue().month) {
-      if (selectedWeekNumber === 0) {
-        this.firstDayOfActiveMonth.next(endOfSelectedWeek.startOf('month'));
-        this.selectedMonth = endOfSelectedWeek.month;
-        this.selectedYear = endOfSelectedWeek.year;
-      } else {
-        this.firstDayOfActiveMonth.next(startOfSelectedWeek.startOf('month'));
-        this.selectedMonth = startOfSelectedWeek.month;
-        this.selectedYear = startOfSelectedWeek.year;
-      }
-      this.updateStartEndDates();
-      this.loadProjects();
+  private getFirstDayOfMonth(date: DateTime): DateTime {
+    const firstDayOfMonth = date.startOf('month');
+    let firstMonday = firstDayOfMonth.set({ weekday: 1 });
+    if (firstMonday.month !== firstDayOfMonth.month) {
+      firstMonday = firstMonday.plus({ weeks: 1 });
     }
+    return firstMonday;
   }
 
-  updateToFirstWeekOfMonth(date: DateTime): void {
-    const firstDayOfMonth = date.startOf('month');
-    this.currentWeek = this.calendarService.getCurrentWeek(firstDayOfMonth);
-    this.timeStateService.updateSelectedDate(firstDayOfMonth.toJSDate());
-    if (date.weekNumber === 1) {
-      if (this.currentWeek.end) {
-        this.selectedWeek = this.currentWeek.end.weekNumber;
-        this.selectedMonth = this.currentWeek.end.month;
-        this.selectedYear = this.currentWeek.end.year;
-      }
-    } else {
-      if (this.currentWeek.start) {
-        this.selectedWeek = this.currentWeek.start.weekNumber;
-        this.selectedMonth = this.currentWeek.start.month;
-        this.selectedYear = this.currentWeek.start.year;
-      }
-    }
+  onWeekChange(): void {
+    const startOfSelectedWeek = DateTime.fromObject({
+      weekYear: this.selectedYear,
+      weekNumber: this.selectedWeek,
+      weekday: 1,
+    });
+    this.currentWeek = this.calendarService.getCurrentWeek(startOfSelectedWeek);
+    this.updateCurrentWeek();
   }
 
   isHoliday(date: Date | DateTime): boolean {
@@ -318,24 +311,15 @@ export class CalendarComponent implements OnInit {
 
   goToPreviousWeek(): void {
     this.currentWeek = this.calendarService.goToPreviousWeek(this.currentWeek);
-    if (this.currentWeek.start && this.currentWeek.end) {
-      const currentWeekNumber = this.currentWeek.start.weekNumber;
-      const selectedWeekDay =
-        currentWeekNumber == 1 ? this.currentWeek.end : this.currentWeek.start;
-      this.timeStateService.updateSelectedDate(this.currentWeek.start.toJSDate());
-      this.selectedWeek = selectedWeekDay.weekNumber;
-      this.selectedMonth = selectedWeekDay.month;
-      this.selectedYear = selectedWeekDay.year;
-      if (selectedWeekDay.month !== this.firstDayOfActiveMonth.getValue().month) {
-        this.firstDayOfActiveMonth.next(selectedWeekDay.startOf('month'));
-        this.updateStartEndDates();
-        this.loadProjects();
-      }
-    }
+    this.updateCurrentWeek();
   }
 
   goToNextWeek(): void {
     this.currentWeek = this.calendarService.goToNextWeek(this.currentWeek);
+    this.updateCurrentWeek();
+  }
+
+  private updateCurrentWeek(): void {
     if (this.currentWeek.start && this.currentWeek.end) {
       const currentWeekNumber = this.currentWeek.start.weekNumber;
       const selectedWeekDay =
@@ -344,6 +328,7 @@ export class CalendarComponent implements OnInit {
       this.selectedWeek = selectedWeekDay.weekNumber;
       this.selectedMonth = selectedWeekDay.month;
       this.selectedYear = selectedWeekDay.year;
+      this.weeksNumbers = this.getWeeksArray(selectedWeekDay.year);
       if (selectedWeekDay.month !== this.firstDayOfActiveMonth.getValue().month) {
         this.firstDayOfActiveMonth.next(selectedWeekDay.startOf('month'));
         this.updateStartEndDates();
@@ -684,7 +669,7 @@ export class CalendarComponent implements OnInit {
     return item?.id || item?.id_project || item?.id_action || index;
   }
 
-  loadProjects(): void {
+  private loadProjects(): void {
     this.isLoadingResults = true;
     const formattedStartDate = this.startDate.toISODate();
     const formattedEndDate = this.endDate.toISODate();
