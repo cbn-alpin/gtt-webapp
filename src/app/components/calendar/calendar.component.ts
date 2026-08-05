@@ -161,7 +161,7 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  updateStartEndDates() {
+  private updateStartEndDates() {
     const activeWeek = this.firstDayOfActiveMonth.value;
     this.startDate = activeWeek.minus({ weeks: 1 }).startOf('month');
     this.endDate = activeWeek.endOf('month').plus({ weeks: 1 });
@@ -519,9 +519,6 @@ export class CalendarComponent implements OnInit {
             message: `Attention : saisie supérieure à ${hoursLimit}h uniquement si déplacement`,
           },
         });
-
-        inputRef.value = initialValue.toString();
-        return;
       }
 
       this.updateTimeEntry(value, projectId, end_date, actionId, date, inputRef, initialValue);
