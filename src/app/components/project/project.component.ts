@@ -1,11 +1,12 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
 import { map, Observable, startWith } from 'rxjs';
+
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { ShareDataService } from 'src/app/services/shareData/share-data.service';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-project',

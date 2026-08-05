@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+
 import { UserInfos } from 'src/app/models/user-infos.model';
 import { ShareDataService } from 'src/app/services/shareData/share-data.service';
 import { UserService } from 'src/app/services/user/user.service';

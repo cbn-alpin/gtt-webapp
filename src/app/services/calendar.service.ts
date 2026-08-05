@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
-import { DateTime, Info, Interval } from 'luxon';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
+
+import { DateTime, Info, Interval } from 'luxon';
 
 @Injectable({
   providedIn: 'root',

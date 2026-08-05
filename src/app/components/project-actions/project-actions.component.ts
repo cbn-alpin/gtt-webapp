@@ -1,14 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { ActionComponent } from '../action/action.component';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
-import { ProjectActionsService } from 'src/app/services/projectActions/project-actions.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserActionService } from 'src/app/services/UserAction/user-action.service';
+import { MatTableDataSource } from '@angular/material/table';
+
 import { Action } from 'src/app/models/Action';
+import { ProjectActionsService } from 'src/app/services/projectActions/project-actions.service';
+import { ProjectsService } from 'src/app/services/projects/projects.service';
+import { UserActionService } from 'src/app/services/UserAction/user-action.service';
+import { ActionComponent } from '../action/action.component';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-project-actions',

@@ -1,9 +1,11 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+
 import { BehaviorSubject } from 'rxjs';
+
 import { UserInfos } from 'src/app/models/user-infos.model';
 import { DownloadService } from 'src/app/services/Download/download.service';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';

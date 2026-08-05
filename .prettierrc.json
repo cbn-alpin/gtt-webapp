@@ -9,6 +9,19 @@
   "singleAttributePerLine": true,
   "bracketSameLine": false,
   "htmlWhitespaceSensitivity": "ignore",
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "^@angular/(.*)$",
+    "",
+    "^rxjs(.*)$",
+    "",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^src/(.*)$",
+    "^[./]"
+  ],
+  "importOrderTypeScriptVersion": "5.0.0",
+  "importOrderParserPlugins": ["typescript", "decorators-legacy"],
   "overrides": [
     {
       "files": ["*.html"],
@@ -18,3 +31,5 @@
     }
   ]
 }
+
+

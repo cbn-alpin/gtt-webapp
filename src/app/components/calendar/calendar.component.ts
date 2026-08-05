@@ -1,21 +1,24 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { DateTime, Info, Interval } from 'luxon';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 import { BehaviorSubject } from 'rxjs';
+
+import { DateTime, Info, Interval } from 'luxon';
+
+import { PopupMessageComponent } from 'src/app/popup-message/popup-message.component';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { TimeStateService } from 'src/app/services/time-state-service.service';
-import { PopupMessageComponent } from 'src/app/popup-message/popup-message.component';
-import { MatDialog } from '@angular/material/dialog';
 import { TimeSheetService } from 'src/app/services/TimeSheet.service';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatSelectModule } from '@angular/material/select';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatButtonModule } from '@angular/material/button';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-calendar',
