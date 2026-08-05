@@ -2,10 +2,14 @@
   <div
     class="logo-cbna"
     (click)="toggleSidenav()"
+    tabindex="0"
+    role="button"
+    (keydown.enter)="toggleSidenav()"
+    (keydown.space)="toggleSidenav()"
   >
     <img
-      alt=""
       src="assets/images/logos/cbna.png"
+      alt="CBNA Logo"
     />
   </div>
   <span class="title">{{ currentTitle }}</span>
@@ -19,6 +23,7 @@
         [src]="userImage"
         (error)="setDefaultImage()"
         class="user-avatar"
+        alt="User profile image"
       />
     </button>
 
@@ -32,6 +37,7 @@
             [src]="userImage"
             (error)="setDefaultImage()"
             class="user-avatar-large"
+            alt="User profile image"
           />
           <p class="user-name">{{ userName }}</p>
           <p
@@ -72,6 +78,10 @@
         <div
           class="password-container"
           (click)="$event.stopPropagation()"
+          tabindex="0"
+          role="button"
+          (keydown.enter)="$event.stopPropagation()"
+          (keydown.space)="$event.stopPropagation()"
         >
           <mat-icon
             class="menu-icon"
@@ -90,6 +100,10 @@
         <div
           class="list-users-container"
           (click)="$event.stopPropagation()"
+          tabindex="0"
+          role="button"
+          (keydown.enter)="$event.stopPropagation()"
+          (keydown.space)="$event.stopPropagation()"
         >
           <mat-icon
             class="menu-icon"
