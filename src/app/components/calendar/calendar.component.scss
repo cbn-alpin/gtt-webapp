@@ -196,11 +196,11 @@
 
 /* CSS time Table */
 
-thead tr {
+thead {
   position: sticky;
-  top: 0;
-  background-color: white;
+  top: -15px;
   z-index: 3;
+  background-color: white;
   border: 1px solid #ddd;
 }
 
@@ -218,7 +218,10 @@ tbody .daily-total-row {
 
   table {
     width: 100%;
-    border-collapse: collapse;
+    background-color: white;
+    // Fix the transparent border issue of sticky thead
+    border-collapse: separate;
+    border-spacing: 0px;
   }
 
   .project-name {
