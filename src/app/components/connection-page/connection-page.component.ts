@@ -1,10 +1,11 @@
-import { AfterViewInit, Component, NgZone } from '@angular/core';
+import { AfterViewInit, Component, inject, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { UserInfos } from 'src/app/models/user-infos.model';
-import { AuthService } from 'src/app/services/auth/auth.service';
+
+import { AuthService } from 'src/app/core/auth/auth.service';
 import { environment } from 'src/environments/environment';
+
 declare const google: any;
 
 @Component({
@@ -13,22 +14,39 @@ declare const google: any;
   styleUrls: ['./connection-page.component.scss'],
 })
 export class ConnectionPageComponent implements AfterViewInit {
+  private errorMessage = '';
+  private codeClient: any;
+
   title = 'Potemps-Tille';
   isLoading = false;
-  errorMessage = '';
   loginForm: FormGroup;
-  codeClient: any;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private fb: FormBuilder,
-    private readonly snackBar: MatSnackBar,
-    private ngZone: NgZone
-  ) {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private fb = inject(FormBuilder);
+  private snackBar = inject(MatSnackBar);
+  private ngZone = inject(NgZone);
+
+  constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
+    });
+  }
+
+  ngAfterViewInit(): void {
+    // Initialize the Google Identity Services
+    google.accounts.id.initialize({
+      client_id: environment.googleClientId,
+      callback: this.handleCredentialResponse.bind(this),
+      auto_select: false,
+    });
+    google.accounts.id.prompt();
+
+    this.codeClient = google.accounts.oauth2.initCodeClient({
+      client_id: environment.googleClientId,
+      scope: 'profile email',
+      callback: this.handleCodeResponse.bind(this),
     });
   }
 
@@ -37,7 +55,7 @@ export class ConnectionPageComponent implements AfterViewInit {
     return field ? field.invalid && (field.dirty || field.touched) : false;
   }
 
-  nativeLogin() {
+  onLoginWithNativeAuth() {
     if (this.loginForm.valid) {
       this.isLoading = true;
       this.errorMessage = '';
@@ -47,17 +65,8 @@ export class ConnectionPageComponent implements AfterViewInit {
         password: this.loginForm.value.password,
       };
 
-      this.authService.nativeAuthenticate(credentials).subscribe({
-        next: (userInfo: UserInfos) => {
-          // Update localStorage synchronously
-          localStorage.setItem('access_token', userInfo.access_token);
-          localStorage.setItem('user_email', userInfo.email);
-          localStorage.setItem('user_name', `${userInfo.first_name} ${userInfo.last_name}`);
-          localStorage.setItem('is_admin', `${userInfo.is_admin}`);
-          localStorage.setItem('id_user', `${userInfo.id_user}`);
-          localStorage.setItem('newTitle', 'saisie des temps');
-          localStorage.setItem('user_photo', `${userInfo.picture}`);
-
+      this.authService.loginWithNativeAuth(credentials).subscribe({
+        next: () => {
           this.isLoading = false;
           // Ensure that navigation takes place in the Angular zone
           this.ngZone.run(() => {
@@ -80,31 +89,15 @@ export class ConnectionPageComponent implements AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    // Initialize the Google Identity Services
-    google.accounts.id.initialize({
-      client_id: environment.googleClientId,
-      callback: this.handleCredentialResponse.bind(this),
-      auto_select: false,
-    });
-    google.accounts.id.prompt();
-
-    this.codeClient = google.accounts.oauth2.initCodeClient({
-      client_id: environment.googleClientId,
-      scope: 'profile email',
-      callback: this.handleCodeResponse.bind(this),
-    });
-  }
-
-  googleLogin(): void {
+  onLoginWithGoogle(): void {
     this.codeClient.requestCode();
   }
 
   /**
    * Handle the response from the One Tap prompt (ID token flow).
    */
-  handleCredentialResponse(response: any): void {
-    this.authService.loginWithGoogle(response.credential).subscribe({
+  private handleCredentialResponse(response: any): void {
+    this.authService.loginWithGoogleToken(response.credential).subscribe({
       next: () => {
         this.router.navigate(['/accueil/saisie-des-temps']);
       },
@@ -122,7 +115,7 @@ export class ConnectionPageComponent implements AfterViewInit {
   /**
    * Handle the response from the popup (authorization code flow).
    */
-  handleCodeResponse(response: any): void {
+  private handleCodeResponse(response: any): void {
     this.authService.loginWithGoogleCode(response.code).subscribe({
       next: () => {
         this.router.navigate(['/accueil/saisie-des-temps']);
@@ -138,7 +131,7 @@ export class ConnectionPageComponent implements AfterViewInit {
     });
   }
 
-  showToast(message: string, isError = false) {
+  private showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',

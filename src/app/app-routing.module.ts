@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ConnectionPageComponent } from './components/connection-page/connection-page.component';
 import { HomeComponent } from './components/home/home.component';
 import { ListProjectsComponent } from './components/list-projects/list-projects.component';
-import { AuthGuard } from './guards/auth.guard';
+import { authGuard } from './core/auth/auth.guard';
 import { TimeSheetComponent } from './components/TimeSheet/TimeSheet.component';
 import { TravelExpenseComponent } from './components/travel-expense/travel-expense.component';
 import { ListTravelExpenseComponent } from './components/list-travel-expense/list-travel-expense.component';
@@ -14,7 +14,7 @@ const routes: Routes = [
   {
     path: 'accueil',
     component: HomeComponent,
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       { path: 'saisie-des-temps', component: TimeSheetComponent },
       { path: 'liste-des-projets', component: ListProjectsComponent },

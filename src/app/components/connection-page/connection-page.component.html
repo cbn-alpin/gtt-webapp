@@ -13,7 +13,7 @@
 
     <form
       [formGroup]="loginForm"
-      (ngSubmit)="nativeLogin()"
+      (ngSubmit)="onLoginWithNativeAuth()"
     >
       <div class="login-form">
         <div class="form-group">
@@ -73,7 +73,7 @@
       extended
       type="button"
       class="login-button"
-      (click)="googleLogin()"
+      (click)="onLoginWithGoogle()"
     >
       <img
         src="assets/images/google-logo.png"
