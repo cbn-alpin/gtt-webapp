@@ -6,7 +6,7 @@ import { DownloadPageComponent } from './components/download-page/download-page.
 import { HomeComponent } from './components/home/home.component';
 import { ListProjectsComponent } from './components/list-projects/list-projects.component';
 import { ListTravelExpenseComponent } from './components/list-travel-expense/list-travel-expense.component';
-import { TimeSheetComponent } from './components/TimeSheet/TimeSheet.component';
+import { TimeSheetComponent } from './components/time-sheet/time-sheet.component';
 import { TravelExpenseComponent } from './components/travel-expense/travel-expense.component';
 import { authGuard } from './core/auth/auth.guard';
 

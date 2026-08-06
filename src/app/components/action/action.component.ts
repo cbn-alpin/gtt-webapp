@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { ProjectActionsService } from 'src/app/services/projectActions/project-actions.service';
+import { ProjectActionsService } from 'src/app/services/project-actions/project-actions.service';
 
 @Component({
   selector: 'app-action',

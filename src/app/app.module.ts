@@ -50,11 +50,11 @@ import { MissionExpenseComponent } from './components/mission-expense/mission-ex
 import { ModifyPasswordComponent } from './components/modify-password/modify-password.component';
 import { ProjectActionsComponent } from './components/project-actions/project-actions.component';
 import { ProjectComponent } from './components/project/project.component';
-import { TimeSheetComponent } from './components/TimeSheet/TimeSheet.component';
+import { TimeSheetComponent } from './components/time-sheet/time-sheet.component';
 import { TravelExpenseComponent } from './components/travel-expense/travel-expense.component';
 import { AuthInterceptor } from './core/auth/auth.interceptor';
 import { FRENCH_DATE_FORMATS } from './core/config/date-formats';
-import { FrenchPaginatorIntl } from './core/config/frenchPaginatorIntl';
+import { FrenchPaginatorIntl } from './core/config/french-paginator-intl';
 import { PopupMessageComponent } from './popup-message/popup-message.component';
 
 @NgModule({

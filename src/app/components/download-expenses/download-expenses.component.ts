@@ -7,9 +7,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject } from 'rxjs';
 
 import { UserInfos } from 'src/app/models/user-infos.model';
-import { DownloadService } from 'src/app/services/Download/download.service';
+import { DownloadService } from 'src/app/services/download/download.service';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
-import { ShareDataService } from 'src/app/services/shareData/share-data.service';
+import { ShareDataService } from 'src/app/services/share-data/share-data.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({

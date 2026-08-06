@@ -4,10 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Action } from 'src/app/models/Action';
-import { ProjectActionsService } from 'src/app/services/projectActions/project-actions.service';
+import { Action } from 'src/app/models/action.model';
+import { ProjectActionsService } from 'src/app/services/project-actions/project-actions.service';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { UserActionService } from 'src/app/services/UserAction/user-action.service';
+import { UserActionService } from 'src/app/services/user-action/user-action.service';
 import { ActionComponent } from '../action/action.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 

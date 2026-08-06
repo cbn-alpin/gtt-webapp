@@ -7,8 +7,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { Project } from 'src/app/models/Project';
-import { DownloadService } from 'src/app/services/Download/download.service';
+import { Project } from 'src/app/models/project.model';
+import { DownloadService } from 'src/app/services/download/download.service';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 
 @Component({

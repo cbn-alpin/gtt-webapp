@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TimeSheetComponent } from './TimeSheet.component';
+import { TimeSheetComponent } from './time-sheet.component';
 
 describe('TimeSheetComponent', () => {
   let component: TimeSheetComponent;

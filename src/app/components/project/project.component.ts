@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, Observable, startWith } from 'rxjs';
 
 import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { ShareDataService } from 'src/app/services/shareData/share-data.service';
+import { ShareDataService } from 'src/app/services/share-data/share-data.service';
 
 @Component({
   selector: 'app-project',

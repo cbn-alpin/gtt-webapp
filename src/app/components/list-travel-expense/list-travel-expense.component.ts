@@ -6,9 +6,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 
-import { TravelExpense } from 'src/app/models/TravelExpense';
+import { TravelExpense } from 'src/app/models/travel-expense.model';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
-import { ShareDataService } from 'src/app/services/shareData/share-data.service';
+import { ShareDataService } from 'src/app/services/share-data/share-data.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { TravelExpenseComponent } from '../travel-expense/travel-expense.component';
 

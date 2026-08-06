@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TimeSheetService } from './TimeSheet.service';
+import { TimeSheetService } from './time-sheet.service';
 
 describe('UserProjectsService', () => {
   let service: TimeSheetService;

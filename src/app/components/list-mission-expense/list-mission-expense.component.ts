@@ -12,9 +12,9 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { forkJoin } from 'rxjs';
 
-import { MissionExpense } from 'src/app/models/MissionExpense';
+import { MissionExpense } from 'src/app/models/mission-expense.model';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
-import { ShareDataService } from 'src/app/services/shareData/share-data.service';
+import { ShareDataService } from 'src/app/services/share-data/share-data.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { MissionExpenseComponent } from '../mission-expense/mission-expense.component';
 

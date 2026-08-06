@@ -7,11 +7,11 @@ import { map, Observable, startWith, switchMap, tap } from 'rxjs';
 
 import moment from 'moment';
 
-import { Project } from 'src/app/models/Project';
+import { Project } from 'src/app/models/project.model';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { MunicipalityService } from 'src/app/services/municipality/municipality.service';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { ShareDataService } from 'src/app/services/shareData/share-data.service';
+import { ShareDataService } from 'src/app/services/share-data/share-data.service';
 
 @Component({
   selector: 'app-travel-expense',
