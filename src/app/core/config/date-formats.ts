@@ -1,5 +1,3 @@
-import { MAT_DATE_FORMATS } from '@angular/material/core';
-
 export const FRENCH_DATE_FORMATS = {
   parse: {
     dateInput: 'DD/MM/YYYY',

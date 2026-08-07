@@ -1,5 +1,8 @@
 <div class="expense-container">
-  <a (click)="openAddExpenseDialog()">
+  <button
+    mat-icon-button
+    (click)="openAddExpenseDialog()"
+  >
     <mat-icon
       class="project-expense"
       matTooltip="Ajouter un frais de mission"
@@ -7,7 +10,7 @@
     >
       add_circle_outline
     </mat-icon>
-  </a>
+  </button>
   <div
     class="table-wrapper"
     *ngIf="dataSource.data.length > 0"

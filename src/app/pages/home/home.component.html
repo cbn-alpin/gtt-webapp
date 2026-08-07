@@ -5,7 +5,7 @@
     tabindex="0"
     role="button"
     (keydown.enter)="toggleSidenav()"
-    (keydown.space)="toggleSidenav()"
+    (keydown.space)="$event.preventDefault(); toggleSidenav()"
   >
     <img
       src="assets/images/logos/cbna.png"
@@ -15,16 +15,11 @@
   <span class="title">{{ currentTitle }}</span>
   <div class="user-infos">
     <button
-      mat-button
+      mat-icon-button
       [matMenuTriggerFor]="beforeMenu"
       class="user-button"
     >
-      <img
-        [src]="userImage"
-        (error)="setDefaultImage()"
-        class="user-avatar"
-        alt="User profile image"
-      />
+      <mat-icon class="user-icon">person</mat-icon>
     </button>
 
     <mat-menu
@@ -75,20 +70,13 @@
       </ng-container>
 
       <ng-container *ngIf="showPasswordChange">
-        <div
-          class="password-container"
-          (click)="$event.stopPropagation()"
-          tabindex="0"
-          role="button"
-          (keydown.enter)="$event.stopPropagation()"
-          (keydown.space)="$event.stopPropagation()"
-        >
-          <mat-icon
-            class="menu-icon"
+        <div class="password-container">
+          <button
+            mat-icon-button
             (click)="togglePasswordChange($event)"
           >
-            chevron_left
-          </mat-icon>
+            <mat-icon class="menu-icon">chevron_left</mat-icon>
+          </button>
           <mat-divider></mat-divider>
           <app-modify-password
             (passwordUpdated)="togglePasswordChange($event)"
@@ -129,7 +117,7 @@
       class="sidenav"
     >
       <div class="sidenav-content">
-        <a
+        <button
           mat-icon-button
           class="icon-container"
           routerLink="/accueil/saisie-des-temps"
@@ -138,8 +126,8 @@
           (click)="updateTitle('Saisie des temps')"
         >
           <mat-icon>schedule</mat-icon>
-        </a>
-        <a
+        </button>
+        <button
           mat-icon-button
           class="icon-container"
           routerLink="/accueil/liste-des-projets"
@@ -148,8 +136,8 @@
           (click)="updateTitle('Liste des projets')"
         >
           <mat-icon>list_alt</mat-icon>
-        </a>
-        <a
+        </button>
+        <button
           mat-icon-button
           class="icon-container"
           routerLink="/accueil/liste-frais-de-deplacement"
@@ -159,8 +147,8 @@
           *ngIf="isAdmin"
         >
           <mat-icon>euro_symbol</mat-icon>
-        </a>
-        <a
+        </button>
+        <button
           mat-icon-button
           class="icon-container"
           routerLink="/accueil/telechargement"
@@ -170,7 +158,7 @@
           *ngIf="isAdmin"
         >
           <mat-icon>download</mat-icon>
-        </a>
+        </button>
       </div>
     </mat-sidenav>
     <mat-sidenav-content class="main-content">

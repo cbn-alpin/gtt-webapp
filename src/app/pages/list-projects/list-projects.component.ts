@@ -83,7 +83,7 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
           }, 100);
         }, 1000);
       },
-      error: (error) => {
+      error: () => {
         this.isLoadingResults = false;
         this.isError = true;
       },
@@ -153,6 +153,8 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
+        // Remove list_action from project and keep the rest in projectData
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { list_action, ...projectData } = project;
 
         const updatedProject = {

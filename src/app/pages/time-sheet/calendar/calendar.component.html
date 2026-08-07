@@ -11,12 +11,13 @@
         <div class="calendar-headline-month">
           {{ firstDayOfActiveMonth.value.monthShort }} {{ firstDayOfActiveMonth.value.year }}
         </div>
-        <div
+        <button
+          mat-raised-button
           class="calendar-headline-control calendar-headline-control-today"
           (click)="goToToday()"
         >
           Aujourd'hui
-        </div>
+        </button>
       </div>
 
       <div class="calendar-weeks-grid">
@@ -39,20 +40,24 @@
             'calendar-grid-cell-current-week': isInCurrentWeek(dayOfMonth),
             'calendar-grid-cell-is-holiday': isHoliday(dayOfMonth)
           }"
-          (click)="setActiveDay(dayOfMonth)"
         >
-          {{ dayOfMonth.day }}
+          <button (click)="setActiveDay(dayOfMonth)">
+            {{ dayOfMonth.day }}
+          </button>
         </div>
       </div>
     </div>
 
     <div class="calendar-headline-controls">
-      <div
+      <button
+        mat-icon-button
+        color="primary"
         class="calendar-headline-control week-scroll"
         (click)="goToPreviousWeek()"
+        aria-label="Aller à la semaine précédente"
       >
-        «
-      </div>
+        <mat-icon>keyboard_double_arrow_left</mat-icon>
+      </button>
       <div class="selectors">
         <div class="calendar-headline-control">
           <mat-select
@@ -100,12 +105,15 @@
           </mat-select>
         </div>
       </div>
-      <div
+      <button
+        mat-icon-button
+        color="primary"
         class="calendar-headline-control week-scroll"
         (click)="goToNextWeek()"
+        aria-label="Aller à la semaine suivante"
       >
-        »
-      </div>
+        <mat-icon>keyboard_double_arrow_right</mat-icon>
+      </button>
     </div>
   </div>
 

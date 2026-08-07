@@ -40,6 +40,25 @@
   color: rgb(81, 81, 81);
 }
 
+.calendar-grid-cell button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  line-height: normal;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.calendar-grid-cell button:focus-visible {
+  outline: 2px solid #e4e5e7;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .calendar-weeks-grid-cell {
   text-align: center;
 }
@@ -66,7 +85,7 @@
 }
 
 .calendar-grid-cell:hover {
-  background: #9ba3bf;
+  background: #dddee3;
 }
 
 .calendar-grid-cell-active {
@@ -80,14 +99,6 @@
 .schedule-headline {
   font-weight: 600;
   margin-bottom: 30px;
-}
-
-.calendar-grid-cell:hover {
-  background: #9ba3bf;
-}
-
-.calendar-grid-cell-active {
-  background: #9ba3bf;
 }
 
 .calendar-grid .calendar-grid-cell:nth-child(7n-1),

@@ -48,7 +48,7 @@ export class CalendarService {
 
   isHoliday(day: DateTime): boolean {
     const dateString = day.toISODate();
-    return dateString ? this.holidays.hasOwnProperty(dateString) : false;
+    return dateString ? Object.keys(this.holidays).includes(dateString) : false;
   }
 
   setHolidays(data: Record<string, string>): void {

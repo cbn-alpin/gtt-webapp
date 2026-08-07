@@ -101,7 +101,7 @@ export class ProjectActionsComponent implements OnInit {
       // Add user action
       this.userActionService.createUserAction(userId, action.id_action).subscribe({
         next: (response) => console.log(`Action ${action.id_action} enregistrée`, response),
-        error: (error) =>
+        error: () =>
           console.error(' Erreur lors de l’enregistrement', localStorage.getItem('access_token')),
       });
     } else {

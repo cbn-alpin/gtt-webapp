@@ -165,16 +165,18 @@
             </button>
           </mat-menu>
 
-          <a
+          <button
+            mat-icon-button
             class="project-action"
             (click)="
               expandedElement = expandedElement === element ? null : element;
               $event.stopPropagation()
             "
+            aria-label="Voir les actions du projet"
           >
             <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
             <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
-          </a>
+          </button>
         </td>
       </ng-container>
 
@@ -186,7 +188,7 @@
         >
           <div
             class="element-detail"
-            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
+            [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'"
           >
             <div class="element-diagram">
               <app-project-actions

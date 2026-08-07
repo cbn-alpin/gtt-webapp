@@ -83,7 +83,7 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
     });
 
     forkJoin(expenseRequests).subscribe({
-      next: (responses) => {
+      next: () => {
         this.shareDataService.notifyMissionExpensesProcessed(true);
 
         // Add new expenses to `list_expenses` and empty `pendingExpenses`.
