@@ -49,6 +49,7 @@
     "cypress": "^13.13.1",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-formatter-compact": "^9.0.1",
     "eslint-plugin-unicorn": "^59.0.1",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
