@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 import { Observable, startWith, switchMap } from 'rxjs';
 
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 import { Project } from 'src/app/models/project.model';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
@@ -166,15 +166,18 @@ export class TravelExpenseComponent implements OnInit {
     if (!date) return '';
 
     // Checks if date is in the expected format (DD/MM/YYYY or YYYY-MM-DD)
-    const parsedDate = moment(date, ['DD/MM/YYYY', 'YYYY-MM-DD'], true);
+    let parsedDate = DateTime.fromFormat(date, 'dd/MM/yyyy');
+    if (!parsedDate.isValid) {
+      parsedDate = DateTime.fromFormat(date, 'yyyy-MM-dd');
+    }
 
-    if (!parsedDate.isValid()) return '';
+    if (!parsedDate.isValid) return '';
 
     // Always return the date in DD/MM/YYYY format
     // If it's a creation, we add the seconds “:00”.
     return this.isEditing
-      ? `${parsedDate.format('DD/MM/YYYY')} ${timeString}`
-      : `${parsedDate.format('DD/MM/YYYY')} ${timeString}:00`;
+      ? `${parsedDate.toFormat('dd/MM/yyyy')} ${timeString}`
+      : `${parsedDate.toFormat('dd/MM/yyyy')} ${timeString}:00`;
   }
 
   cancel(): void {
@@ -251,10 +254,10 @@ export class TravelExpenseComponent implements OnInit {
     const endDate = this.expenseForm.get('endDate')?.value;
 
     if (startDate && endDate) {
-      const start = moment(startDate, 'YYYY-MM-DD');
-      const end = moment(endDate, 'YYYY-MM-DD');
+      const start = DateTime.fromFormat(startDate, 'yyyy-MM-dd');
+      const end = DateTime.fromFormat(endDate, 'yyyy-MM-dd');
 
-      if (end.isBefore(start)) {
+      if (end < start) {
         this.expenseForm.get('endDate')?.setErrors({ invalidEndDate: true });
       } else {
         this.expenseForm.get('endDate')?.setErrors(null);
