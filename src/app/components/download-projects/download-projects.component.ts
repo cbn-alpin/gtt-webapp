@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -30,11 +30,9 @@ export class DownloadProjectsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(
-    private projectService: ProjectsService,
-    private downloadServivce: DownloadService,
-    private readonly snackBar: MatSnackBar
-  ) {}
+  private readonly projectService = inject(ProjectsService);
+  private readonly downloadServivce = inject(DownloadService);
+  private readonly snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
     this.fetchProjects();

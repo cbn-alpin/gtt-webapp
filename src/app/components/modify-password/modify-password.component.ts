@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -17,11 +17,11 @@ export class ModifyPasswordComponent {
   isPasswordChanged = false;
   passwordError = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private userService: UserService,
-    private readonly snackBar: MatSnackBar
-  ) {
+  private readonly fb = inject(FormBuilder);
+  private readonly userService = inject(UserService);
+  private readonly snackBar = inject(MatSnackBar);
+
+  constructor() {
     this.passwordForm = this.fb.group({
       newPassword: ['', [Validators.required]],
       confirmPassword: ['', Validators.required],

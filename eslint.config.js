@@ -38,8 +38,6 @@ module.exports = (async () => {
             style: 'kebab-case',
           },
         ],
-        // ⚠️ Temporarily set to "warn" to unblock CI
-        // TODO: 👷🏼 Fix all occurrences category by category, then restore the "error" value
         '@angular-eslint/prefer-inject': 'error',
         'unicorn/filename-case': [
           'error',

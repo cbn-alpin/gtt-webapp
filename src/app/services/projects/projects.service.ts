@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -10,20 +10,9 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ProjectsService {
-  baseUrl = environment.apiUrl;
+  private readonly baseUrl = environment.apiUrl;
 
-  private getHttpOptions() {
-    const token = localStorage.getItem('access_token');
-
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      }),
-    };
-  }
-
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getAllProjects(): Observable<any> {
     const url = `${this.baseUrl}/projects`;
@@ -58,5 +47,16 @@ export class ProjectsService {
   getGefiprojAllProjects(): Observable<any> {
     const url = `${this.baseUrl}/projects/gefiproj`;
     return this.http.get(url, this.getHttpOptions());
+  }
+
+  private getHttpOptions() {
+    const token = localStorage.getItem('access_token');
+
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }),
+    };
   }
 }

@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  inject,
   Input,
   OnChanges,
   OnInit,
@@ -31,23 +32,23 @@ export class ListMissionExpenseComponent implements OnChanges, OnInit {
   id_travel?: number;
   pendingExpenses: any[] = [];
 
-  ngOnInit(): void {
-    this.shareDataService.newTravelId$.subscribe((id) => {
-      this.id_travel = id;
-    });
-  }
+  private readonly dialog = inject(MatDialog);
+  private readonly shareDataService = inject(ShareDataService);
+  private readonly expenseService = inject(ExpensesService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly cdr = inject(ChangeDetectorRef);
 
-  constructor(
-    private dialog: MatDialog,
-    private shareDataService: ShareDataService,
-    private expenseService: ExpensesService,
-    private readonly snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
-  ) {
+  constructor() {
     this.shareDataService.travelExpenseValidated$.subscribe(() => {
       this.sendAllExpensesToAPI();
     });
     this.id_travel = Number(localStorage.getItem('id_travel'));
+  }
+
+  ngOnInit(): void {
+    this.shareDataService.newTravelId$.subscribe((id) => {
+      this.id_travel = id;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

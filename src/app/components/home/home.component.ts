@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 
 import { AuthService } from 'src/app/core/auth/auth.service';
 
@@ -19,6 +19,8 @@ export class HomeComponent implements OnInit {
   switched_user_name: any = '';
   isAdmin = false;
 
+  private readonly authService = inject(AuthService);
+
   ngOnInit() {
     this.currentTitle = localStorage.getItem('newTitle') || '';
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
@@ -27,8 +29,6 @@ export class HomeComponent implements OnInit {
     this.userImage = localStorage.getItem('user_photo') || 'assets/images/default_profil.png'; // Default image if no image
     this.switched_user_name = localStorage.getItem('switched_user_name');
   }
-
-  constructor(private authService: AuthService) {}
 
   updateTitle(newTitle: string) {
     this.currentTitle = newTitle;

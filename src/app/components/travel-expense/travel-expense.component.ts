@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { map, Observable, startWith, switchMap, tap } from 'rxjs';
+import { Observable, startWith, switchMap } from 'rxjs';
 
 import moment from 'moment';
 
@@ -34,15 +34,15 @@ export class TravelExpenseComponent implements OnInit {
   savedProjectCode: any;
   list_mission_expenses: any[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private municipalityService: MunicipalityService,
-    private readonly projectService: ProjectsService,
-    private expenseService: ExpensesService,
-    private readonly snackBar: MatSnackBar,
-    private router: Router,
-    private shareDataService: ShareDataService
-  ) {
+  private readonly fb = inject(FormBuilder);
+  private readonly municipalityService = inject(MunicipalityService);
+  private readonly projectService = inject(ProjectsService);
+  private readonly expenseService = inject(ExpensesService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly router = inject(Router);
+  private readonly shareDataService = inject(ShareDataService);
+
+  constructor() {
     this.expenseForm = this.fb.group({
       projectCode: ['', Validators.required],
       projectName: [''],
@@ -162,84 +162,6 @@ export class TravelExpenseComponent implements OnInit {
     }
   }
 
-  /**
-   * Mappe les données du formulaire en un objet `travelData`
-   */
-  private mapFormDataToTravelData(formData: any): any {
-    return {
-      start_date: this.formatDate(formData.startDate, formData.startTime),
-      end_date: this.formatDate(formData.endDate, formData.endTime),
-      start_place: formData.startResidence,
-      return_place: formData.endResidence,
-      status: 'A Traiter',
-      purpose: formData.purpose,
-      start_municipality: `${formData.startMunicipality.nom} (${formData.startMunicipality.codesPostaux[0]})`,
-      end_municipality: `${formData.returnMunicipality.nom} (${formData.returnMunicipality.codesPostaux[0]})`,
-      destination: `${formData.destinationMunicipality.nom} (${formData.destinationMunicipality.codesPostaux[0]})`,
-      night_municipality: `${formData.nightMunicipality.nom} (${formData.nightMunicipality.codesPostaux[0]})`,
-      night_count: formData.nightCount || 0,
-      meal_count: formData.mealCount || 0,
-      comment: formData.comments,
-      license_vehicle: formData.vehicleLicense,
-      comment_vehicle: formData.vehicleComment,
-      start_km: formData.startKm || 0,
-      end_km: formData.endKm || 0,
-    };
-  }
-
-  /**
-   * Update an existing travel expense
-   */
-  private updateTravelExpense(userId: number, travelData: any): void {
-    travelData.status = history.state.travelData.status;
-    this.shareDataService.sendTravelId(this.travelId);
-
-    this.expenseService.updateUserTravelExpense(this.travelId, userId, travelData).subscribe({
-      next: () => {
-        this.shareDataService.validateTravelExpense();
-        // Check if mission expenses are added
-        this.shareDataService.missionExpensesProcessed$.subscribe((success) => {
-          this.showToast(`Frais de déplacement mis à jour avec succès. 🎉`);
-        });
-
-        this.router.navigate(['accueil/liste-frais-de-deplacement/']);
-      },
-      error: () => {
-        (this.showToast(`Erreur lors de mise à jour du frais de déplacement.`, true),
-          (this.isSubmitting = false));
-      },
-    });
-  }
-
-  /**
-   * Create a new travel expense
-   */
-  private createTravelExpense(userId: number, travelData: any): void {
-    this.expenseService.createTravelExpense(userId, this.projectId, travelData).subscribe({
-      next: (travelexpense) => {
-        this.shareDataService.sendTravelId(travelexpense.travel_id);
-        this.shareDataService.validateTravelExpense();
-
-        // Check if mission expenses are added
-        this.shareDataService.missionExpensesProcessed$.subscribe((success) => {
-          this.showToast(
-            success
-              ? 'Frais de déplacement créé avec succès.'
-              : `Frais de déplacement créé, mais aucun frais de mission ajouté.`
-          );
-        });
-
-        // Redirection after creation
-        this.router.navigate(['accueil/liste-frais-de-deplacement/']);
-      },
-      error: (error) => {
-        console.log('Erreur lors de la création du frais de déplacement.', error);
-        this.showToast(`Erreur lors de la création du frais de déplacement.`, true);
-        this.isSubmitting = false;
-      },
-    });
-  }
-
   formatDate(date: string, timeString?: string): string {
     if (!date) return '';
 
@@ -351,6 +273,76 @@ export class TravelExpenseComponent implements OnInit {
       panelClass: isError ? 'error-toast' : 'success-toast',
       verticalPosition: 'top',
       horizontalPosition: 'center',
+    });
+  }
+
+  private mapFormDataToTravelData(formData: any): any {
+    return {
+      start_date: this.formatDate(formData.startDate, formData.startTime),
+      end_date: this.formatDate(formData.endDate, formData.endTime),
+      start_place: formData.startResidence,
+      return_place: formData.endResidence,
+      status: 'A Traiter',
+      purpose: formData.purpose,
+      start_municipality: `${formData.startMunicipality.nom} (${formData.startMunicipality.codesPostaux[0]})`,
+      end_municipality: `${formData.returnMunicipality.nom} (${formData.returnMunicipality.codesPostaux[0]})`,
+      destination: `${formData.destinationMunicipality.nom} (${formData.destinationMunicipality.codesPostaux[0]})`,
+      night_municipality: `${formData.nightMunicipality.nom} (${formData.nightMunicipality.codesPostaux[0]})`,
+      night_count: formData.nightCount || 0,
+      meal_count: formData.mealCount || 0,
+      comment: formData.comments,
+      license_vehicle: formData.vehicleLicense,
+      comment_vehicle: formData.vehicleComment,
+      start_km: formData.startKm || 0,
+      end_km: formData.endKm || 0,
+    };
+  }
+
+  private updateTravelExpense(userId: number, travelData: any): void {
+    travelData.status = history.state.travelData.status;
+    this.shareDataService.sendTravelId(this.travelId);
+
+    this.expenseService.updateUserTravelExpense(this.travelId, userId, travelData).subscribe({
+      next: () => {
+        this.shareDataService.validateTravelExpense();
+        // Check if mission expenses are added
+        this.shareDataService.missionExpensesProcessed$.subscribe(() => {
+          this.showToast(`Frais de déplacement mis à jour avec succès. 🎉`);
+        });
+
+        this.router.navigate(['accueil/liste-frais-de-deplacement/']);
+      },
+      error: (error) => {
+        console.log('Erreur lors de la mise à jour du frais de déplacement.', error);
+        this.showToast(`Erreur lors de mise à jour du frais de déplacement.`, true);
+        this.isSubmitting = false;
+      },
+    });
+  }
+
+  private createTravelExpense(userId: number, travelData: any): void {
+    this.expenseService.createTravelExpense(userId, this.projectId, travelData).subscribe({
+      next: (travelexpense) => {
+        this.shareDataService.sendTravelId(travelexpense.travel_id);
+        this.shareDataService.validateTravelExpense();
+
+        // Check if mission expenses are added
+        this.shareDataService.missionExpensesProcessed$.subscribe((success) => {
+          this.showToast(
+            success
+              ? 'Frais de déplacement créé avec succès.'
+              : `Frais de déplacement créé, mais aucun frais de mission ajouté.`
+          );
+        });
+
+        // Redirection after creation
+        this.router.navigate(['accueil/liste-frais-de-deplacement/']);
+      },
+      error: (error) => {
+        console.log('Erreur lors de la création du frais de déplacement.', error);
+        this.showToast(`Erreur lors de la création du frais de déplacement.`, true);
+        this.isSubmitting = false;
+      },
     });
   }
 }

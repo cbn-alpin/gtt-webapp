@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
@@ -15,26 +15,25 @@ export class MissionExpenseComponent implements OnInit {
   id_travel?: number;
   isEditMode = false;
 
+  private readonly fb = inject(FormBuilder);
+  private readonly dialogRef = inject(MatDialogRef<MissionExpenseComponent>);
+  readonly data = inject<{ id_travel: number; expense?: any }>(MAT_DIALOG_DATA);
+  private readonly shareDataService = inject(ShareDataService);
+
+  constructor() {
+    this.missionForm = this.fb.group({
+      name: [this.data.expense ? this.data.expense.name : ''],
+      comment: [this.data.expense ? this.data.expense.comment : ''],
+      amount: [this.data.expense ? this.data.expense.amount : ''],
+    });
+    this.isEditMode = !!this.data.expense;
+  }
+
   ngOnInit(): void {
     this.shareDataService.newTravelId$.subscribe((id) => {
       this.id_travel = id;
     });
   }
-
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly dialogRef: MatDialogRef<MissionExpenseComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id_travel: number; expense?: any },
-    private shareDataService: ShareDataService
-  ) {
-    this.missionForm = this.fb.group({
-      name: [data.expense ? data.expense.name : ''],
-      comment: [data.expense ? data.expense.comment : ''],
-      amount: [data.expense ? data.expense.amount : ''],
-    });
-    this.isEditMode = !!this.data.expense;
-  }
-
   onClose(): void {
     this.dialogRef.close();
   }

@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,28 +17,29 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
   styleUrls: ['./project-actions.component.scss'],
 })
 export class ProjectActionsComponent implements OnInit {
+  @Input() id_project!: number;
+
+  private _list_action: Action[] = [];
+
   displayedColumns: string[] = ['numAction', 'name', 'description', 'actions'];
   dataSource = new MatTableDataSource<Action>([]);
   selection = new SelectionModel<Action>(true, []);
   isAdmin = false;
 
-  constructor(
-    private readonly dialog: MatDialog,
-    private projectService: ProjectsService,
-    private readonly snackBar: MatSnackBar,
-    private readonly projectActionsService: ProjectActionsService,
-    private readonly userActionService: UserActionService
-  ) {
-    this.isAdmin = localStorage.getItem('is_admin') === 'true';
-  }
-
-  @Input() id_project!: number;
-  private _list_action: Action[] = [];
+  private readonly dialog = inject(MatDialog);
+  private readonly projectService = inject(ProjectsService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly projectActionsService = inject(ProjectActionsService);
+  private readonly userActionService = inject(UserActionService);
 
   @Input()
   set list_action(actions: Action[]) {
     this._list_action = actions || [];
     this.dataSource.data = this._list_action;
+  }
+
+  constructor() {
+    this.isAdmin = localStorage.getItem('is_admin') === 'true';
   }
 
   ngOnInit(): void {
@@ -198,6 +199,15 @@ export class ProjectActionsComponent implements OnInit {
     });
   }
 
+  showToast(message: string, isError = false) {
+    this.snackBar.open(message, '', {
+      duration: 5000,
+      panelClass: isError ? 'error-toast' : 'success-toast',
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
+    });
+  }
+
   // Add this function for sorting hierarchical format numbers (1.2.3.3)
   private naturalSort(list: Action[]): Action[] {
     return [...list].sort((a, b) => {
@@ -220,15 +230,6 @@ export class ProjectActionsComponent implements OnInit {
 
       // If all segments are equal up to this point, the shortest comes first
       return segmentsA.length - segmentsB.length;
-    });
-  }
-
-  showToast(message: string, isError = false) {
-    this.snackBar.open(message, '', {
-      duration: 5000,
-      panelClass: isError ? 'error-toast' : 'success-toast',
-      verticalPosition: 'top',
-      horizontalPosition: 'center',
     });
   }
 }

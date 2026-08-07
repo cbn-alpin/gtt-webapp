@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -9,20 +9,9 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ExpensesService {
-  baseUrl = environment.apiUrl;
+  private readonly baseUrl = environment.apiUrl;
 
-  private getHttpOptions() {
-    const token = localStorage.getItem('access_token');
-
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      }),
-    };
-  }
-
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   createTravelExpense(userId: number, project_id: number, travelData: any): Observable<any> {
     const url = `${this.baseUrl}/user/${userId}/project/${project_id}/travels/`;
@@ -57,5 +46,16 @@ export class ExpensesService {
   deleteMissionExpense(user_id: number, expense_id: number): Observable<any> {
     const url = `${this.baseUrl}/expenses/${expense_id}/user/${user_id}`;
     return this.http.delete(url, this.getHttpOptions());
+  }
+
+  private getHttpOptions() {
+    const token = localStorage.getItem('access_token');
+
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }),
+    };
   }
 }

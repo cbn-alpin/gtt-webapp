@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -33,11 +33,11 @@ export class ListProjectsComponent implements OnInit, AfterViewInit {
   isError = false;
   showArchived = false;
 
-  constructor(
-    private readonly dialog: MatDialog,
-    private projectService: ProjectsService,
-    private readonly snackBar: MatSnackBar
-  ) {
+  private readonly dialog = inject(MatDialog);
+  private readonly projectService = inject(ProjectsService);
+  private readonly snackBar = inject(MatSnackBar);
+
+  constructor() {
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
   }
 

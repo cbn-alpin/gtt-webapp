@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -7,5 +7,5 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./popup-message.component.scss'],
 })
 export class PopupMessageComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { title: string; message: string }) {}
+  readonly data = inject<{ title: string; message: string }>(MAT_DIALOG_DATA);
 }

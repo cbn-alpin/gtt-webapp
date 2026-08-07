@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -9,19 +9,9 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class TimeSheetService {
-  constructor(private http: HttpClient) {}
-  private apiUrl = environment.apiUrl;
+  private readonly apiUrl = environment.apiUrl;
 
-  private getHttpOptions() {
-    const token = localStorage.getItem('access_token');
-
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      }),
-    };
-  }
+  private readonly http = inject(HttpClient);
 
   getUserProjects(userId: string, dateStart: string, dateEnd: string): Observable<any[]> {
     const url = `${this.apiUrl}/user/${userId}/projects/times?date_start=${dateStart}&date_end=${dateEnd}`;
@@ -38,5 +28,16 @@ export class TimeSheetService {
     };
 
     return this.http.post<any>(url, body, this.getHttpOptions());
+  }
+
+  private getHttpOptions() {
+    const token = localStorage.getItem('access_token');
+
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }),
+    };
   }
 }

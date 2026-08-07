@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -9,7 +9,19 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class UserActionService {
-  baseUrl = environment.apiUrl;
+  private readonly baseUrl = environment.apiUrl;
+
+  private readonly http = inject(HttpClient);
+
+  createUserAction(user_id: number, action_id: number): Observable<any> {
+    const url = `${this.baseUrl}/user/${user_id}/action/${action_id}`;
+    return this.http.post(url, {}, this.getHttpOptions());
+  }
+
+  deleteUserAction(user_id: number, action_id: number): Observable<any> {
+    const url = `${this.baseUrl}/user/${user_id}/action/${action_id}`;
+    return this.http.delete(url, this.getHttpOptions());
+  }
 
   private getHttpOptions() {
     const token = localStorage.getItem('access_token');
@@ -20,17 +32,5 @@ export class UserActionService {
         Authorization: `Bearer ${token}`,
       }),
     };
-  }
-
-  constructor(private http: HttpClient) {}
-
-  createUserAction(user_id: number, action_id: number): Observable<any> {
-    const url = `${this.baseUrl}/user/${user_id}/action/${action_id}`;
-    return this.http.post(url, {}, this.getHttpOptions());
-  }
-
-  deleteUserAction(user_id: number, action_id: number): Observable<any> {
-    const url = `${this.baseUrl}/user/${user_id}/action/${action_id}`;
-    return this.http.delete(url, this.getHttpOptions());
   }
 }

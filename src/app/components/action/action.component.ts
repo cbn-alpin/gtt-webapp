@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,16 +17,16 @@ export class ActionComponent implements OnInit {
   isSubmitting = false;
   isEditMode = false;
 
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly projectActionsService: ProjectActionsService,
-    private readonly dialogRef: MatDialogRef<ActionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id_project: number; action?: any },
-    private readonly snackBar: MatSnackBar
-  ) {
-    this.id_project = data.id_project;
-    this.isEditMode = !!data.action;
-    this.id_action = data.action?.id_action;
+  private readonly fb = inject(FormBuilder);
+  private readonly projectActionsService = inject(ProjectActionsService);
+  private readonly dialogRef = inject(MatDialogRef<ActionComponent>);
+  readonly data = inject<{ id_project: number; action?: any }>(MAT_DIALOG_DATA);
+  private readonly snackBar = inject(MatSnackBar);
+
+  constructor() {
+    this.id_project = this.data.id_project;
+    this.isEditMode = !!this.data.action;
+    this.id_action = this.data.action?.id_action;
     this.actionForm = this.fb.group({
       actionNum: ['', Validators.required],
       name: ['', Validators.required],

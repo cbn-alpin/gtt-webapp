@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -6,11 +6,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 
-import { TravelExpense } from 'src/app/models/travel-expense.model';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { ShareDataService } from 'src/app/services/share-data/share-data.service';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
-import { TravelExpenseComponent } from '../travel-expense/travel-expense.component';
 
 @Component({
   selector: 'app-list-travel-expense',
@@ -29,13 +27,13 @@ export class ListTravelExpenseComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(
-    private readonly dialog: MatDialog,
-    private readonly snackBar: MatSnackBar,
-    private router: Router,
-    private readonly expensesService: ExpensesService,
-    private shareDataService: ShareDataService
-  ) {
+  private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly router = inject(Router);
+  private readonly expensesService = inject(ExpensesService);
+  private readonly shareDataService = inject(ShareDataService);
+
+  constructor() {
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
     this.userId = Number(localStorage.getItem('id_user'));
   }

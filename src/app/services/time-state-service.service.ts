@@ -2,15 +2,30 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { CalendarService } from './calendar.service';
-
 @Injectable({
   providedIn: 'root',
 })
 export class TimeStateService {
-  public selectedDate = new BehaviorSubject<Date>(new Date());
+  selectedDate = new BehaviorSubject<Date>(new Date());
 
-  constructor(private calendarService: CalendarService) {}
+  // Get the current week
+  get currentWeek() {
+    const startOfWeek = this.getStartOfWeek(this.selectedDate.value);
+    const days = [];
+
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(startOfWeek);
+
+      day.setDate(startOfWeek.getDate() + i);
+      days.push({
+        date: day,
+        name: this.getDayName(day),
+        isWeekend: day.getDay() === 0 || day.getDay() === 6,
+        isToday: this.isToday(day),
+      });
+    }
+    return days;
+  }
 
   // Observable to provide the selected date
   selectedDateSignal() {
@@ -44,25 +59,6 @@ export class TimeStateService {
     nextWeek.setDate(currentDate.getDate() + 7);
     this.updateSelectedDate(nextWeek);
     return nextWeek;
-  }
-
-  // Get the current week
-  get currentWeek() {
-    const startOfWeek = this.getStartOfWeek(this.selectedDate.value);
-    const days = [];
-
-    for (let i = 0; i < 7; i++) {
-      const day = new Date(startOfWeek);
-
-      day.setDate(startOfWeek.getDate() + i);
-      days.push({
-        date: day,
-        name: this.getDayName(day),
-        isWeekend: day.getDay() === 0 || day.getDay() === 6,
-        isToday: this.isToday(day),
-      });
-    }
-    return days;
   }
 
   // Helper function to get the name of the day

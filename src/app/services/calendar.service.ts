@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { DateTime, Info, Interval } from 'luxon';
 export class CalendarService {
   holidays: Record<string, string> = {};
 
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   today(): DateTime {
     return DateTime.local();

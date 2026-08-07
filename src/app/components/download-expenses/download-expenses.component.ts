@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -34,13 +34,13 @@ export class DownloadExpensesComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(
-    private userService: UserService,
-    private downloadServivce: DownloadService,
-    private readonly expensesService: ExpensesService,
-    private readonly snackBar: MatSnackBar,
-    private shareDateService: ShareDataService
-  ) {
+  private readonly userService = inject(UserService);
+  private readonly downloadServivce = inject(DownloadService);
+  private readonly expensesService = inject(ExpensesService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly shareDateService = inject(ShareDataService);
+
+  constructor() {
     this.userId = Number(localStorage.getItem('id_user'));
   }
 

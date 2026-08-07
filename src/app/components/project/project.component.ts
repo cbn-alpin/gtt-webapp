@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -6,7 +6,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, Observable, startWith } from 'rxjs';
 
 import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { ShareDataService } from 'src/app/services/share-data/share-data.service';
 
 @Component({
   selector: 'app-project',
@@ -24,15 +23,14 @@ export class ProjectComponent implements OnInit {
   manuallyEditingProjectName = false;
   manuallyEditingCode = false;
 
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly dialogRef: MatDialogRef<ProjectComponent>,
-    private readonly projectService: ProjectsService,
-    private readonly snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private shareDateService: ShareDataService,
-    private cdRef: ChangeDetectorRef
-  ) {
+  private readonly fb = inject(FormBuilder);
+  private readonly dialogRef = inject(MatDialogRef<ProjectComponent>);
+  private readonly projectService = inject(ProjectsService);
+  private readonly snackBar = inject(MatSnackBar);
+  readonly data = inject<any>(MAT_DIALOG_DATA);
+  private readonly cdRef = inject(ChangeDetectorRef);
+
+  constructor() {
     this.projectForm = this.fb.group(
       {
         code: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],

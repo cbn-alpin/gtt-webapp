@@ -10,8 +10,18 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class UserService {
-  baseUrl = environment.apiUrl;
-  private http = inject(HttpClient);
+  private readonly baseUrl = environment.apiUrl;
+  private readonly http = inject(HttpClient);
+
+  getAllUsers(): Observable<Partial<UserInfos>[]> {
+    const url = `${this.baseUrl}/users`;
+    return this.http.get<Partial<UserInfos>[]>(url, this.getHttpOptions());
+  }
+
+  updateUserById(userId: number, userData: Partial<UserInfos>): Observable<UserInfos> {
+    const url = `${this.baseUrl}/users/${userId}`;
+    return this.http.put<UserInfos>(url, userData, this.getHttpOptions());
+  }
 
   private getHttpOptions() {
     const token = localStorage.getItem('access_token');
@@ -22,15 +32,5 @@ export class UserService {
         Authorization: `Bearer ${token}`,
       }),
     };
-  }
-
-  getAllUsers(): Observable<Partial<UserInfos>[]> {
-    const url = `${this.baseUrl}/users`;
-    return this.http.get<Partial<UserInfos>[]>(url, this.getHttpOptions());
-  }
-
-  updateUserById(userId: number, userData: Partial<UserInfos>): Observable<UserInfos> {
-    const url = `${this.baseUrl}/users/${userId}`;
-    return this.http.put<UserInfos>(url, userData, this.getHttpOptions());
   }
 }
