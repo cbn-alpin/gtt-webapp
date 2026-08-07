@@ -27,7 +27,7 @@
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss",
-              "src/app/components/common/common-styles.scss"
+              "src/app/shared/styles/common-styles.scss"
             ],
             "scripts": []
           },

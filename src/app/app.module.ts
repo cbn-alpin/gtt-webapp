@@ -34,28 +34,28 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ActionComponent } from './components/action/action.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
-import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
-import { ConnectionPageComponent } from './components/connection-page/connection-page.component';
-import { DownloadExpensesComponent } from './components/download-expenses/download-expenses.component';
-import { DownloadPageComponent } from './components/download-page/download-page.component';
-import { DownloadProjectsComponent } from './components/download-projects/download-projects.component';
-import { HomeComponent } from './components/home/home.component';
-import { ListMissionExpenseComponent } from './components/list-mission-expense/list-mission-expense.component';
-import { ListProjectsComponent } from './components/list-projects/list-projects.component';
-import { ListTravelExpenseComponent } from './components/list-travel-expense/list-travel-expense.component';
-import { ListUsersComponent } from './components/list-users/list-users.component';
-import { MissionExpenseComponent } from './components/mission-expense/mission-expense.component';
-import { ModifyPasswordComponent } from './components/modify-password/modify-password.component';
-import { ProjectActionsComponent } from './components/project-actions/project-actions.component';
-import { ProjectComponent } from './components/project/project.component';
-import { TimeSheetComponent } from './components/time-sheet/time-sheet.component';
-import { TravelExpenseComponent } from './components/travel-expense/travel-expense.component';
 import { AuthInterceptor } from './core/auth/auth.interceptor';
 import { FRENCH_DATE_FORMATS } from './core/config/date-formats';
 import { FrenchPaginatorIntl } from './core/config/french-paginator-intl';
-import { PopupMessageComponent } from './popup-message/popup-message.component';
+import { ConnectionPageComponent } from './pages/connection-page/connection-page.component';
+import { DownloadExpensesComponent } from './pages/download-page/download-expenses/download-expenses.component';
+import { DownloadPageComponent } from './pages/download-page/download-page.component';
+import { DownloadProjectsComponent } from './pages/download-page/download-projects/download-projects.component';
+import { HomeComponent } from './pages/home/home.component';
+import { ListUsersComponent } from './pages/home/list-users/list-users.component';
+import { ModifyPasswordComponent } from './pages/home/modify-password/modify-password.component';
+import { ListProjectsComponent } from './pages/list-projects/list-projects.component';
+import { ActionComponent } from './pages/list-projects/project-actions/action/action.component';
+import { ProjectActionsComponent } from './pages/list-projects/project-actions/project-actions.component';
+import { ProjectComponent } from './pages/list-projects/project/project.component';
+import { ListTravelExpenseComponent } from './pages/list-travel-expense/list-travel-expense.component';
+import { CalendarComponent } from './pages/time-sheet/calendar/calendar.component';
+import { PopupMessageComponent } from './pages/time-sheet/calendar/popup-message/popup-message.component';
+import { TimeSheetComponent } from './pages/time-sheet/time-sheet.component';
+import { ListMissionExpenseComponent } from './pages/travel-expense/list-mission-expense/list-mission-expense.component';
+import { MissionExpenseComponent } from './pages/travel-expense/list-mission-expense/mission-expense/mission-expense.component';
+import { TravelExpenseComponent } from './pages/travel-expense/travel-expense.component';
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [

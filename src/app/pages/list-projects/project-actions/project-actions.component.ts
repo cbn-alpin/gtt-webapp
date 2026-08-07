@@ -8,8 +8,8 @@ import { Action } from 'src/app/models/action.model';
 import { ProjectActionsService } from 'src/app/services/project-actions/project-actions.service';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
 import { UserActionService } from 'src/app/services/user-action/user-action.service';
-import { ActionComponent } from '../action/action.component';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import { ActionComponent } from './action/action.component';
 
 @Component({
   selector: 'app-project-actions',

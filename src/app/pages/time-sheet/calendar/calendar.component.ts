@@ -15,10 +15,10 @@ import { BehaviorSubject } from 'rxjs';
 
 import { DateTime, Info, Interval } from 'luxon';
 
-import { PopupMessageComponent } from 'src/app/popup-message/popup-message.component';
 import { CalendarService } from 'src/app/services/calendar.service';
 import { TimeSheetService } from 'src/app/services/time-sheet.service';
 import { TimeStateService } from 'src/app/services/time-state-service.service';
+import { PopupMessageComponent } from './popup-message/popup-message.component';
 
 @Component({
   selector: 'app-calendar',

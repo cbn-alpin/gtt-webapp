@@ -8,8 +8,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { Project } from 'src/app/models/project.model';
 import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
-import { ProjectComponent } from '../project/project.component';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { ProjectComponent } from './project/project.component';
 
 @Component({
   selector: 'app-list-projects',

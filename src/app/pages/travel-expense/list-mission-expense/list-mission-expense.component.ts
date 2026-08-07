@@ -16,8 +16,8 @@ import { forkJoin } from 'rxjs';
 import { MissionExpense } from 'src/app/models/mission-expense.model';
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { ShareDataService } from 'src/app/services/share-data/share-data.service';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
-import { MissionExpenseComponent } from '../mission-expense/mission-expense.component';
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import { MissionExpenseComponent } from './mission-expense/mission-expense.component';
 
 @Component({
   selector: 'app-list-mission-expense',

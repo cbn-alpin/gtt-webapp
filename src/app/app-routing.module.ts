@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { ConnectionPageComponent } from './components/connection-page/connection-page.component';
-import { DownloadPageComponent } from './components/download-page/download-page.component';
-import { HomeComponent } from './components/home/home.component';
-import { ListProjectsComponent } from './components/list-projects/list-projects.component';
-import { ListTravelExpenseComponent } from './components/list-travel-expense/list-travel-expense.component';
-import { TimeSheetComponent } from './components/time-sheet/time-sheet.component';
-import { TravelExpenseComponent } from './components/travel-expense/travel-expense.component';
 import { authGuard } from './core/auth/auth.guard';
+import { ConnectionPageComponent } from './pages/connection-page/connection-page.component';
+import { DownloadPageComponent } from './pages/download-page/download-page.component';
+import { HomeComponent } from './pages/home/home.component';
+import { ListProjectsComponent } from './pages/list-projects/list-projects.component';
+import { ListTravelExpenseComponent } from './pages/list-travel-expense/list-travel-expense.component';
+import { TimeSheetComponent } from './pages/time-sheet/time-sheet.component';
+import { TravelExpenseComponent } from './pages/travel-expense/travel-expense.component';
 
 const routes: Routes = [
   { path: 'connexion', component: ConnectionPageComponent },

@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 
 import { ExpensesService } from 'src/app/services/expenses/expenses.service';
 import { ShareDataService } from 'src/app/services/share-data/share-data.service';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-list-travel-expense',
