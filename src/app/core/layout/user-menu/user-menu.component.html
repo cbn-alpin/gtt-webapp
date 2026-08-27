@@ -1,0 +1,90 @@
+<div class="user-infos">
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="beforeMenu"
+    class="user-button"
+  >
+    <mat-icon class="user-icon">person</mat-icon>
+  </button>
+
+  <mat-menu
+    #beforeMenu="matMenu"
+    [overlapTrigger]="false"
+  >
+    <ng-container *ngIf="!showUsers && !showPasswordChange">
+      <div class="user-profile">
+        <img
+          [src]="userImage"
+          (error)="setDefaultImage()"
+          class="user-avatar-large"
+          alt="User profile image"
+        />
+        <p class="user-name">{{ userName }}</p>
+        <p
+          class="user-name"
+          *ngIf="isAdminChangedAccount"
+        >
+          Connecté comme : {{ switched_user_name }}
+        </p>
+      </div>
+      <mat-divider></mat-divider>
+      <button
+        mat-menu-item
+        (click)="togglePasswordChange($event)"
+      >
+        <mat-icon class="menu-icon">settings</mat-icon>
+        Modifier le mot de passe
+      </button>
+      <mat-divider></mat-divider>
+      <button
+        mat-menu-item
+        *ngIf="isAdmin"
+        (click)="toggleUserList($event)"
+      >
+        <mat-icon class="menu-icon">sync</mat-icon>
+        Changer d'agent
+      </button>
+      <mat-divider></mat-divider>
+      <button
+        mat-menu-item
+        (click)="logout()"
+      >
+        <mat-icon class="menu-icon">exit_to_app</mat-icon>
+        Déconnexion
+      </button>
+    </ng-container>
+
+    <ng-container *ngIf="showPasswordChange">
+      <div class="password-container">
+        <button
+          mat-icon-button
+          (click)="togglePasswordChange($event)"
+        >
+          <mat-icon class="menu-icon">chevron_left</mat-icon>
+        </button>
+        <mat-divider></mat-divider>
+        <app-password-change (passwordUpdated)="togglePasswordChange($event)"></app-password-change>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="showUsers">
+      <div
+        class="list-users-container"
+        (click)="$event.stopPropagation()"
+        tabindex="0"
+        role="button"
+        (keydown.enter)="$event.stopPropagation()"
+        (keydown.space)="$event.stopPropagation()"
+      >
+        <mat-icon
+          class="menu-icon"
+          (click)="toggleUserList($event)"
+        >
+          chevron_left
+        </mat-icon>
+        <mat-divider></mat-divider>
+        <app-user-list></app-user-list>
+      </div>
+    </ng-container>
+  </mat-menu>
+</div>

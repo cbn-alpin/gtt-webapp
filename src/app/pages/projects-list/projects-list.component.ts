@@ -1,0 +1,211 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+
+import { Project } from 'src/app/core/models/project.model';
+import { ProjectsService } from 'src/app/core/services/projects/projects.service';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { ProjectComponent } from './project/project.component';
+
+@Component({
+  selector: 'app-projects-list',
+  templateUrl: './projects-list.component.html',
+  styleUrls: ['./projects-list.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
+})
+export class ProjectsListComponent implements OnInit, AfterViewInit {
+  isAdmin = false;
+  displayedColumns: string[] = ['code', 'name', 'startDate', 'endDate'];
+  columnsToDisplayWithExpand = [...this.displayedColumns, 'actions'];
+  dataSource = new MatTableDataSource<Project>([]);
+  expandedElement: Project | null = null;
+  isLoadingResults = false;
+  isError = false;
+  showArchived = false;
+
+  private readonly dialog = inject(MatDialog);
+  private readonly projectService = inject(ProjectsService);
+  private readonly snackBar = inject(MatSnackBar);
+
+  constructor() {
+    this.isAdmin = localStorage.getItem('is_admin') === 'true';
+  }
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  ngOnInit(): void {
+    this.fetchProjects();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  fetchProjects(): void {
+    this.isLoadingResults = true;
+    this.isError = false;
+    this.expandedElement = null;
+
+    this.projectService.getAllProjects().subscribe({
+      next: (projects) => {
+        setTimeout(() => {
+          const filteredProjects = projects
+            .filter((p: Project) => p.is_archived === this.showArchived && p.id_project !== 0)
+            .sort((a: Project, b: Project) => {
+              const codeA = Number(a.code) || 0;
+              const codeB = Number(b.code) || 0;
+              return codeB - codeA;
+            });
+
+          this.dataSource.data = filteredProjects;
+          this.isLoadingResults = false;
+
+          setTimeout(() => {
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          }, 100);
+        }, 1000);
+      },
+      error: () => {
+        this.isLoadingResults = false;
+        this.isError = true;
+      },
+    });
+
+    this.dataSource.sortingDataAccessor = (item: any, property: string) => {
+      switch (property) {
+        case 'code':
+          return Number(item.code) || 0;
+        case 'name':
+          return item.name?.toLowerCase().trim() || '';
+        case 'startDate':
+          return new Date(this.formatDateForForm(item.start_date)).getTime();
+        case 'endDate':
+          return new Date(this.formatDateForForm(item.end_date)).getTime();
+        default:
+          return (item as any)[property];
+      }
+    };
+  }
+
+  deleteProjectById(action: string, projectId: number): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      disableClose: true,
+      width: '300px',
+      data: { message: `${action}?` },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.projectService.deleteProjectById(projectId).subscribe({
+          next: () => {
+            this.fetchProjects();
+            this.showToast(`Projet supprimé avec succès ✅`);
+          },
+          error: (error) => {
+            this.showToast(`Erreur : ${error.error.message || 'Suppression impossible'} ❌`, true);
+          },
+        });
+      }
+    });
+  }
+
+  createProject() {
+    const dialogRef = this.dialog.open(ProjectComponent, { disableClose: true });
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.fetchProjects();
+      }
+    });
+  }
+
+  archiveOrUnArchiveProject(action: string, project: Project, is_archived: boolean): void {
+    const successMessage = is_archived
+      ? `Projet "${project.name}" archivé avec succès 🎉`
+      : `Projet "${project.name}" désarchivé avec succès ✅`;
+
+    const errorMessage = is_archived
+      ? `Erreur : Impossible d'archiver le projet "${project.name}" ❌`
+      : `Erreur : Impossible de désarchiver le projet "${project.name}" ❌`;
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      disableClose: true,
+      width: '300px',
+      data: { message: `${action}?` },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        // Remove list_action from project and keep the rest in projectData
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { list_action, ...projectData } = project;
+
+        const updatedProject = {
+          ...projectData,
+          is_archived: is_archived,
+        };
+
+        this.projectService.updateProjectById(project.id_project, updatedProject).subscribe({
+          next: () => {
+            this.showToast(successMessage, false);
+            this.fetchProjects();
+          },
+          error: (error) => {
+            console.log(error);
+            this.showToast(errorMessage, true);
+          },
+        });
+      }
+    });
+  }
+
+  toggleArchived(): void {
+    this.showArchived = !this.showArchived;
+    this.fetchProjects();
+  }
+
+  editProject(project: Project) {
+    const dialogRef = this.dialog.open(ProjectComponent, {
+      disableClose: true,
+      data: { project },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.fetchProjects();
+      }
+    });
+  }
+
+  formatDateForForm(dateStr: string): string {
+    if (!dateStr) return '';
+    const [day, month, year] = dateStr.split('/'); // "dd/MM/yyyy"
+    return `${year}-${month}-${day}`; // "yyyy-MM-dd"
+  }
+
+  showToast(message: string, isError = false) {
+    this.snackBar.open(message, '', {
+      duration: 5000,
+      panelClass: isError ? 'error-toast' : 'success-toast',
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
+    });
+  }
+}

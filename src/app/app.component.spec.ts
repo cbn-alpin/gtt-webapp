@@ -17,12 +17,6 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'gtt-webapp'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('gtt-webapp');
-  });
-
   it('should contain a router-outlet element', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();

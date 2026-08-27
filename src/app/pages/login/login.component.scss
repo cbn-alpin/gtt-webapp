@@ -1,0 +1,124 @@
+@use '../../shared/styles/variables' as vars;
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #ffffff;
+}
+
+.login-box {
+  background-color: #ffffff;
+  border-radius: 70px;
+  padding: 20px 40px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 400px;
+  border: 3px solid vars.$blue-gray;
+  position: relative;
+}
+
+.login-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-cbna {
+  width: 100px;
+}
+
+.horizontal-bar {
+  width: 482px;
+  height: 3px;
+  background-color: vars.$blue-gray;
+  margin: 2px -454px 21px -42px;
+  border: none;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 0.9em;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-buttons {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.login-button {
+  padding: 0px;
+  background-color: white;
+  color: black;
+  border: 1px solid vars.$blue-gray;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  width: 300px;
+  height: 40px;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #475a6b;
+    color: white;
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    border-color: #cccccc;
+    cursor: not-allowed;
+    color: #666666;
+
+    &:hover {
+      background-color: #cccccc;
+      color: #666666;
+    }
+  }
+
+  .content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    .google-logo {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    span {
+      line-height: 1;
+    }
+  }
+}
+
+.OR {
+  font-size: 0.9em;
+  color: #555;
+  margin: 10px 0;
+}

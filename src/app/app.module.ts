@@ -38,52 +38,50 @@ import { AppComponent } from './app.component';
 import { AuthInterceptor } from './core/auth/auth.interceptor';
 import { FRENCH_DATE_FORMATS } from './core/config/date-formats';
 import { FrenchPaginatorIntl } from './core/config/french-paginator-intl';
-import { ConnectionPageComponent } from './pages/connection-page/connection-page.component';
-import { DownloadExpensesComponent } from './pages/download-page/download-expenses/download-expenses.component';
-import { DownloadPageComponent } from './pages/download-page/download-page.component';
-import { DownloadProjectsComponent } from './pages/download-page/download-projects/download-projects.component';
-import { HomeComponent } from './pages/home/home.component';
-import { ListUsersComponent } from './pages/home/list-users/list-users.component';
-import { ModifyPasswordComponent } from './pages/home/modify-password/modify-password.component';
-import { ListProjectsComponent } from './pages/list-projects/list-projects.component';
-import { ActionComponent } from './pages/list-projects/project-actions/action/action.component';
-import { ProjectActionsComponent } from './pages/list-projects/project-actions/project-actions.component';
-import { ProjectComponent } from './pages/list-projects/project/project.component';
-import { ListTravelExpenseComponent } from './pages/list-travel-expense/list-travel-expense.component';
-import { CalendarComponent } from './pages/time-sheet/calendar/calendar.component';
-import { PopupMessageComponent } from './pages/time-sheet/calendar/popup-message/popup-message.component';
-import { TimeSheetComponent } from './pages/time-sheet/time-sheet.component';
-import { ListMissionExpenseComponent } from './pages/travel-expense/list-mission-expense/list-mission-expense.component';
-import { MissionExpenseComponent } from './pages/travel-expense/list-mission-expense/mission-expense/mission-expense.component';
-import { TravelExpenseComponent } from './pages/travel-expense/travel-expense.component';
+import { HeaderComponent } from './core/layout/header/header.component';
+import { MainLayoutComponent } from './core/layout/main-layout/main-layout.component';
+import { ExpensesExportComponent } from './pages/exports/expenses-export/expenses-export.component';
+import { ExportsComponent } from './pages/exports/exports.component';
+import { ProjectsExportComponent } from './pages/exports/projects-export/projects-export.component';
+import { LoginComponent } from './pages/login/login.component';
+import { ActionComponent } from './pages/projects-list/project-actions/action/action.component';
+import { ProjectActionsComponent } from './pages/projects-list/project-actions/project-actions.component';
+import { ProjectComponent } from './pages/projects-list/project/project.component';
+import { ProjectsListComponent } from './pages/projects-list/projects-list.component';
+import { CalendarComponent } from './pages/timesheet/calendar/calendar.component';
+import { PopupMessageComponent } from './pages/timesheet/calendar/popup-message/popup-message.component';
+import { TimesheetComponent } from './pages/timesheet/timesheet.component';
+import { ExpenseItemDialogComponent } from './pages/travel-expenses/travel-expense-form/expense-item-list/expense-item-dialog/expense-item-dialog.component';
+import { ExpenseItemListComponent } from './pages/travel-expenses/travel-expense-form/expense-item-list/expense-item-list.component';
+import { TravelExpenseFormComponent } from './pages/travel-expenses/travel-expense-form/travel-expense-form.component';
+import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expense-list/travel-expense-list.component';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ConnectionPageComponent,
-    HomeComponent,
-    ListProjectsComponent,
+    LoginComponent,
+    MainLayoutComponent,
+    ProjectsListComponent,
     ProjectActionsComponent,
     ConfirmationDialogComponent,
     ActionComponent,
     ProjectComponent,
-    DownloadPageComponent,
-    DownloadProjectsComponent,
     PopupMessageComponent,
-    TimeSheetComponent,
-    ListUsersComponent,
-    ModifyPasswordComponent,
-    DownloadExpensesComponent,
-    TravelExpenseComponent,
-    ListTravelExpenseComponent,
-    MissionExpenseComponent,
-    ListMissionExpenseComponent,
+    TimesheetComponent,
+    TravelExpenseFormComponent,
+    TravelExpenseListComponent,
+    ExpenseItemDialogComponent,
+    ExpenseItemListComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    HeaderComponent,
+    ExportsComponent,
+    ProjectsExportComponent,
+    ExpensesExportComponent,
     MatToolbarModule,
     MatIconModule,
     BrowserAnimationsModule,

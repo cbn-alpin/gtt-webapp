@@ -1,0 +1,57 @@
+<app-header (menuToggled)="toggleSidenav()"></app-header>
+
+<div class="main-container">
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      #sidenav
+      mode="side"
+      [opened]="isSidenavOpened"
+      [mode]="isMobile ? 'over' : 'side'"
+      class="sidenav"
+    >
+      <div class="sidenav-content">
+        <button
+          mat-icon-button
+          class="icon-container"
+          routerLink="/accueil/saisie-temps"
+          matTooltip="Saisie des temps"
+          matTooltipPosition="right"
+        >
+          <mat-icon>schedule</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          class="icon-container"
+          routerLink="/accueil/liste-projets"
+          matTooltip="Liste des projets"
+          matTooltipPosition="right"
+        >
+          <mat-icon>list_alt</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          class="icon-container"
+          routerLink="/accueil/liste-frais-deplacement"
+          matTooltip="Frais de déplacement"
+          matTooltipPosition="right"
+          *ngIf="isAdmin"
+        >
+          <mat-icon>euro_symbol</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          class="icon-container"
+          routerLink="/accueil/exports"
+          matTooltip="Exports"
+          matTooltipPosition="right"
+          *ngIf="isAdmin"
+        >
+          <mat-icon>download</mat-icon>
+        </button>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content class="main-content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
