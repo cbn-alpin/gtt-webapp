@@ -55,7 +55,7 @@ describe('CalendarComponent', () => {
   });
 
   it('should update time entry when input changes', () => {
-    spyOn(component, 'updateTimeEntryDelayed');
+    spyOn(component, 'saveTimeEntry');
 
     fixture.detectChanges();
     const input = fixture.debugElement.query(By.css('input'));
@@ -63,7 +63,7 @@ describe('CalendarComponent', () => {
     input.triggerEventHandler('ngModelChange', 4);
     fixture.detectChanges();
 
-    expect(component.updateTimeEntryDelayed).toHaveBeenCalled();
+    expect(component.saveTimeEntry).toHaveBeenCalled();
   });
 
   it('should apply weekend style to weekend days', () => {

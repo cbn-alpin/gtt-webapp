@@ -210,9 +210,16 @@
                         formatApiDate(toLuxonDate(day.date))
                       ).hours
                     "
-                    (ngModelChange)="
-                      updateTimeEntryDelayed(
-                        $event,
+                    [id]="getInputId(project.id_project, action.id_action, day.date)"
+                    step="0.25"
+                    max="10"
+                    min="0"
+                    #inputRef
+                    (focus)="onFocus(inputRef)"
+                    (keydown)="blockNegativeInput($event)"
+                    (blur)="
+                      saveTimeEntry(
+                        inputRef.value,
                         project.id_project,
                         project.end_date,
                         action.id_action,
@@ -225,14 +232,6 @@
                         ).hours
                       )
                     "
-                    [id]="getInputId(project.id_project, action.id_action, day.date)"
-                    step="0.25"
-                    max="10"
-                    min="0"
-                    #inputRef
-                    (focus)="onFocus(inputRef)"
-                    (blur)="onBlur(inputRef)"
-                    (keydown)="blockNegativeInput($event)"
                   />
                 </td>
                 <td class="total-week">
@@ -298,9 +297,16 @@
                         formatApiDate(toLuxonDate(day.date))
                       ).hours
                     "
-                    (ngModelChange)="
-                      updateTimeEntryDelayed(
-                        $event,
+                    [id]="getInputId(project.id_project, action.id_action, day.date)"
+                    step="0.25"
+                    max="24"
+                    min="0"
+                    #inputRef2
+                    (focus)="onFocus(inputRef2)"
+                    (keydown)="blockNegativeInput($event)"
+                    (blur)="
+                      saveTimeEntry(
+                        inputRef2.value,
                         project.id_project,
                         project.end_date,
                         action.id_action,
@@ -313,14 +319,6 @@
                         ).hours
                       )
                     "
-                    [id]="getInputId(project.id_project, action.id_action, day.date)"
-                    step="0.25"
-                    max="24"
-                    min="0"
-                    #inputRef2
-                    (focus)="onFocus(inputRef2)"
-                    (blur)="onBlur(inputRef2)"
-                    (keydown)="blockNegativeInput($event)"
                   />
                 </td>
                 <td class="total-week">

@@ -370,7 +370,7 @@ export class CalendarComponent implements OnInit {
     return timeEntry ? { hours: Number(timeEntry.duration) } : { hours: 0 };
   }
 
-  updateTimeEntry(
+  private updateTimeEntry(
     value: number,
     projectId: number,
     end_date: Date,
@@ -484,8 +484,8 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  updateTimeEntryDelayed(
-    value: number,
+  saveTimeEntry(
+    inputValue: number | string,
     projectId: number,
     end_date: Date,
     actionId: number,
@@ -493,39 +493,40 @@ export class CalendarComponent implements OnInit {
     inputRef: HTMLInputElement,
     initialValue: number
   ) {
-    if (this.timer) {
-      clearTimeout(this.timer);
+    if (inputValue === '' || inputValue == null) {
+      inputRef.value = '0';
+      inputValue = 0;
     }
+    const valueNum = Number(inputValue);
 
-    this.timer = setTimeout(() => {
-      const formattedDate = new Date(date);
+    const formattedDate = new Date(date);
+    const currentTotal = this.calculateDayTotal(formattedDate);
+    const hoursLimit = this.computeMinHoursLimit(projectId, formattedDate);
 
-      const currentTotal = this.calculateDayTotal(formattedDate);
-      const hoursLimit = this.computeMinHoursLimit(projectId, formattedDate);
-      const newTotal = currentTotal + value - initialValue;
+    const newTotal = currentTotal + valueNum - initialValue;
 
-      if (newTotal > this.MAX_DAILY_HOURS) {
-        this.dialog.open(PopupMessageComponent, {
-          data: {
-            title: 'Erreur',
-            message: `Quota horaire journalier (${this.MAX_DAILY_HOURS}h) dépassé !`,
-          },
-        });
+    if (newTotal > this.MAX_DAILY_HOURS) {
+      this.dialog.open(PopupMessageComponent, {
+        data: {
+          title: 'Erreur',
+          message: `Quota horaire journalier (${this.MAX_DAILY_HOURS}h) dépassé !`,
+        },
+      });
 
-        inputRef.value = initialValue.toString();
-        return;
-      }
-      if (hoursLimit && newTotal > hoursLimit) {
-        this.dialog.open(PopupMessageComponent, {
-          data: {
-            title: 'Avertissement',
-            message: `Attention : saisie supérieure à ${hoursLimit}h uniquement si déplacement`,
-          },
-        });
-      }
-
-      this.updateTimeEntry(value, projectId, end_date, actionId, date, inputRef, initialValue);
-    }, 500);
+      inputRef.value = initialValue.toString();
+      return;
+    }
+    if (hoursLimit && newTotal > hoursLimit) {
+      this.dialog.open(PopupMessageComponent, {
+        data: {
+          title: 'Avertissement',
+          message: `Attention : saisie supérieure à ${hoursLimit}h uniquement si déplacement`,
+        },
+      });
+    }
+    if (valueNum !== initialValue) {
+      this.updateTimeEntry(valueNum, projectId, end_date, actionId, date, inputRef, initialValue);
+    }
   }
 
   calculateWeeklyTotalByAction(projectId: number, actionId: number): number {
@@ -722,12 +723,6 @@ export class CalendarComponent implements OnInit {
   onFocus(inputRef: HTMLInputElement) {
     if (inputRef.value === '0') {
       inputRef.value = '';
-    }
-  }
-
-  onBlur(inputRef: HTMLInputElement) {
-    if (inputRef.value === '') {
-      inputRef.value = '0';
     }
   }
 
