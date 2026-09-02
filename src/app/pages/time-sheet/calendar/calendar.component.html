@@ -166,6 +166,7 @@
           <ng-container *ngFor="let project of projects; trackBy: trackById">
             <!-- Project Row -->
             <tr
+              *ngIf="project.is_selected"
               class="project-name"
               matTooltip="{{ project.description }}"
               matTooltipPosition="above"
@@ -180,72 +181,75 @@
             </tr>
 
             <ng-container *ngIf="isProjectExpanded(project)">
-              <tr
-                *ngFor="let action of project.list_action; trackBy: trackById"
-                class="action-row"
-                [@slideInOut]="'in'"
-              >
-                <td
-                  class="action-name"
-                  matTooltip="{{ action.description }}"
-                  matTooltipPosition="above"
+              <ng-container *ngFor="let action of project.list_action; trackBy: trackById">
+                <tr
+                  *ngIf="action.is_selected"
+                  class="action-row"
+                  [@slideInOut]="'in'"
                 >
-                  {{ action.numero_action }} {{ action.name }}
-                </td>
+                  <td
+                    class="action-name"
+                    matTooltip="{{ action.description }}"
+                    matTooltipPosition="above"
+                  >
+                    {{ action.numero_action }} {{ action.name }}
+                  </td>
 
-                <td
-                  *ngFor="let day of weekDays; trackBy: trackByDate"
-                  [ngClass]="{
-                    'weekend-input': day.isWeekend,
-                    'holiday-input': isHoliday(day.date),
-                    today: day.isToday
-                  }"
-                >
-                  <input
-                    type="number"
-                    [ngModel]="
-                      getTimeEntry(
-                        project.id_project,
-                        action.id_action,
-                        formatApiDate(toLuxonDate(day.date))
-                      ).hours
-                    "
-                    [id]="getInputId(project.id_project, action.id_action, day.date)"
-                    step="0.25"
-                    max="10"
-                    min="0"
-                    #inputRef
-                    (focus)="onFocus(inputRef)"
-                    (keydown)="blockNegativeInput($event)"
-                    (blur)="
-                      saveTimeEntry(
-                        inputRef.value,
-                        project.id_project,
-                        project.end_date,
-                        action.id_action,
-                        formatApiDate(toLuxonDate(day.date)),
-                        inputRef,
+                  <td
+                    *ngFor="let day of weekDays; trackBy: trackByDate"
+                    [ngClass]="{
+                      'weekend-input': day.isWeekend,
+                      'holiday-input': isHoliday(day.date),
+                      today: day.isToday
+                    }"
+                  >
+                    <input
+                      type="number"
+                      [ngModel]="
                         getTimeEntry(
                           project.id_project,
                           action.id_action,
                           formatApiDate(toLuxonDate(day.date))
                         ).hours
-                      )
-                    "
-                  />
-                </td>
-                <td class="total-week">
-                  {{ calculateWeeklyTotalByAction(project.id_project, action.id_action) }}
-                </td>
-                <td
-                  class="total-year"
-                  matTooltip="~ {{ transformToWorkingDays(action.total_duration) }} jours de {{
-                    STANDARD_DAILY_WORKING_HOURS
-                  }}h"
-                >
-                  {{ action.total_duration }}
-                </td>
-              </tr>
+                      "
+                      [id]="getInputId(project.id_project, action.id_action, day.date)"
+                      step="0.25"
+                      max="10"
+                      min="0"
+                      #inputRef
+                      (focus)="onFocus(inputRef)"
+                      (keydown)="blockNegativeInput($event)"
+                      (keydown.enter)="inputRef.blur()"
+                      (blur)="
+                        saveTimeEntry(
+                          inputRef.value,
+                          project.id_project,
+                          project.end_date,
+                          action.id_action,
+                          formatApiDate(toLuxonDate(day.date)),
+                          inputRef,
+                          getTimeEntry(
+                            project.id_project,
+                            action.id_action,
+                            formatApiDate(toLuxonDate(day.date))
+                          ).hours
+                        )
+                      "
+                    />
+                  </td>
+                  <td class="total-week">
+                    {{ calculateWeeklyTotalByAction(project.id_project, action.id_action) }}
+                  </td>
+                  <td
+                    class="total-year"
+                    matTooltip="~ {{ transformToWorkingDays(action.total_duration) }} jours de {{
+                      STANDARD_DAILY_WORKING_HOURS
+                    }}h"
+                  >
+                    {{ action.total_duration }}
+                  </td>
+                </tr>
+              </ng-container>
             </ng-container>
           </ng-container>
 
@@ -304,6 +308,7 @@
                     #inputRef2
                     (focus)="onFocus(inputRef2)"
                     (keydown)="blockNegativeInput($event)"
+                    (keydown.enter)="inputRef2.blur()"
                     (blur)="
                       saveTimeEntry(
                         inputRef2.value,
@@ -347,7 +352,18 @@
                 today: day.isToday
               }"
             >
-              {{ calculateDayTotal(day.date) }}
+              <ng-container *ngIf="calculateDayTotal(day.date) as dayTotal">
+                {{ dayTotal.total }}
+                <span
+                  *ngIf="dayTotal.totalNotDisplayed > 0"
+                  matTooltip="Nombre d'heures sur des actions non affichées ici : {{
+                    dayTotal.actionsNotDisplayed
+                  }}."
+                  class="not-displayed-times"
+                >
+                  (👻 {{ dayTotal.totalNotDisplayed }})
+                </span>
+              </ng-container>
             </th>
             <th
               matTooltip="Total hebdomadaire des actions affichées (~ {{

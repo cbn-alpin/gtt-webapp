@@ -139,9 +139,6 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadProjects();
-    this.fetchHolidays();
-
     const today = this.calendarService.today();
     this.selectedWeek = today.weekNumber;
     this.selectedMonth = today.month;
@@ -151,6 +148,9 @@ export class CalendarComponent implements OnInit {
     this.timeStateService.selectedDateSignal().subscribe(() => {
       this.weekDays = this.timeStateService.currentWeek;
     });
+
+    this.loadProjects();
+    this.fetchHolidays();
   }
 
   private fetchHolidays() {
@@ -165,9 +165,10 @@ export class CalendarComponent implements OnInit {
   }
 
   private updateStartEndDates() {
-    const activeWeek = this.firstDayOfActiveMonth.value;
-    this.startDate = activeWeek.minus({ weeks: 1 }).startOf('month');
-    this.endDate = activeWeek.endOf('month').plus({ weeks: 1 });
+    if (this.currentWeek.start && this.currentWeek.end) {
+      this.startDate = this.currentWeek.start;
+      this.endDate = this.currentWeek.end;
+    }
   }
 
   setActiveDay(day: DateTime): void {
@@ -356,10 +357,14 @@ export class CalendarComponent implements OnInit {
     const project = source.find((p) => p.id_project === projectId);
     if (!project) return { hours: 0 };
 
+    if (!project.list_action || !Array.isArray(project.list_action)) {
+      return { hours: 0 };
+    }
+
     const action = project.list_action.find((a: any) => a.id_action === actionId);
     if (!action) return { hours: 0 };
 
-    if (!project.list_action || !Array.isArray(project.list_action)) {
+    if (!action.list_time || !Array.isArray(action.list_time)) {
       return { hours: 0 };
     }
 
@@ -379,10 +384,12 @@ export class CalendarComponent implements OnInit {
     inputRef: HTMLInputElement,
     initialValue: number
   ) {
-    const selectedDate = new Date(date);
-    selectedDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(end_date);
-    endDate.setHours(0, 0, 0, 0);
+    if (isNaN(value) || value < 0) {
+      value = initialValue;
+      inputRef.value = initialValue.toString();
+      return;
+    }
+    const formattedDate = new Date(date).toISOString().split('T')[0];
 
     let source;
     if (projectId === 0) {
@@ -390,58 +397,8 @@ export class CalendarComponent implements OnInit {
     } else {
       source = this.projects;
     }
-
     const project = source.find((p) => p.id_project === projectId);
     if (!project) return;
-
-    if (projectId !== 0) {
-      if (end_date && selectedDate > endDate) {
-        this.dialog.open(PopupMessageComponent, {
-          data: {
-            title: 'Erreur',
-            message:
-              'Vous ne pouvez pas saisir un temps pour une date qui dépasse la date de fin du projet.',
-          },
-        });
-
-        inputRef.value = initialValue.toString();
-        return;
-      }
-
-      if (value > this.MAX_DAILY_HOURS) {
-        this.dialog.open(PopupMessageComponent, {
-          data: {
-            title: 'Erreur',
-            message: `Quota horaire journalier maximum (${this.MAX_DAILY_HOURS}h) atteint.`,
-          },
-        });
-        value = 0;
-        inputRef.value = initialValue.toString();
-        return;
-      }
-
-      if (project.hours_limit && value > project.hours_limit && value <= this.MAX_DAILY_HOURS) {
-        this.dialog.open(PopupMessageComponent, {
-          data: {
-            title: 'Avertissement',
-            message: `Attention : saisie supérieure à ${project.hours_limit}h uniquement si déplacement`,
-          },
-        });
-      }
-    }
-
-    if (value == null || value == undefined) {
-      console.warn(`Value (${value}) null or undefined set to 0.`);
-      value = 0;
-      inputRef.value = '0';
-    }
-    if (isNaN(value) || value < 0 || value > this.MAX_DAILY_HOURS) {
-      console.warn(`Invalid value (${value})`);
-      value = initialValue;
-      inputRef.value = initialValue.toString();
-    }
-
-    const formattedDate = new Date(date).toISOString().split('T')[0];
 
     const action = project.list_action.find((a: any) => a.id_action === actionId);
     if (!action) return;
@@ -498,11 +455,32 @@ export class CalendarComponent implements OnInit {
       inputValue = 0;
     }
     const valueNum = Number(inputValue);
-
     const formattedDate = new Date(date);
-    const currentTotal = this.calculateDayTotal(formattedDate);
-    const hoursLimit = this.computeMinHoursLimit(projectId, formattedDate);
 
+    // Validate project end date
+    if (projectId !== 0 && end_date) {
+      const selectedDate = new Date(date);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      const projectEndDate = new Date(end_date);
+      projectEndDate.setHours(0, 0, 0, 0);
+
+      if (selectedDate > projectEndDate) {
+        this.dialog.open(PopupMessageComponent, {
+          data: {
+            title: 'Erreur',
+            message:
+              'Vous ne pouvez pas saisir un temps pour une date qui dépasse la date de fin du projet.',
+          },
+        });
+        inputRef.value = initialValue.toString();
+        return;
+      }
+    }
+
+    // Validate daily and project hours limit
+    const currentTotal = this.calculateDayTotal(formattedDate).total;
+    const hoursLimit = this.computeMinHoursLimit(projectId, formattedDate);
     const newTotal = currentTotal + valueNum - initialValue;
 
     if (newTotal > this.MAX_DAILY_HOURS) {
@@ -516,7 +494,8 @@ export class CalendarComponent implements OnInit {
       inputRef.value = initialValue.toString();
       return;
     }
-    if (hoursLimit && newTotal > hoursLimit) {
+
+    if (valueNum != 0 && hoursLimit && newTotal > hoursLimit) {
       this.dialog.open(PopupMessageComponent, {
         data: {
           title: 'Avertissement',
@@ -524,6 +503,8 @@ export class CalendarComponent implements OnInit {
         },
       });
     }
+
+    // Update time entry
     if (valueNum !== initialValue) {
       this.updateTimeEntry(valueNum, projectId, end_date, actionId, date, inputRef, initialValue);
     }
@@ -576,18 +557,32 @@ export class CalendarComponent implements OnInit {
     return Math.round(totalHours / this.STANDARD_DAILY_WORKING_HOURS);
   }
 
-  calculateDayTotal(date: Date): number {
+  calculateDayTotal(date: Date): {
+    total: number;
+    totalNotDisplayed: number;
+    actionsNotDisplayed: string;
+  } {
     let total = 0;
+    let totalNotDisplayed = 0;
+    const actionsNotDisplayed: { project: string; action: string }[] = [];
 
     const formattedDate = this.formatApiDate(this.toLuxonDate(date));
 
     if (!this.projects || !Array.isArray(this.projects)) {
       console.warn("calculateDayTotal: this.projects est undefined ou n'est pas un tableau");
-      return total;
+      return {
+        total: total,
+        totalNotDisplayed: totalNotDisplayed,
+        actionsNotDisplayed: '',
+      };
     }
 
     this.projects.forEach(
-      (project: { id_project: number; list_action: { id_action: number }[] }) => {
+      (project: {
+        id_project: number;
+        name: string;
+        list_action: { id_action: number; is_selected: boolean; name: string }[];
+      }) => {
         if (!project.list_action || !Array.isArray(project.list_action)) {
           console.warn(
             `calculateDayTotal: project.list_action est undefined ou n'est pas un tableau pour project ${project.id_project}`
@@ -595,12 +590,18 @@ export class CalendarComponent implements OnInit {
           return;
         }
 
-        project.list_action.forEach((action: { id_action: number }) => {
-          const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
-          if (entry && typeof entry.hours === 'number') {
-            total += entry.hours;
+        project.list_action.forEach(
+          (action: { id_action: number; is_selected: boolean; name: string }) => {
+            const entry = this.getTimeEntry(project.id_project, action.id_action, formattedDate);
+            if (entry && typeof entry.hours === 'number') {
+              total += entry.hours;
+              if (!action.is_selected) {
+                totalNotDisplayed += entry.hours;
+                actionsNotDisplayed.push({ project: project.name, action: action.name });
+              }
+            }
           }
-        });
+        );
       }
     );
     this.fixedRows.forEach(
@@ -620,7 +621,16 @@ export class CalendarComponent implements OnInit {
         });
       }
     );
-    return total;
+
+    return {
+      total: total,
+      totalNotDisplayed: totalNotDisplayed,
+      actionsNotDisplayed: actionsNotDisplayed
+        .map(
+          (action: { project: string; action: string }) => `${action.project} - ${action.action}`
+        )
+        .join(', '),
+    };
   }
 
   private computeMinHoursLimit(projectId: number, date: Date): number | null {
@@ -684,8 +694,9 @@ export class CalendarComponent implements OnInit {
             this.fixedRows = data.filter((project: any) => project.id_project === 0);
             this.initializeExpandedProjects();
           },
-          error: (error) => {
-            console.error('Erreur lors du chargement des projets', error);
+          error: (response) => {
+            this.isLoadingResults = false;
+            console.error(`Error loading project: ${response.error.message}`);
           },
           complete: () => {
             this.isLoadingResults = false;
