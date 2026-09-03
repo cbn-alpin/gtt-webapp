@@ -1,12 +1,13 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { TimeSheetService } from './time-sheet.service';
 
-describe('UserProjectsService', () => {
+describe('TimeSheetService', () => {
   let service: TimeSheetService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ imports: [HttpClientTestingModule] });
     service = TestBed.inject(TimeSheetService);
   });
 
