@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CalendarComponent } from './calendar.component';
 
@@ -9,9 +10,26 @@ describe('CalendarComponent', () => {
   let component: CalendarComponent;
   let fixture: ComponentFixture<CalendarComponent>;
 
+  const createMockProjects = () => [
+    {
+      id_project: 1,
+      name: 'Projet Test',
+      is_selected: true,
+      list_action: [
+        {
+          id_action: 10,
+          numero_action: 'ACT-01',
+          name: 'Action Test',
+          is_selected: true,
+          total_duration: 0,
+        },
+      ],
+    },
+  ];
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, CalendarComponent, MatDialogModule],
+      imports: [FormsModule, CalendarComponent, MatDialogModule, NoopAnimationsModule],
       providers: [MatDialog],
     }).compileComponents();
 
@@ -19,7 +37,7 @@ describe('CalendarComponent', () => {
     component = fixture.componentInstance;
   });
 
-  fit('should create the component', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
@@ -36,12 +54,12 @@ describe('CalendarComponent', () => {
   });
 
   it('should calculate the total hours for a day', () => {
-    component.projects = [{ id_project: 1, list_action: [{ id_action: 1 }] }];
+    component.projects = [{ id_project: 1, list_action: [{ id_action: 1, is_selected: true }] }];
 
     spyOn(component, 'getTimeEntry').and.returnValue({ hours: 3 });
 
     const total = component.calculateDayTotal(new Date());
-    expect(total).toBe(3);
+    expect(total).toEqual({ total: 3, totalNotDisplayed: 0, actionsNotDisplayed: '' });
   });
 
   it('should track by date correctly', () => {
@@ -56,11 +74,15 @@ describe('CalendarComponent', () => {
 
   it('should update time entry when input changes', () => {
     spyOn(component, 'saveTimeEntry');
+    component.projects = createMockProjects();
+    component.expandedProjects.add(1);
 
     fixture.detectChanges();
-    const input = fixture.debugElement.query(By.css('input'));
 
-    input.triggerEventHandler('ngModelChange', 4);
+    const input = fixture.debugElement.query(By.css('[data-qa="action-input-cell"]'));
+    expect(input).not.toBeNull();
+
+    input.triggerEventHandler('blur', null);
     fixture.detectChanges();
 
     expect(component.saveTimeEntry).toHaveBeenCalled();
