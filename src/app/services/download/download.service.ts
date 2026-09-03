@@ -1,12 +1,9 @@
-import { inject, Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DownloadService {
-  private readonly snackBar = inject(MatSnackBar);
-
   downloadCSV(data: any[], exportFileName: string) {
     if (!data || data.length === 0) {
       return;
