@@ -198,7 +198,7 @@ export class TravelExpenseComponent implements OnInit {
 
   loadTravelData(): void {
     const state = history.state;
-    if (state.travelData) {
+    if (state?.travelData) {
       this.isEditing = true;
       this.travelId = state.travelData.id_travel;
       this.list_mission_expenses = state.travelData.list_expenses;
