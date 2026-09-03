@@ -35,7 +35,7 @@ export class DownloadExpensesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   private readonly userService = inject(UserService);
-  private readonly downloadServivce = inject(DownloadService);
+  private readonly downloadService = inject(DownloadService);
   private readonly expensesService = inject(ExpensesService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly shareDateService = inject(ShareDataService);
@@ -105,7 +105,7 @@ export class DownloadExpensesComponent implements OnInit, AfterViewInit {
           }
           const fileName = `${exportFileName}_${this.selectedUserFirstName}_${this.selectedUserLastName}`;
           const formattedData = this.formatUserExpensesForCSV(usersTravelsExpenses);
-          this.downloadServivce.downloadCSV(formattedData, fileName);
+          this.downloadService.downloadCSV(formattedData, fileName);
           console.error('expenses du user', formattedData);
 
           //Update the status to “In progress” for each travel with a status other than In progress or To be processed.
