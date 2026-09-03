@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -10,24 +10,23 @@ import { UserService } from 'src/app/services/user/user.service';
   templateUrl: './list-users.component.html',
   styleUrls: ['./list-users.component.scss'],
 })
-export class ListUsersComponent implements OnInit, AfterViewInit {
+export class ListUsersComponent implements OnInit {
   displayedColumns: string[] = ['user_first_name', 'user_last_name'];
   dataSource = new MatTableDataSource<Partial<UserInfos>>([]);
-  selectedProjectData: any = null;
   isLoadingResults = false;
   isError = false;
-  isAdminChangingAccount = false;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  paginator!: MatPaginator;
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.dataSource.paginator = this.paginator;
+  }
 
   private readonly userService = inject(UserService);
 
   ngOnInit(): void {
     this.fetchUsers();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
   }
 
   fetchUsers(): void {
@@ -36,14 +35,8 @@ export class ListUsersComponent implements OnInit, AfterViewInit {
 
     this.userService.getAllUsers().subscribe({
       next: (users) => {
-        setTimeout(() => {
-          this.dataSource.data = users;
-          this.isLoadingResults = false;
-
-          setTimeout(() => {
-            this.dataSource.paginator = this.paginator;
-          }, 100);
-        }, 1000);
+        this.dataSource.data = users;
+        this.isLoadingResults = false;
       },
       error: () => {
         this.isLoadingResults = false;
@@ -60,7 +53,7 @@ export class ListUsersComponent implements OnInit, AfterViewInit {
   selectUser(userInfo: UserInfos) {
     localStorage.setItem('user_email', userInfo.email);
     localStorage.setItem('switched_user_name', `${userInfo.first_name} ${userInfo.last_name}`);
-    localStorage.setItem('isAdminChangedAccount', `true`);
+    localStorage.setItem('isAdminChangedAccount', 'true');
     localStorage.setItem('id_user', `${userInfo.id_user}`);
     window.location.reload();
   }
