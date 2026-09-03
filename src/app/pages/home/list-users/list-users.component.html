@@ -74,14 +74,16 @@
 
     <ng-template #emptyState>
       <div
-        class="empty-container-user"
         *ngIf="!isLoadingResults && !isError"
+        class="empty-container-user"
+        data-qa="empty-no-users"
       >
         <p>Aucun agent trouvé.</p>
       </div>
       <div
+        *ngIf="!isLoadingResults && isError"
         class="empty-container-user"
-        *ngIf="isError && !isLoadingResults"
+        data-qa="error-no-users"
       >
         <p>Une erreur est survenue lors de la récupération des agents.</p>
       </div>
