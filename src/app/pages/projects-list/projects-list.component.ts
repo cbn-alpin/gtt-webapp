@@ -1,20 +1,43 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
 import { Project } from 'src/app/core/models/project.model';
 import { ProjectsService } from 'src/app/core/services/projects/projects.service';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { ProjectActionsComponent } from './project-actions/project-actions.component';
 import { ProjectComponent } from './project/project.component';
 
 @Component({
   selector: 'app-projects-list',
+  standalone: true,
   templateUrl: './projects-list.component.html',
   styleUrls: ['./projects-list.component.scss'],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    MatSlideToggleModule,
+    ProjectActionsComponent,
+  ],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),

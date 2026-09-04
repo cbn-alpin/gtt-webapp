@@ -24,7 +24,7 @@ describe('ProjectsListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProjectsListComponent],
+      imports: [ProjectsListComponent],
       providers: [
         { provide: MatDialog, useValue: mockDialog },
         { provide: MatSnackBar, useValue: mockSnackBar },
