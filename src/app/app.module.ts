@@ -45,7 +45,6 @@ import { ExportsComponent } from './pages/exports/exports.component';
 import { ProjectsExportComponent } from './pages/exports/projects-export/projects-export.component';
 import { ActionComponent } from './pages/projects-list/project-actions/action/action.component';
 import { ProjectActionsComponent } from './pages/projects-list/project-actions/project-actions.component';
-import { ProjectComponent } from './pages/projects-list/project/project.component';
 import { ProjectsListComponent } from './pages/projects-list/projects-list.component';
 import { CalendarComponent } from './pages/timesheet/calendar/calendar.component';
 import { PopupMessageComponent } from './pages/timesheet/calendar/popup-message/popup-message.component';
@@ -62,7 +61,6 @@ import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expen
     ProjectsListComponent,
     ProjectActionsComponent,
     ActionComponent,
-    ProjectComponent,
     PopupMessageComponent,
     TimesheetComponent,
     TravelExpenseFormComponent,

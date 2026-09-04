@@ -1,6 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { map, Observable, startWith } from 'rxjs';
@@ -9,8 +17,10 @@ import { ProjectsService } from 'src/app/core/services/projects/projects.service
 
 @Component({
   selector: 'app-project',
+  standalone: true,
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss'],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule],
 })
 export class ProjectComponent implements OnInit {
   projectForm: FormGroup;
