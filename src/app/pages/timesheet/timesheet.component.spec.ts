@@ -2,9 +2,10 @@ import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { CalendarComponent } from './calendar/calendar.component';
 import { TimesheetComponent } from './timesheet.component';
 
-@Component({ selector: 'app-calendar', template: '' })
+@Component({ selector: 'app-calendar', template: '', standalone: true })
 class MockCalendarComponent {}
 
 describe('TimesheetComponent', () => {
@@ -13,9 +14,14 @@ describe('TimesheetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TimesheetComponent, MockCalendarComponent],
+      imports: [TimesheetComponent],
       schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+    })
+      .overrideComponent(TimesheetComponent, {
+        remove: { imports: [CalendarComponent] },
+        add: { imports: [MockCalendarComponent] },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(TimesheetComponent);
     component = fixture.componentInstance;
