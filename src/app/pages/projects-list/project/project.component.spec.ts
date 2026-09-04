@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { of } from 'rxjs';
 
-import { ProjectsService } from 'src/app/services/projects/projects.service';
+import { ProjectsService } from 'src/app/core/services/projects/projects.service';
 import { ProjectComponent } from './project.component';
 
 describe('ProjectComponent', () => {

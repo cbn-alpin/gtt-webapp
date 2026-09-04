@@ -31,7 +31,7 @@ describe('ExpensesExportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ExpensesExportComponent],
+      imports: [ExpensesExportComponent],
       providers: [
         { provide: UserService, useValue: mockUserService },
         { provide: DownloadService, useValue: mockDownloadService },

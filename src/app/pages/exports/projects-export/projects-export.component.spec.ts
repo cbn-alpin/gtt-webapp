@@ -27,7 +27,7 @@ describe('ProjectsExportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProjectsExportComponent],
+      imports: [ProjectsExportComponent],
       providers: [
         { provide: DownloadService, useValue: mockDownloadService },
         { provide: ProjectsService, useValue: mockProjectService },

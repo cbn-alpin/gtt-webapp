@@ -2,12 +2,14 @@ import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { ExpensesExportComponent } from './expenses-export/expenses-export.component';
 import { ExportsComponent } from './exports.component';
+import { ProjectsExportComponent } from './projects-export/projects-export.component';
 
-@Component({ selector: 'app-projects-export', template: '' })
+@Component({ selector: 'app-projects-export', template: '', standalone: true })
 class MockProjectsExportComponent {}
 
-@Component({ selector: 'app-expenses-export', template: '' })
+@Component({ selector: 'app-expenses-export', template: '', standalone: true })
 class MockExpensesExportComponent {}
 
 describe('ExportsComponent', () => {
@@ -16,9 +18,14 @@ describe('ExportsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ExportsComponent, MockProjectsExportComponent, MockExpensesExportComponent],
+      imports: [ExportsComponent],
       schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
+    })
+      .overrideComponent(ExportsComponent, {
+        remove: { imports: [ProjectsExportComponent, ExpensesExportComponent] },
+        add: { imports: [MockProjectsExportComponent, MockExpensesExportComponent] },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(ExportsComponent);
     component = fixture.componentInstance;
@@ -29,7 +36,7 @@ describe('ExportsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should contain download-projects and download-expenses', () => {
+  it('should contain projects-export and expenses-export components', () => {
     expect(fixture.debugElement.query(By.directive(MockProjectsExportComponent))).not.toBeNull();
     expect(fixture.debugElement.query(By.directive(MockExpensesExportComponent))).not.toBeNull();
   });

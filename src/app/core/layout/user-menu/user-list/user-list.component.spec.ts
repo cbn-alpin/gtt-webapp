@@ -6,7 +6,7 @@ import { of, throwError } from 'rxjs';
 import { UserService } from 'src/app/core/services/user/user.service';
 import { UserListComponent } from './user-list.component';
 
-fdescribe('UserListComponent', () => {
+describe('UserListComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
 
@@ -16,7 +16,7 @@ fdescribe('UserListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [UserListComponent],
+      imports: [UserListComponent],
       providers: [{ provide: UserService, useValue: mockUserService }],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

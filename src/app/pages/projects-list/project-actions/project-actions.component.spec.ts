@@ -5,9 +5,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { of } from 'rxjs';
 
-import { ProjectActionsService } from 'src/app/services/project-actions/project-actions.service';
-import { ProjectsService } from 'src/app/services/projects/projects.service';
-import { UserActionService } from 'src/app/services/user-action/user-action.service';
+import { ProjectActionsService } from 'src/app/core/services/project-actions/project-actions.service';
+import { ProjectsService } from 'src/app/core/services/projects/projects.service';
+import { UserActionService } from 'src/app/core/services/user-action/user-action.service';
 import { ProjectActionsComponent } from './project-actions.component';
 
 describe('ProjectActionsComponent', () => {
