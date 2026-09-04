@@ -20,6 +20,8 @@ import { ProjectsService } from 'src/app/core/services/projects/projects.service
 @Component({
   selector: 'app-projects-export',
   standalone: true,
+  templateUrl: './projects-export.component.html',
+  styleUrls: ['./projects-export.component.scss'],
   imports: [
     CommonModule,
     MatCheckboxModule,
@@ -31,8 +33,6 @@ import { ProjectsService } from 'src/app/core/services/projects/projects.service
     MatTableModule,
     MatTooltipModule,
   ],
-  templateUrl: './projects-export.component.html',
-  styleUrls: ['./projects-export.component.scss'],
 })
 export class ProjectsExportComponent implements OnInit, AfterViewInit {
   private selectionState = new BehaviorSubject<boolean>(false);

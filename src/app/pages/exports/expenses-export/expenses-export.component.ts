@@ -22,6 +22,8 @@ import { UserService } from 'src/app/core/services/user/user.service';
 @Component({
   selector: 'app-expenses-export',
   standalone: true,
+  templateUrl: './expenses-export.component.html',
+  styleUrls: ['./expenses-export.component.scss'],
   imports: [
     CommonModule,
     MatCheckboxModule,
@@ -33,8 +35,6 @@ import { UserService } from 'src/app/core/services/user/user.service';
     MatTableModule,
     MatTooltipModule,
   ],
-  templateUrl: './expenses-export.component.html',
-  styleUrls: ['./expenses-export.component.scss'],
 })
 export class ExpensesExportComponent implements OnInit, AfterViewInit {
   private selectionState = new BehaviorSubject<boolean>(false);

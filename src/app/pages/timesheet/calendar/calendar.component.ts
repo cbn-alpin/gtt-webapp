@@ -23,6 +23,8 @@ import { TimesheetService } from './services/timesheet.service';
 @Component({
   selector: 'app-calendar',
   standalone: true,
+  templateUrl: './calendar.component.html',
+  styleUrls: ['./calendar.component.scss'],
   imports: [
     CommonModule,
     FormsModule,
@@ -34,7 +36,6 @@ import { TimesheetService } from './services/timesheet.service';
     MatSlideToggleModule,
     MatTooltipModule,
   ],
-  templateUrl: './calendar.component.html',
   animations: [
     trigger('slideInOut', [
       state('out', style({ height: '0px', visibility: 'hidden' })),
@@ -48,7 +49,6 @@ import { TimesheetService } from './services/timesheet.service';
       transition('down <=> up', animate('225ms ease-in-out')),
     ]),
   ],
-  styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent implements OnInit {
   private readonly MAX_DAILY_HOURS = 10;

@@ -7,8 +7,8 @@ import { ProjectsExportComponent } from './projects-export/projects-export.compo
 @Component({
   selector: 'app-exports',
   standalone: true,
-  imports: [ProjectsExportComponent, MatDividerModule, ExpensesExportComponent],
   templateUrl: './exports.component.html',
   styleUrls: ['./exports.component.scss'],
+  imports: [ProjectsExportComponent, MatDividerModule, ExpensesExportComponent],
 })
 export class ExportsComponent {}

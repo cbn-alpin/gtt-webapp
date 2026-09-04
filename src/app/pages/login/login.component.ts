@@ -12,9 +12,9 @@ declare const google: any;
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatSnackBarModule],
 })
 export class LoginComponent implements AfterViewInit {
