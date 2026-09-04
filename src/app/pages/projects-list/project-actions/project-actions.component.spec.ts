@@ -34,7 +34,7 @@ describe('ProjectActionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProjectActionsComponent],
+      imports: [ProjectActionsComponent],
       providers: [
         { provide: UserActionService, useValue: mockUserActionService },
         { provide: ProjectsService, useValue: mockProjectService },

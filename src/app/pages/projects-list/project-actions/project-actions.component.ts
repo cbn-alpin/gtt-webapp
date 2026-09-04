@@ -1,8 +1,13 @@
 import { SelectionModel } from '@angular/cdk/collections';
+import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { Action } from 'src/app/core/models/action.model';
 import { ProjectActionsService } from 'src/app/core/services/project-actions/project-actions.service';
@@ -13,8 +18,17 @@ import { ActionComponent } from './action/action.component';
 
 @Component({
   selector: 'app-project-actions',
+  standalone: true,
   templateUrl: './project-actions.component.html',
   styleUrls: ['./project-actions.component.scss'],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatTooltipModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatTableModule,
+  ],
 })
 export class ProjectActionsComponent implements OnInit {
   @Input() id_project!: number;
