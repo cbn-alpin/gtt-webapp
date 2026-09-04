@@ -45,7 +45,6 @@ import { ExportsComponent } from './pages/exports/exports.component';
 import { ProjectsExportComponent } from './pages/exports/projects-export/projects-export.component';
 import { CalendarComponent } from './pages/timesheet/calendar/calendar.component';
 import { ExpenseItemDialogComponent } from './pages/travel-expenses/travel-expense-form/expense-item-list/expense-item-dialog/expense-item-dialog.component';
-import { ExpenseItemListComponent } from './pages/travel-expenses/travel-expense-form/expense-item-list/expense-item-list.component';
 import { TravelExpenseFormComponent } from './pages/travel-expenses/travel-expense-form/travel-expense-form.component';
 import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expense-list/travel-expense-list.component';
 
@@ -55,7 +54,6 @@ import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expen
     TravelExpenseFormComponent,
     TravelExpenseListComponent,
     ExpenseItemDialogComponent,
-    ExpenseItemListComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -7,9 +8,12 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { forkJoin } from 'rxjs';
 
@@ -21,8 +25,10 @@ import { ExpenseItemDialogComponent } from './expense-item-dialog/expense-item-d
 
 @Component({
   selector: 'app-expense-item-list',
+  standalone: true,
   templateUrl: './expense-item-list.component.html',
   styleUrls: ['./expense-item-list.component.scss'],
+  imports: [CommonModule, MatIconModule, MatTableModule, MatButtonModule, MatTooltipModule],
 })
 export class ExpenseItemListComponent implements OnChanges, OnInit {
   @Input() list_expenses: any[] = [];

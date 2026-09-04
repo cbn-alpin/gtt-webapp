@@ -34,7 +34,7 @@ describe('ExpenseItemListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ExpenseItemListComponent],
+      imports: [ExpenseItemListComponent],
       providers: [
         { provide: MatDialog, useValue: mockDialog },
         { provide: MatSnackBar, useValue: mockSnackBar },
