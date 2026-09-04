@@ -43,7 +43,6 @@ import { MainLayoutComponent } from './core/layout/main-layout/main-layout.compo
 import { ExpensesExportComponent } from './pages/exports/expenses-export/expenses-export.component';
 import { ExportsComponent } from './pages/exports/exports.component';
 import { ProjectsExportComponent } from './pages/exports/projects-export/projects-export.component';
-import { LoginComponent } from './pages/login/login.component';
 import { ActionComponent } from './pages/projects-list/project-actions/action/action.component';
 import { ProjectActionsComponent } from './pages/projects-list/project-actions/project-actions.component';
 import { ProjectComponent } from './pages/projects-list/project/project.component';
@@ -59,7 +58,6 @@ import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expen
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     MainLayoutComponent,
     ProjectsListComponent,
     ProjectActionsComponent,
