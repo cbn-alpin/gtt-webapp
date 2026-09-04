@@ -12,7 +12,7 @@ describe('PopupMessageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PopupMessageComponent],
+      imports: [PopupMessageComponent],
       providers: [{ provide: MAT_DIALOG_DATA, useValue: mockData }],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

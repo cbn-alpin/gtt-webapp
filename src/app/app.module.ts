@@ -44,7 +44,6 @@ import { ExpensesExportComponent } from './pages/exports/expenses-export/expense
 import { ExportsComponent } from './pages/exports/exports.component';
 import { ProjectsExportComponent } from './pages/exports/projects-export/projects-export.component';
 import { CalendarComponent } from './pages/timesheet/calendar/calendar.component';
-import { PopupMessageComponent } from './pages/timesheet/calendar/popup-message/popup-message.component';
 import { ExpenseItemDialogComponent } from './pages/travel-expenses/travel-expense-form/expense-item-list/expense-item-dialog/expense-item-dialog.component';
 import { ExpenseItemListComponent } from './pages/travel-expenses/travel-expense-form/expense-item-list/expense-item-list.component';
 import { TravelExpenseFormComponent } from './pages/travel-expenses/travel-expense-form/travel-expense-form.component';
@@ -54,7 +53,6 @@ import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expen
   declarations: [
     AppComponent,
     MainLayoutComponent,
-    PopupMessageComponent,
     TravelExpenseFormComponent,
     TravelExpenseListComponent,
     ExpenseItemDialogComponent,
