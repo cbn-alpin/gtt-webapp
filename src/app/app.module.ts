@@ -52,7 +52,6 @@ import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expen
 @NgModule({
   declarations: [
     AppComponent,
-    MainLayoutComponent,
     TravelExpenseFormComponent,
     TravelExpenseListComponent,
     ExpenseItemDialogComponent,
@@ -62,6 +61,7 @@ import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expen
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    MainLayoutComponent,
     HeaderComponent,
     ExportsComponent,
     ProjectsExportComponent,

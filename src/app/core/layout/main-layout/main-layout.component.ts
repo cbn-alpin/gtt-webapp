@@ -1,9 +1,28 @@
+import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterLink, RouterOutlet } from '@angular/router';
+
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-main-layout',
+  standalone: true,
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.scss'],
+  imports: [
+    CommonModule,
+    HeaderComponent,
+    MatDialogModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatSnackBarModule,
+    RouterLink,
+    RouterOutlet,
+  ],
 })
 export class MainLayoutComponent implements OnInit {
   isSidenavOpened = true;
