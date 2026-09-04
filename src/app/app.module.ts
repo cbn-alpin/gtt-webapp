@@ -44,10 +44,9 @@ import { ExpensesExportComponent } from './pages/exports/expenses-export/expense
 import { ExportsComponent } from './pages/exports/exports.component';
 import { ProjectsExportComponent } from './pages/exports/projects-export/projects-export.component';
 import { CalendarComponent } from './pages/timesheet/calendar/calendar.component';
-import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expense-list/travel-expense-list.component';
 
 @NgModule({
-  declarations: [AppComponent, TravelExpenseListComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

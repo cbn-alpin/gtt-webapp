@@ -1,9 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 
 import { ExpensesService } from 'src/app/core/services/expenses/expenses.service';
@@ -12,8 +19,20 @@ import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/
 
 @Component({
   selector: 'app-travel-expense-list',
+  standalone: true,
   templateUrl: './travel-expense-list.component.html',
   styleUrls: ['./travel-expense-list.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatSelectModule,
+    MatTableModule,
+    MatProgressSpinnerModule,
+  ],
 })
 export class TravelExpenseListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['date', 'project', 'purpose', 'amount', 'status', 'actions'];

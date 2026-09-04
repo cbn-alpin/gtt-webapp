@@ -34,7 +34,7 @@ describe('TravelExpenseListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TravelExpenseListComponent],
+      imports: [TravelExpenseListComponent],
       providers: [
         { provide: MatDialog, useValue: mockDialog },
         { provide: MatSnackBar, useValue: mockSnackBar },
