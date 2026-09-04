@@ -44,11 +44,10 @@ import { ExpensesExportComponent } from './pages/exports/expenses-export/expense
 import { ExportsComponent } from './pages/exports/exports.component';
 import { ProjectsExportComponent } from './pages/exports/projects-export/projects-export.component';
 import { CalendarComponent } from './pages/timesheet/calendar/calendar.component';
-import { TravelExpenseFormComponent } from './pages/travel-expenses/travel-expense-form/travel-expense-form.component';
 import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expense-list/travel-expense-list.component';
 
 @NgModule({
-  declarations: [AppComponent, TravelExpenseFormComponent, TravelExpenseListComponent],
+  declarations: [AppComponent, TravelExpenseListComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

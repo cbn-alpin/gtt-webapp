@@ -1,5 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
@@ -12,11 +18,25 @@ import { ExpensesService } from 'src/app/core/services/expenses/expenses.service
 import { MunicipalityService } from 'src/app/core/services/municipality/municipality.service';
 import { ProjectsService } from 'src/app/core/services/projects/projects.service';
 import { ShareDataService } from 'src/app/core/services/share-data/share-data.service';
+import { ExpenseItemListComponent } from './expense-item-list/expense-item-list.component';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-travel-expense-form',
+  standalone: true,
   templateUrl: './travel-expense-form.component.html',
   styleUrls: ['./travel-expense-form.component.scss'],
+  imports: [
+    CommonModule,
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCardModule,
+    ReactiveFormsModule,
+    ExpenseItemListComponent,
+  ],
 })
 export class TravelExpenseFormComponent implements OnInit {
   expenseForm!: FormGroup;
