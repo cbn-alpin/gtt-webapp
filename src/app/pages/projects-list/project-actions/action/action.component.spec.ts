@@ -28,8 +28,7 @@ describe('ActionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ActionComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ActionComponent, ReactiveFormsModule],
       providers: [
         { provide: MatDialogRef, useValue: mockMatDialogRef },
         { provide: MatSnackBar, useValue: mockSnackBar },

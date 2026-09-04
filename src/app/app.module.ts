@@ -43,7 +43,6 @@ import { MainLayoutComponent } from './core/layout/main-layout/main-layout.compo
 import { ExpensesExportComponent } from './pages/exports/expenses-export/expenses-export.component';
 import { ExportsComponent } from './pages/exports/exports.component';
 import { ProjectsExportComponent } from './pages/exports/projects-export/projects-export.component';
-import { ActionComponent } from './pages/projects-list/project-actions/action/action.component';
 import { ProjectActionsComponent } from './pages/projects-list/project-actions/project-actions.component';
 import { ProjectsListComponent } from './pages/projects-list/projects-list.component';
 import { CalendarComponent } from './pages/timesheet/calendar/calendar.component';
@@ -60,7 +59,6 @@ import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expen
     MainLayoutComponent,
     ProjectsListComponent,
     ProjectActionsComponent,
-    ActionComponent,
     PopupMessageComponent,
     TimesheetComponent,
     TravelExpenseFormComponent,

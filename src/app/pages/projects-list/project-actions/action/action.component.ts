@@ -1,14 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ProjectActionsService } from 'src/app/core/services/project-actions/project-actions.service';
 
 @Component({
   selector: 'app-action',
+  standalone: true,
   templateUrl: './action.component.html',
   styleUrls: ['./action.component.scss'],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule],
 })
 export class ActionComponent implements OnInit {
   id_project!: number;
