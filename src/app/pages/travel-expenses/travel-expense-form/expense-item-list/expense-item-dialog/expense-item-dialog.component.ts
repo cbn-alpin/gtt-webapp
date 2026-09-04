@@ -1,13 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { ShareDataService } from 'src/app/core/services/share-data/share-data.service';
 
 @Component({
   selector: 'app-expense-item-dialog',
+  standalone: true,
   templateUrl: './expense-item-dialog.component.html',
   styleUrls: ['./expense-item-dialog.component.scss'],
+  imports: [ReactiveFormsModule],
 })
 export class ExpenseItemDialogComponent implements OnInit {
   expenseForm: FormGroup;

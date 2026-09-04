@@ -44,17 +44,11 @@ import { ExpensesExportComponent } from './pages/exports/expenses-export/expense
 import { ExportsComponent } from './pages/exports/exports.component';
 import { ProjectsExportComponent } from './pages/exports/projects-export/projects-export.component';
 import { CalendarComponent } from './pages/timesheet/calendar/calendar.component';
-import { ExpenseItemDialogComponent } from './pages/travel-expenses/travel-expense-form/expense-item-list/expense-item-dialog/expense-item-dialog.component';
 import { TravelExpenseFormComponent } from './pages/travel-expenses/travel-expense-form/travel-expense-form.component';
 import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expense-list/travel-expense-list.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    TravelExpenseFormComponent,
-    TravelExpenseListComponent,
-    ExpenseItemDialogComponent,
-  ],
+  declarations: [AppComponent, TravelExpenseFormComponent, TravelExpenseListComponent],
   imports: [
     BrowserModule,
     HttpClientModule,

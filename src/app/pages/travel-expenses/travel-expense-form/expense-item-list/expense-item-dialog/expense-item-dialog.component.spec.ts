@@ -24,8 +24,7 @@ describe('ExpenseItemDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [ExpenseItemDialogComponent],
+      imports: [ExpenseItemDialogComponent, ReactiveFormsModule],
       providers: [
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: MAT_DIALOG_DATA, useValue: mockData },
