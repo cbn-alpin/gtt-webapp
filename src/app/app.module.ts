@@ -55,7 +55,6 @@ import { ExpenseItemDialogComponent } from './pages/travel-expenses/travel-expen
 import { ExpenseItemListComponent } from './pages/travel-expenses/travel-expense-form/expense-item-list/expense-item-list.component';
 import { TravelExpenseFormComponent } from './pages/travel-expenses/travel-expense-form/travel-expense-form.component';
 import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expense-list/travel-expense-list.component';
-import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +63,6 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
     MainLayoutComponent,
     ProjectsListComponent,
     ProjectActionsComponent,
-    ConfirmationDialogComponent,
     ActionComponent,
     ProjectComponent,
     PopupMessageComponent,
