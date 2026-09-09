@@ -10,7 +10,7 @@ import { TimesheetComponent } from './pages/timesheet/timesheet.component';
 import { TravelExpenseFormComponent } from './pages/travel-expenses/travel-expense-form/travel-expense-form.component';
 import { TravelExpenseListComponent } from './pages/travel-expenses/travel-expense-list/travel-expense-list.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: 'connexion', component: LoginComponent },
   {
     path: 'accueil',
