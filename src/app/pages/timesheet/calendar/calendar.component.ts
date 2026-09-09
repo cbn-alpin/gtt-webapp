@@ -198,9 +198,9 @@ export class CalendarComponent implements OnInit {
   }
 
   isProjectExpanded(project: any): boolean {
-    return (
-      project && project.id_project !== undefined && this.expandedProjects.has(project.id_project)
-    );
+    const isExpanded =
+      project && project.id_project !== undefined && this.expandedProjects.has(project.id_project);
+    return isExpanded;
   }
 
   toggleAllProjects(): void {
@@ -208,14 +208,18 @@ export class CalendarComponent implements OnInit {
       this.expandedProjects.clear();
       this.saveExpandedState();
     } else {
-      this.projects.forEach((project) => this.expandedProjects.add(project.id_project));
-      this.fixedRows.forEach((project) => this.expandedProjects.add(project.id_project));
+      this.projects
+        .filter((project) => project.is_selected)
+        .concat(this.fixedRows.map((project) => project.id_project))
+        .forEach((project) => this.expandedProjects.add(project.id_project));
       this.saveExpandedState();
     }
   }
 
   areAllProjectsExpanded(): boolean {
-    const totalProjects = this.projects.concat(this.fixedRows);
+    const totalProjects = this.projects
+      .filter((project) => project.is_selected)
+      .concat(this.fixedRows);
     if (!totalProjects || totalProjects.length === 0) {
       return false;
     }
@@ -707,19 +711,25 @@ export class CalendarComponent implements OnInit {
   }
 
   private initializeExpandedProjects(): void {
+    const currentProjectsIds = this.projects
+      .filter((project) => project.is_selected)
+      .map((project) => project.id_project)
+      .concat(this.fixedRows.map((project) => project.id_project));
+    // By default, expand all the displayed projects
+    currentProjectsIds.forEach((projectId) => this.expandedProjects.add(projectId));
+
     const savedState = localStorage.getItem(this.EXPANDED_PROJECTS_KEY);
     if (savedState) {
       try {
-        const expandedIds = JSON.parse(savedState);
-        this.expandedProjects = new Set<number>(expandedIds);
+        const savedExpandedIds = JSON.parse(savedState);
+        const savedExpandedIdsActive = savedExpandedIds.filter((projectId: number) =>
+          currentProjectsIds.includes(projectId)
+        );
+        this.expandedProjects = new Set<number>(savedExpandedIdsActive);
+        this.saveExpandedState();
       } catch (e) {
-        console.error('Error parsing expanded projects state from localStorage', e);
-        this.projects.forEach((project) => this.expandedProjects.add(project.id_project));
-        this.fixedRows.forEach((project) => this.expandedProjects.add(project.id_project));
+        console.warn('Error parsing expanded projects state from localStorage', e);
       }
-    } else {
-      this.projects.forEach((project) => this.expandedProjects.add(project.id_project));
-      this.fixedRows.forEach((project) => this.expandedProjects.add(project.id_project));
     }
   }
 
