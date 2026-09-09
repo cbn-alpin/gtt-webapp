@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,7 +34,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/confirmation-dialog/
     MatProgressSpinnerModule,
   ],
 })
-export class TravelExpenseListComponent implements OnInit, AfterViewInit {
+export class TravelExpenseListComponent implements OnInit {
   displayedColumns: string[] = ['date', 'project', 'purpose', 'amount', 'status', 'actions'];
   statusOptions = ['A Traiter', 'En cours', 'Traité', 'Problème'];
   dataSource = new MatTableDataSource<any>([]);
@@ -43,8 +43,18 @@ export class TravelExpenseListComponent implements OnInit, AfterViewInit {
   isAdmin = false;
   userId: number;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  paginator!: MatPaginator;
+  sort!: MatSort;
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.dataSource.paginator = mp;
+  }
+
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.dataSource.sort = ms;
+  }
 
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
@@ -61,10 +71,7 @@ export class TravelExpenseListComponent implements OnInit, AfterViewInit {
     this.loadUserTravelExpenses();
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
+
 
   loadUserTravelExpenses(): void {
     this.isLoadingResults = true;
@@ -76,14 +83,8 @@ export class TravelExpenseListComponent implements OnInit, AfterViewInit {
 
     this.expensesService.getUserAllTravelsExpenses(this.userId, '', '').subscribe({
       next: (travels) => {
-        setTimeout(() => {
-          this.dataSource.data = travels;
-          this.isLoadingResults = false;
-          setTimeout(() => {
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-          }, 100);
-        }, 1000);
+        this.dataSource.data = travels;
+        this.isLoadingResults = false;
       },
       error: (error) => {
         console.error('Erreur lors du chargement des frais de déplacement :', error);
