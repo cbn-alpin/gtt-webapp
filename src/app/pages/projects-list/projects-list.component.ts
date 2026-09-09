@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -46,7 +46,7 @@ import { ProjectComponent } from './project/project.component';
     ]),
   ],
 })
-export class ProjectsListComponent implements OnInit, AfterViewInit {
+export class ProjectsListComponent implements OnInit {
   isAdmin = false;
   displayedColumns: string[] = ['code', 'name', 'startDate', 'endDate'];
   columnsToDisplayWithExpand = [...this.displayedColumns, 'actions'];
@@ -64,16 +64,21 @@ export class ProjectsListComponent implements OnInit, AfterViewInit {
     this.isAdmin = localStorage.getItem('is_admin') === 'true';
   }
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  paginator!: MatPaginator;
+  sort!: MatSort;
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.dataSource.paginator = mp;
+  }
+
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.dataSource.sort = ms;
+  }
 
   ngOnInit(): void {
     this.fetchProjects();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -88,23 +93,16 @@ export class ProjectsListComponent implements OnInit, AfterViewInit {
 
     this.projectService.getAllProjects().subscribe({
       next: (projects) => {
-        setTimeout(() => {
-          const filteredProjects = projects
-            .filter((p: Project) => p.is_archived === this.showArchived && p.id_project !== 0)
-            .sort((a: Project, b: Project) => {
-              const codeA = Number(a.code) || 0;
-              const codeB = Number(b.code) || 0;
-              return codeB - codeA;
-            });
+        const filteredProjects = projects
+          .filter((p: Project) => p.is_archived === this.showArchived && p.id_project !== 0)
+          .sort((a: Project, b: Project) => {
+            const codeA = Number(a.code) || 0;
+            const codeB = Number(b.code) || 0;
+            return codeB - codeA;
+          });
 
-          this.dataSource.data = filteredProjects;
-          this.isLoadingResults = false;
-
-          setTimeout(() => {
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-          }, 100);
-        }, 1000);
+        this.dataSource.data = filteredProjects;
+        this.isLoadingResults = false;
       },
       error: () => {
         this.isLoadingResults = false;
