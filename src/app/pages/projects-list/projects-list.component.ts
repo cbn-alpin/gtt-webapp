@@ -158,14 +158,6 @@ export class ProjectsListComponent implements OnInit {
   }
 
   archiveOrUnArchiveProject(action: string, project: Project, is_archived: boolean): void {
-    const successMessage = is_archived
-      ? `Projet "${project.name}" archivé avec succès 🎉`
-      : `Projet "${project.name}" désarchivé avec succès ✅`;
-
-    const errorMessage = is_archived
-      ? `Erreur : Impossible d'archiver le projet "${project.name}" ❌`
-      : `Erreur : Impossible de désarchiver le projet "${project.name}" ❌`;
-
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       disableClose: true,
       width: '300px',
@@ -185,21 +177,21 @@ export class ProjectsListComponent implements OnInit {
 
         this.projectService.updateProjectById(project.id_project, updatedProject).subscribe({
           next: () => {
-            this.showToast(successMessage, false);
+            const successMessage = is_archived
+              ? `Projet "${project.name}" archivé avec succès 🎉`
+              : `Projet "${project.name}" désarchivé avec succès ✅`;
+            this.showSuccess(successMessage);
             this.fetchProjects();
           },
           error: (error) => {
-            console.log(error);
-            this.showToast(errorMessage, true);
+            const state = is_archived ? "d'archiver" : 'de désarchiver';
+            const errorMessage =
+              `❌ Erreur : Impossible ${state} le projet "${project.name}". ` + error.error;
+            this.showError(errorMessage);
           },
         });
       }
     });
-  }
-
-  toggleArchived(): void {
-    this.showArchived = !this.showArchived;
-    this.fetchProjects();
   }
 
   editProject(project: Project) {
@@ -215,13 +207,21 @@ export class ProjectsListComponent implements OnInit {
     });
   }
 
-  formatDateForForm(dateStr: string): string {
+  private formatDateForForm(dateStr: string): string {
     if (!dateStr) return '';
     const [day, month, year] = dateStr.split('/'); // "dd/MM/yyyy"
     return `${year}-${month}-${day}`; // "yyyy-MM-dd"
   }
 
-  showToast(message: string, isError = false) {
+  private showSuccess(message: string) {
+    this.showToast(message, false);
+  }
+
+  private showError(message: string) {
+    this.showToast(message, true);
+  }
+
+  private showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',
