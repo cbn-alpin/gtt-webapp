@@ -127,7 +127,7 @@ export class TravelExpenseFormComponent implements OnInit {
     this.loadTravelData();
   }
 
-  autocompleteProjectName(code: string) {
+  private autocompleteProjectName(code: string) {
     if (!code) {
       this.expenseForm.patchValue({ projectName: '' });
       return;
@@ -143,7 +143,7 @@ export class TravelExpenseFormComponent implements OnInit {
     }
   }
 
-  setupAutocomplete(controlName: string): Observable<any[]> {
+  private setupAutocomplete(controlName: string): Observable<any[]> {
     return this.expenseForm.get(controlName)!.valueChanges.pipe(
       startWith(''),
       switchMap((value) => this.municipalityService.getCommunes(value || ''))
@@ -157,9 +157,7 @@ export class TravelExpenseFormComponent implements OnInit {
   save(): void {
     if (this.expenseForm.invalid) {
       this.expenseForm.markAllAsTouched();
-      setTimeout(() => {
-        this.showToast('Veuillez remplir tous les champs obligatoires.', true);
-      });
+      this.showToast('Veuillez remplir tous les champs obligatoires.', true);
       return;
     }
 
@@ -182,15 +180,10 @@ export class TravelExpenseFormComponent implements OnInit {
     }
   }
 
-  formatDate(date: string, timeString?: string): string {
+  private formatDate(date: any, timeString?: string): string {
     if (!date) return '';
 
-    // Checks if date is in the expected format (DD/MM/YYYY or YYYY-MM-DD)
-    let parsedDate = DateTime.fromFormat(date, 'dd/MM/yyyy');
-    if (!parsedDate.isValid) {
-      parsedDate = DateTime.fromFormat(date, 'yyyy-MM-dd');
-    }
-
+    const parsedDate: DateTime = this.parseDateValue(date);
     if (!parsedDate.isValid) return '';
 
     // Always return the date in DD/MM/YYYY format
@@ -205,7 +198,7 @@ export class TravelExpenseFormComponent implements OnInit {
     this.expenseForm.reset();
   }
 
-  calculateTotalKm(): void {
+  private calculateTotalKm(): void {
     const startKm = this.expenseForm.get('startKm')!.value;
     const endKm = this.expenseForm.get('endKm')!.value;
 
@@ -216,7 +209,7 @@ export class TravelExpenseFormComponent implements OnInit {
     }
   }
 
-  loadTravelData(): void {
+  private loadTravelData(): void {
     const state = history.state;
     if (state?.travelData) {
       this.isEditing = true;
@@ -269,13 +262,13 @@ export class TravelExpenseFormComponent implements OnInit {
     }
   }
 
-  validateEndDate(): void {
+  private validateEndDate(): void {
     const startDate = this.expenseForm.get('startDate')?.value;
     const endDate = this.expenseForm.get('endDate')?.value;
 
     if (startDate && endDate) {
-      const start = DateTime.fromFormat(startDate, 'yyyy-MM-dd');
-      const end = DateTime.fromFormat(endDate, 'yyyy-MM-dd');
+      const start: DateTime = this.parseDateValue(startDate);
+      const end: DateTime = this.parseDateValue(endDate);
 
       if (end < start) {
         this.expenseForm.get('endDate')?.setErrors({ invalidEndDate: true });
@@ -285,12 +278,32 @@ export class TravelExpenseFormComponent implements OnInit {
     }
   }
 
-  parseMunicipality(value: string): any {
+  // Handle Date, DateTime, Moment or string
+  private parseDateValue(val: any): DateTime {
+    let parsedDate: DateTime;
+    if (val instanceof Date) {
+      parsedDate = DateTime.fromJSDate(val);
+    } else if (DateTime.isDateTime(val)) {
+      parsedDate = val;
+    } else if (val && typeof val.toDate === 'function') {
+      // It's a Moment object (or Day.js)
+      parsedDate = DateTime.fromJSDate(val.toDate());
+    } else {
+      // Checks if date is in the expected format (DD/MM/YYYY or YYYY-MM-DD)
+      parsedDate = DateTime.fromFormat(val, 'dd/MM/yyyy');
+      if (!parsedDate.isValid) {
+        parsedDate = DateTime.fromFormat(val, 'yyyy-MM-dd');
+      }
+    }
+    return parsedDate;
+  };
+
+  private parseMunicipality(value: string): any {
     const match = value.match(/^(.*?) \((\d{5})\)$/);
     return match ? { nom: match[1], codesPostaux: [match[2]] } : null;
   }
 
-  showToast(message: string, isError = false) {
+  private showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',
@@ -345,8 +358,8 @@ export class TravelExpenseFormComponent implements OnInit {
 
   private createTravelExpense(userId: number, travelData: any): void {
     this.expenseService.createTravelExpense(userId, this.projectId, travelData).subscribe({
-      next: (travelexpense) => {
-        this.shareDataService.sendTravelId(travelexpense.travel_id);
+      next: (travelExpense) => {
+        this.shareDataService.sendTravelId(travelExpense.travel_id);
         this.shareDataService.validateTravelExpense();
 
         // Check if mission expenses are added
