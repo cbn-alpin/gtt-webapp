@@ -5,6 +5,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCardModule } from '@angular/material/card';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -19,7 +20,6 @@ import { MunicipalityService } from 'src/app/core/services/municipality/municipa
 import { ProjectsService } from 'src/app/core/services/projects/projects.service';
 import { ShareDataService } from 'src/app/core/services/share-data/share-data.service';
 import { ExpenseItemListComponent } from './expense-item-list/expense-item-list.component';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-travel-expense-form',
@@ -296,7 +296,7 @@ export class TravelExpenseFormComponent implements OnInit {
       }
     }
     return parsedDate;
-  };
+  }
 
   private parseMunicipality(value: string): any {
     const match = value.match(/^(.*?) \((\d{5})\)$/);

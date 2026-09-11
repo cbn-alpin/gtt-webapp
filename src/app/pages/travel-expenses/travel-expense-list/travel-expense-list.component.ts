@@ -71,8 +71,6 @@ export class TravelExpenseListComponent implements OnInit {
     this.loadUserTravelExpenses();
   }
 
-
-
   loadUserTravelExpenses(): void {
     this.isLoadingResults = true;
     this.isError = false;
