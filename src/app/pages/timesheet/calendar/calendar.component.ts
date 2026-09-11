@@ -350,7 +350,7 @@ export class CalendarComponent implements OnInit {
   }
 
   getTimeEntry(projectId: number, actionId: number, date: string) {
-    const formattedDate = new Date(date).toISOString().split('T')[0];
+    const formattedDate = this.getLocaleDateString(date);
     let source;
     if (projectId === 0) {
       source = this.fixedRows;
@@ -373,7 +373,7 @@ export class CalendarComponent implements OnInit {
     }
 
     const timeEntry = action.list_time.find(
-      (t: any) => new Date(t.date).toISOString().split('T')[0] === formattedDate
+      (t: any) => this.getLocaleDateString(t.date) === formattedDate
     );
 
     return timeEntry ? { hours: Number(timeEntry.duration) } : { hours: 0 };
@@ -393,8 +393,7 @@ export class CalendarComponent implements OnInit {
       inputRef.value = initialValue.toString();
       return;
     }
-    const formattedDate = new Date(date).toISOString().split('T')[0];
-
+    const formattedDate = this.getLocaleDateString(date);
     let source;
     if (projectId === 0) {
       source = this.fixedRows;
@@ -408,7 +407,7 @@ export class CalendarComponent implements OnInit {
     if (!action) return;
 
     const timeEntry = action.list_time.find(
-      (t: any) => new Date(t.date).toISOString().split('T')[0] === formattedDate
+      (t: any) => this.getLocaleDateString(t.date) === formattedDate
     );
     if (timeEntry) {
       timeEntry.duration = value.toString();
@@ -425,6 +424,15 @@ export class CalendarComponent implements OnInit {
         this.applySaveAnimation(inputRef);
       },
     });
+  }
+
+  private getLocaleDateString(date: string | Date): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Monthes start at 0
+    const day = String(d.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
   }
 
   private applySaveAnimation(inputRef: HTMLInputElement) {
@@ -460,7 +468,6 @@ export class CalendarComponent implements OnInit {
     }
     const valueNum = Number(inputValue);
     const formattedDate = new Date(date);
-
     // Validate project end date
     if (projectId !== 0 && end_date) {
       const selectedDate = new Date(date);
@@ -673,11 +680,11 @@ export class CalendarComponent implements OnInit {
   }
 
   getInputId(projectId: number | string, actionId: number, date: Date): string {
-    return `input-${projectId}-${actionId}-${date.toISOString()}`;
+    return `input-${projectId}-${actionId}-${this.getLocaleDateString(date)}`;
   }
 
   trackByDate(index: number, item: any): string {
-    return item.date.toISOString();
+    return item.date.getTime();
   }
 
   trackById(index: number, item: any): number {
