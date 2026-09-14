@@ -9,102 +9,102 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Handle working hours limit by project. [@jpm-cbna]
-- Add hours limit field to project form. [@jpm-cbna]
+- Handle working hours limit by project.
+- Add hours limit field to project form.
 - Add new favicon. [@jpm-cbna, @eratajczak-cbna]
-- Add new unit tests for Calendar component. [@jpm-cbna]
-- Add `karma.conf.ts` file to disable randomness if necessary. [@jpm-cbna]
+- Add new unit tests for Calendar component.
+- Add `karma.conf.ts` file to disable randomness if necessary.
 
 ### Changed
 
-- Rename and reduce size of image assets. [@jpm-cbna]
-- Add and apply Prettier import sort. [@jpm-cbna]
-- Add fetch hollidays method. [@jpm-cbna]
-- Simplify time entry recording by using `onBlur` and Enter key instead of a timer with `ngOnChange`. [@jpm-cbna]
-- Refactor all the components and apply code formatting & best practices. [@jpm-cbna]
-- Switch all components and the application to the standalone version. [@jpm-cbna]
-- Replace Moment with Luxon to reduce the number of third-party libraries. [@jpm-cbna]
-- Use a setter for pagination and sorting with `@ViewChild` instead of a timer. [@jpm-cbna]
+- Rename and reduce size of image assets.
+- Add and apply Prettier import sort.
+- Add fetch hollidays method.
+- Simplify time entry recording by using `onBlur` and Enter key instead of a timer with `ngOnChange`.
+- Refactor all the components and apply code formatting & best practices.
+- Switch all components and the application to the standalone version.
+- Replace Moment with Luxon to reduce the number of third-party libraries.
+- Use a setter for pagination and sorting with `@ViewChild` instead of a timer.
 
 ### Fixed
 
-- Correct all the Jasmine unit tests. [@jpm-cbna]
-- Fix Cypress `tsconfig.json` include parameter. [@jpm-cbna]
-- Improve sticky header of time entry table. [@jpm-cbna]
-- Correct heights of main content and container. [@jpm-cbna]
-- Improve accessibility of home component html. [@jpm-cbna]
-- Improve resizing of app sticky header. [@jpm-cbna]
-- Add auth http interceptor and refactor auth. [@jpm-cbna]
-- Record time entry even if hour limit exceeded. [@jpm-cbna]
-- Correct and simplify calendar component. [@jpm-cbna]
-- Correctly handle first and last week of each year. [@jpm-cbna]
+- Correct all the Jasmine unit tests.
+- Fix Cypress `tsconfig.json` include parameter.
+- Improve sticky header of time entry table.
+- Correct heights of main content and container.
+- Improve accessibility of home component html.
+- Improve resizing of app sticky header.
+- Add auth http interceptor and refactor auth.
+- Record time entry even if hour limit exceeded.
+- Correct and simplify calendar component.
+- Correctly handle first and last week of each year.
 
 ## [1.2.0] - 2026-02-12
 
 ### Added
 
-- Add collapsible projects, improve the display. [@jpm-cbna]
-- Add weekly total in hours and std days. [@jpm-cbna]
-- Add Vscode settings. [@jpm-cbna]
+- Add collapsible projects, improve the display.
+- Add weekly total in hours and std days.
+- Add Vscode settings.
 
 ### Changed
 
-- Use readonly attributes for business constants. [@jpm-cbna]
-- Improve code formatting. [@jpm-cbna]
-- Update `package-lock.json`. [@jpm-cbna]
+- Use readonly attributes for business constants.
+- Improve code formatting.
+- Update `package-lock.json`.
 
 ### Fixed
 
-- Color background cells instead of inputs. [@jpm-cbna]
+- Color background cells instead of inputs.
 
 ## [1.1.1] - 2026-01-22
 
 ### Fixed
 
-- Use latest with prod deployment. [@jpm-cbna]
+- Use latest with prod deployment.
 
 ## [1.1.0] - 2026-01-22
 
 ### Added
 
-- Add copilot instructions. [@jpm-cbna]
-- Enable local-dev environment & add node version. [@jpm-cbna]
-- Add and configure Eslint extension. [@jpm-cbna]
-- Add rule to enforce kebab-case notation for filenames. [@jpm-cbna]
-- Add section about coding conventions and code analysis. [@jpm-cbna]
-- Add all extensions used. [@jpm-cbna]
-- Add Prettier to format code. [@jpm-cbna]
-- Add Cypress for e2e tests. [@jpm-cbna]
+- Add copilot instructions.
+- Enable local-dev environment & add node version.
+- Add and configure Eslint extension.
+- Add rule to enforce kebab-case notation for filenames.
+- Add section about coding conventions and code analysis.
+- Add all extensions used.
+- Add Prettier to format code.
+- Add Cypress for e2e tests.
 
 ### Changed
 
-- Hide travel expenses button for agent users. [@jpm-cbna]
-- Rename npm command check-format to format:check. [@jpm-cbna]
-- Enable tsconfig option for moment and tests. [@jpm-cbna]
-- Use warn instead of error to unblock CI. [@jpm-cbna]
-- Rename github action test-on-push. [@jpm-cbna]
-- Apply eslint fixes. [@jpm-cbna]
-- Use short names, reorder tests steps. [@jpm-cbna]
-- Enable Eslint and Prettier in test on push action. [@jpm-cbna]
-- Use staging instead of development environment. [@jpm-cbna]
-- Improve tsconfig file for tests. [@jpm-cbna]
-- Format all with Prettier. [@jpm-cbna]
-- Use last Node version compatible with Angular. [@jpm-cbna]
-- Add extension .md to LICENSE file. [@jpm-cbna]
-- Improve the Nvm usage doc. [@jpm-cbna]
-- Improve tasks with use of Nvm. [@jpm-cbna]
+- Hide travel expenses button for agent users.
+- Rename npm command check-format to format:check.
+- Enable tsconfig option for moment and tests.
+- Use warn instead of error to unblock CI.
+- Rename github action test-on-push.
+- Apply eslint fixes.
+- Use short names, reorder tests steps.
+- Enable Eslint and Prettier in test on push action.
+- Use staging instead of development environment.
+- Improve tsconfig file for tests.
+- Format all with Prettier.
+- Use last Node version compatible with Angular.
+- Add extension .md to LICENSE file.
+- Improve the Nvm usage doc.
+- Improve tasks with use of Nvm.
 
 ### Fixed
 
-- Use existing UserInfos model instead of new one. [@jpm-cbna]
-- Fix lint errors for user. [@jpm-cbna]
-- Use a default value for googleClientId. [@jpm-cbna]
-- Fix and enable tests on checks-on-push. [@jpm-cbna]
-- Fix the Cypress version to use. [@jpm-cbna]
+- Use existing UserInfos model instead of new one.
+- Fix lint errors for user.
+- Use a default value for googleClientId.
+- Fix and enable tests on checks-on-push.
+- Fix the Cypress version to use.
 
 ### Removed
 
-- Remove local-dev environment to keep only development. [@jpm-cbna]
+- Remove local-dev environment to keep only development.
 
 ## [1.0.0] - 2025-12-12
 
