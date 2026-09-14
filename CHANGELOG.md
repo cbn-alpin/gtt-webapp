@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Handle working hours limit by project.
+- Handle working hours limit by project. ([#57](https://github.com/cbn-alpin/gtt-webapp/issues/57))
 - Add hours limit field to project form.
 - Add new favicon. [@jpm-cbna, @eratajczak-cbna]
 - Add new unit tests for Calendar component.
@@ -20,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename and reduce size of image assets.
 - Add and apply Prettier import sort.
 - Add fetch hollidays method.
-- Simplify time entry recording by using `onBlur` and Enter key instead of a timer with `ngOnChange`.
 - Refactor all the components and apply code formatting & best practices.
 - Switch all components and the application to the standalone version.
 - Replace Moment with Luxon to reduce the number of third-party libraries.
@@ -28,16 +27,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Simplify time entry recording by using `onBlur` and Enter key instead of a timer with `ngOnChange`. ([#61](https://github.com/cbn-alpin/gtt-webapp/issues/61))
 - Correct all the Jasmine unit tests.
 - Fix Cypress `tsconfig.json` include parameter.
 - Improve sticky header of time entry table.
 - Correct heights of main content and container.
 - Improve accessibility of home component html.
 - Improve resizing of app sticky header.
-- Add auth http interceptor and refactor auth.
+- Add auth http interceptor and refactor auth. ([#54](https://github.com/cbn-alpin/gtt-webapp/issues/54))
 - Record time entry even if hour limit exceeded.
-- Correct and simplify calendar component.
-- Correctly handle first and last week of each year.
+- Correct and simplify calendar component. ([#62](https://github.com/cbn-alpin/gtt-webapp/issues/62), [#60](https://github.com/cbn-alpin/gtt-webapp/issues/60))
+- Correctly handle first and last week of each year. ([#55](https://github.com/cbn-alpin/gtt-webapp/issues/55))
 
 ## [1.2.0] - 2026-02-12
 
