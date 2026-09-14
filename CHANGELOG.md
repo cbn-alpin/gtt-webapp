@@ -11,20 +11,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Handle working hours limit by project. [@jpm-cbna]
 - Add hours limit field to project form. [@jpm-cbna]
+- Add new favicon. [@jpm-cbna, @eratajczak-cbna]
+- Add new unit tests for Calendar component. [@jpm-cbna]
+- Add `karma.conf.ts` file to disable randomness if necessary. [@jpm-cbna]
 
 ### Changed
 
 - Rename and reduce size of image assets. [@jpm-cbna]
 - Add and apply Prettier import sort. [@jpm-cbna]
 - Add fetch hollidays method. [@jpm-cbna]
+- Simplify time entry recording by using `onBlur` and Enter key instead of a timer with `ngOnChange`. [@jpm-cbna]
+- Refactor all the components and apply code formatting & best practices. [@jpm-cbna]
+- Switch all components and the application to the standalone version. [@jpm-cbna]
+- Replace Moment with Luxon to reduce the number of third-party libraries. [@jpm-cbna]
+- Use a setter for pagination and sorting with `@ViewChild` instead of a timer. [@jpm-cbna]
 
 ### Fixed
 
+- Correct all the Jasmine unit tests. [@jpm-cbna]
+- Fix Cypress `tsconfig.json` include parameter. [@jpm-cbna]
 - Improve sticky header of time entry table. [@jpm-cbna]
 - Correct heights of main content and container. [@jpm-cbna]
 - Improve accessibility of home component html. [@jpm-cbna]
 - Improve resizing of app sticky header. [@jpm-cbna]
-- Fix Cypress `tsconfig.json` include parameter. [@jpm-cbna]
 - Add auth http interceptor and refactor auth. [@jpm-cbna]
 - Record time entry even if hour limit exceeded. [@jpm-cbna]
 - Correct and simplify calendar component. [@jpm-cbna]
