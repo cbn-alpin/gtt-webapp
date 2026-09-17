@@ -4,18 +4,23 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+import { of, throwError } from 'rxjs';
+
 import { DateTime } from 'luxon';
 
 import { CalendarComponent } from './calendar.component';
+import { TimesheetService } from './services/timesheet.service';
 
-fdescribe('CalendarComponent', () => {
+describe('CalendarComponent', () => {
   let component: CalendarComponent;
   let fixture: ComponentFixture<CalendarComponent>;
+  let timesheetServiceSpy: jasmine.SpyObj<TimesheetService>;
 
   const createMockProjects = () => [
     {
       id_project: 1,
       name: 'Projet Test',
+      hours_limit: null,
       is_selected: true,
       list_action: [
         {
@@ -27,16 +32,44 @@ fdescribe('CalendarComponent', () => {
         },
       ],
     },
+    {
+      id_project: 0,
+      name: 'Absences et fonctionnement',
+      is_selected: true,
+      list_action: [
+        {
+          id_action: 1,
+          numero_action: 'A.1',
+          name: 'Congés payés',
+          description: 'Congés payés.',
+          is_selected: true,
+          total_duration: 0,
+        },
+        {
+          id_action: 2,
+          numero_action: 'A.2',
+          name: 'RTT',
+          description: 'Congés de type RTT (Réduction du Temps de Travail).',
+          is_selected: true,
+          total_duration: 0,
+        },
+      ],
+    },
   ];
 
   beforeEach(async () => {
+    const timesheetServiceSpyObj = jasmine.createSpyObj('TimesheetService', ['getUserProjects']);
+    timesheetServiceSpyObj.getUserProjects.and.returnValue(of([]));
+
     await TestBed.configureTestingModule({
       imports: [FormsModule, CalendarComponent, MatDialogModule, NoopAnimationsModule],
-      providers: [MatDialog],
+      providers: [MatDialog, { provide: TimesheetService, useValue: timesheetServiceSpyObj }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CalendarComponent);
     component = fixture.componentInstance;
+    timesheetServiceSpy = TestBed.inject(TimesheetService) as jasmine.SpyObj<TimesheetService>;
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -51,6 +84,51 @@ fdescribe('CalendarComponent', () => {
 
     const weekendCell = fixture.debugElement.query(By.css('.weekend-input'));
     expect(weekendCell).toBeTruthy();
+  });
+
+  describe('loadProjects()', () => {
+    const mockProjects = createMockProjects();
+
+    beforeEach(() => {
+      timesheetServiceSpy.getUserProjects.calls.reset();
+      timesheetServiceSpy.getUserProjects.and.returnValue(of(mockProjects));
+
+      component.userId = '123';
+      component.startDate = DateTime.local(2026, 9, 7);
+      component.endDate = DateTime.local(2026, 9, 13);
+    });
+
+    it('should call timesheetService.getUserProjects() with correct params and populate projects and fixedRows', () => {
+      (component as any).loadProjects();
+
+      expect(timesheetServiceSpy.getUserProjects).toHaveBeenCalledTimes(1);
+      expect(timesheetServiceSpy.getUserProjects).toHaveBeenCalledWith(
+        '123',
+        '2026-09-07',
+        '2026-09-13'
+      );
+
+      // Vérification du tri entre projets standards et lignes fixes
+      expect(component.projects.length).toBe(1);
+      expect(component.projects[0].id_project).toBe(1);
+
+      expect(component.fixedRows.length).toBe(1);
+      expect(component.fixedRows[0].id_project).toBe(0);
+
+      expect(component.isLoadingResults).toBeFalse();
+    });
+
+    it('should handle error when service fails', () => {
+      spyOn(console, 'error');
+      const errorResponse = { error: { message: 'Network error' } };
+      timesheetServiceSpy.getUserProjects.and.returnValue(throwError(() => errorResponse));
+
+      (component as any).loadProjects();
+
+      expect(timesheetServiceSpy.getUserProjects).toHaveBeenCalledTimes(1);
+      expect(component.isLoadingResults).toBeFalse();
+      expect(console.error).toHaveBeenCalledWith('Error loading project: Network error');
+    });
   });
 
   describe('getInputId()', () => {

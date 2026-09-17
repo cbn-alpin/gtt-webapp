@@ -337,11 +337,9 @@ export class CalendarComponent implements OnInit {
       this.selectedMonth = selectedWeekDay.month;
       this.selectedYear = selectedWeekDay.year;
       this.weeksNumbers = this.getWeeksArray(selectedWeekDay.year);
-      if (selectedWeekDay.month !== this.firstDayOfActiveMonth.getValue().month) {
-        this.firstDayOfActiveMonth.next(selectedWeekDay.startOf('month'));
-        this.updateStartEndDates();
-        this.loadProjects();
-      }
+      this.firstDayOfActiveMonth.next(selectedWeekDay.startOf('month'));
+      this.updateStartEndDates();
+      this.loadProjects();
     }
   }
 
