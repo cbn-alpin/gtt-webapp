@@ -90,6 +90,8 @@ export class LoginComponent implements AfterViewInit {
           this.showToast(`${this.errorMessage} ❌`, true);
         },
       });
+    } else {
+      this.loginForm.markAllAsTouched();
     }
   }
 

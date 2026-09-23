@@ -58,7 +58,7 @@
       <button
         type="submit"
         class="login-button"
-        [disabled]="loginForm.invalid || isLoading"
+        [disabled]="isLoading"
       >
         {{ isLoading ? 'Connexion...' : 'SE CONNECTER' }}
       </button>
