@@ -39,6 +39,16 @@ export class LoginComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    if (typeof google !== 'undefined' && google.accounts) {
+      this.initGoogleAccounts();
+    } else {
+      (window as any).onGoogleLibraryLoad = () => {
+        this.initGoogleAccounts();
+      };
+    }
+  }
+
+  private initGoogleAccounts(): void {
     // Initialize the Google Identity Services
     google.accounts.id.initialize({
       client_id: environment.googleClientId,
