@@ -11,21 +11,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-
-
 import { BehaviorSubject } from 'rxjs';
 
-
-
 import { DateTime, Info, Interval } from 'luxon';
-
-
 
 import { PopupMessageComponent } from './popup-message/popup-message.component';
 import { CalendarService } from './services/calendar.service';
 import { TimeStateService } from './services/time-state-service.service';
 import { TimesheetService } from './services/timesheet.service';
-
 
 @Component({
   selector: 'app-calendar',

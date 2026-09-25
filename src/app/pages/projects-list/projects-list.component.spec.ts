@@ -3,11 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-
-
 import { of, throwError } from 'rxjs';
-
-
 
 import { ProjectsService } from 'src/app/core/services/projects/projects.service';
 import { ProjectsListComponent } from './projects-list.component';

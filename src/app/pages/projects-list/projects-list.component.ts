@@ -15,14 +15,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
-
-
 import { Project } from 'src/app/core/models/project.model';
 import { ProjectsService } from 'src/app/core/services/projects/projects.service';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { ProjectActionsComponent } from './project-actions/project-actions.component';
 import { ProjectComponent } from './project/project.component';
-
 
 @Component({
   selector: 'app-projects-list',
