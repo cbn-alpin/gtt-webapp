@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,11 +15,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 
+
+
 import { Project } from 'src/app/core/models/project.model';
 import { ProjectsService } from 'src/app/core/services/projects/projects.service';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { ProjectActionsComponent } from './project-actions/project-actions.component';
 import { ProjectComponent } from './project/project.component';
+
 
 @Component({
   selector: 'app-projects-list',
@@ -138,10 +142,10 @@ export class ProjectsListComponent implements OnInit {
         this.projectService.deleteProjectById(projectId).subscribe({
           next: () => {
             this.fetchProjects();
-            this.showToast(`Projet supprimé avec succès ✅`);
+            this.showSuccess(`✅ Projet supprimé avec succès`);
           },
-          error: (error) => {
-            this.showToast(`Erreur : ${error.error.message || 'Suppression impossible'} ❌`, true);
+          error: (response) => {
+            this.showError(`❌ Erreur : ${response.error.message || 'Suppression impossible'}`);
           },
         });
       }
