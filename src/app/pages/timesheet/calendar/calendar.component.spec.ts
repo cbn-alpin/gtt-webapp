@@ -4,6 +4,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+
+
 import { of, throwError } from 'rxjs';
 
 import { DateTime } from 'luxon';
@@ -223,6 +225,50 @@ describe('CalendarComponent', () => {
     });
   });
 
+  describe('onTimeEntryKeydown()', () => {
+    it('should prevent Tab and blur the input when validation opens a dialog', () => {
+      component.projects = [
+        {
+          id_project: 1,
+          start_date: new Date(2026, 7, 1),
+          end_date: new Date(2026, 7, 30),
+          list_action: [],
+        },
+      ];
+      const input = document.createElement('input');
+      input.value = '2';
+      spyOn(input, 'blur');
+      const event = new KeyboardEvent('keydown', { key: 'Tab', cancelable: true });
+      spyOn(event, 'preventDefault').and.callThrough();
+
+      component.onTimeEntryKeydown(event, input, 1, '2026-09-10T00:00:00', 0);
+
+      expect(event.preventDefault).toHaveBeenCalled();
+      expect(input.blur).toHaveBeenCalled();
+    });
+
+    it('should allow Tab when validation does not open a dialog', () => {
+      component.projects = [
+        {
+          id_project: 1,
+          start_date: new Date(2026, 8, 1),
+          end_date: new Date(2026, 8, 30),
+          list_action: [],
+        },
+      ];
+      const input = document.createElement('input');
+      input.value = '2';
+      spyOn(input, 'blur');
+      const event = new KeyboardEvent('keydown', { key: 'Tab', cancelable: true });
+      spyOn(event, 'preventDefault').and.callThrough();
+
+      component.onTimeEntryKeydown(event, input, 1, '2026-09-10T00:00:00', 0);
+
+      expect(event.preventDefault).not.toHaveBeenCalled();
+      expect(input.blur).not.toHaveBeenCalled();
+    });
+  });
+
   describe('onBlur()', () => {
     it('should call the time entry recording function', () => {
       spyOn(component, 'saveTimeEntry');
@@ -238,6 +284,28 @@ describe('CalendarComponent', () => {
       fixture.detectChanges();
 
       expect(component.saveTimeEntry).toHaveBeenCalled();
+    });
+  });
+
+  describe('saveTimeEntry()', () => {
+    it('should not open the same validation dialog twice', () => {
+      const dialog = TestBed.inject(MatDialog);
+      const openSpy = spyOn(dialog, 'open').and.callThrough();
+      component.projects = [
+        {
+          id_project: 1,
+          start_date: new Date(2026, 7, 1),
+          end_date: new Date(2026, 7, 30),
+          list_action: [],
+        },
+      ];
+      const inputRef = document.createElement('input');
+
+      component.saveTimeEntry(2, 1, 10, '2026-09-10T00:00:00', inputRef, 0);
+      component.saveTimeEntry(2, 1, 10, '2026-09-10T00:00:00', inputRef, 0);
+
+      expect(openSpy).toHaveBeenCalledTimes(1);
+      dialog.closeAll();
     });
   });
 

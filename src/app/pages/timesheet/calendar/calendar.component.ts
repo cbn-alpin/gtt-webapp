@@ -11,14 +11,21 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+
+
 import { BehaviorSubject } from 'rxjs';
 
+
+
 import { DateTime, Info, Interval } from 'luxon';
+
+
 
 import { PopupMessageComponent } from './popup-message/popup-message.component';
 import { CalendarService } from './services/calendar.service';
 import { TimeStateService } from './services/time-state-service.service';
 import { TimesheetService } from './services/timesheet.service';
+
 
 @Component({
   selector: 'app-calendar',
@@ -380,7 +387,6 @@ export class CalendarComponent implements OnInit {
   private updateTimeEntry(
     value: number,
     projectId: number,
-    end_date: Date,
     actionId: number,
     date: string,
     inputRef: HTMLInputElement,
@@ -451,10 +457,102 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  onTimeEntryKeydown(
+    event: KeyboardEvent,
+    inputRef: HTMLInputElement,
+    projectId: number,
+    date: string,
+    initialValue: number
+  ): void {
+    this.blockNegativeInput(event);
+
+    // Prevent tabbing out of the input if the validation fails
+    if (
+      event.key === 'Tab' &&
+      this.getTimeEntryValidation(inputRef.value, projectId, date, initialValue)
+    ) {
+      event.preventDefault();
+      inputRef.blur();
+    }
+  }
+
+  private getTimeEntryValidation(
+    inputValue: number | string,
+    projectId: number,
+    date: string,
+    initialValue: number
+  ): { title: string; message: string; blocksSave: boolean } | null {
+    const valueNum = Number(inputValue === '' || inputValue == null ? 0 : inputValue);
+
+    if (projectId !== 0) {
+      const selectedDate = new Date(date);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      const project = this.projects.find((project) => project.id_project === projectId);
+      if (!project) {
+        return {
+          title: 'Erreur',
+          message: 'Projet introuvable.',
+          blocksSave: true,
+        };
+      }
+
+      let projectStartDate = null;
+      if (project.start_date) {
+        projectStartDate = new Date(project.start_date);
+        projectStartDate.setHours(0, 0, 0, 0);
+      }
+      let projectEndDate = null;
+      if (project.end_date) {
+        projectEndDate = new Date(project.end_date);
+        projectEndDate.setHours(0, 0, 0, 0);
+      }
+
+      if (projectStartDate && selectedDate < projectStartDate) {
+        return {
+          title: 'Erreur',
+          message:
+            'Impossible de saisir un temps pour une date précèdant la date de début du projet.',
+          blocksSave: true,
+        };
+      }
+      if (projectEndDate && selectedDate > projectEndDate) {
+        return {
+          title: 'Erreur',
+          message:
+            'Impossible de saisir un temps pour une date dépassant la date de fin du projet.',
+          blocksSave: true,
+        };
+      }
+    }
+
+    const formattedDate = new Date(date);
+    const currentTotal = this.calculateDayTotal(formattedDate).total;
+    const hoursLimit = this.computeMinHoursLimit(projectId, formattedDate);
+    const newTotal = currentTotal + valueNum - initialValue;
+
+    if (newTotal > this.MAX_DAILY_HOURS) {
+      return {
+        title: 'Erreur',
+        message: `Quota horaire journalier (${this.MAX_DAILY_HOURS}h) dépassé !`,
+        blocksSave: true,
+      };
+    }
+
+    if (valueNum !== 0 && hoursLimit && newTotal > hoursLimit) {
+      return {
+        title: 'Avertissement',
+        message: `Attention : saisie supérieure à ${hoursLimit}h uniquement si déplacement`,
+        blocksSave: false,
+      };
+    }
+
+    return null;
+  }
+
   saveTimeEntry(
     inputValue: number | string,
     projectId: number,
-    end_date: Date,
     actionId: number,
     date: string,
     inputRef: HTMLInputElement,
@@ -464,58 +562,30 @@ export class CalendarComponent implements OnInit {
       inputRef.value = '0';
       inputValue = 0;
     }
-    const valueNum = Number(inputValue);
-    const formattedDate = new Date(date);
-    // Validate project end date
-    if (projectId !== 0 && end_date) {
-      const selectedDate = new Date(date);
-      selectedDate.setHours(0, 0, 0, 0);
+    const validation = this.getTimeEntryValidation(inputValue, projectId, date, initialValue);
 
-      const projectEndDate = new Date(end_date);
-      projectEndDate.setHours(0, 0, 0, 0);
-
-      if (selectedDate > projectEndDate) {
-        this.dialog.open(PopupMessageComponent, {
-          data: {
-            title: 'Erreur',
-            message:
-              'Vous ne pouvez pas saisir un temps pour une date qui dépasse la date de fin du projet.',
-          },
-        });
+    if (validation) {
+      this.showPopupMessage(validation.title, validation.message);
+      if (validation.blocksSave) {
         inputRef.value = initialValue.toString();
         return;
       }
     }
 
-    // Validate daily and project hours limit
-    const currentTotal = this.calculateDayTotal(formattedDate).total;
-    const hoursLimit = this.computeMinHoursLimit(projectId, formattedDate);
-    const newTotal = currentTotal + valueNum - initialValue;
-
-    if (newTotal > this.MAX_DAILY_HOURS) {
-      this.dialog.open(PopupMessageComponent, {
-        data: {
-          title: 'Erreur',
-          message: `Quota horaire journalier (${this.MAX_DAILY_HOURS}h) dépassé !`,
-        },
-      });
-
-      inputRef.value = initialValue.toString();
-      return;
-    }
-
-    if (valueNum != 0 && hoursLimit && newTotal > hoursLimit) {
-      this.dialog.open(PopupMessageComponent, {
-        data: {
-          title: 'Avertissement',
-          message: `Attention : saisie supérieure à ${hoursLimit}h uniquement si déplacement`,
-        },
-      });
-    }
-
     // Update time entry
+    const valueNum = Number(inputValue);
     if (valueNum !== initialValue) {
-      this.updateTimeEntry(valueNum, projectId, end_date, actionId, date, inputRef, initialValue);
+      this.updateTimeEntry(valueNum, projectId, actionId, date, inputRef, initialValue);
+    }
+  }
+
+  private showPopupMessage(title: string, message: string): void {
+    const popupAlreadyOpen = this.dialog.openDialogs.some(
+      (dialogRef) => dialogRef.componentInstance instanceof PopupMessageComponent
+    );
+
+    if (!popupAlreadyOpen) {
+      this.dialog.open(PopupMessageComponent, { data: { title, message } });
     }
   }
 

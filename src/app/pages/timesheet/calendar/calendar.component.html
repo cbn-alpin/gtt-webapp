@@ -218,13 +218,24 @@
                       min="0"
                       #inputRef
                       (focus)="onFocus(inputRef)"
-                      (keydown)="blockNegativeInput($event)"
+                      (keydown)="
+                        onTimeEntryKeydown(
+                          $event,
+                          inputRef,
+                          project.id_project,
+                          formatApiDate(toLuxonDate(day.date)),
+                          getTimeEntry(
+                            project.id_project,
+                            action.id_action,
+                            formatApiDate(toLuxonDate(day.date))
+                          ).hours
+                        )
+                      "
                       (keydown.enter)="inputRef.blur()"
                       (blur)="
                         saveTimeEntry(
                           inputRef.value,
                           project.id_project,
-                          project.end_date,
                           action.id_action,
                           formatApiDate(toLuxonDate(day.date)),
                           inputRef,
@@ -308,13 +319,24 @@
                     min="0"
                     #inputRef2
                     (focus)="onFocus(inputRef2)"
-                    (keydown)="blockNegativeInput($event)"
+                    (keydown)="
+                      onTimeEntryKeydown(
+                        $event,
+                        inputRef2,
+                        project.id_project,
+                        formatApiDate(toLuxonDate(day.date)),
+                        getTimeEntry(
+                          project.id_project,
+                          action.id_action,
+                          formatApiDate(toLuxonDate(day.date))
+                        ).hours
+                      )
+                    "
                     (keydown.enter)="inputRef2.blur()"
                     (blur)="
                       saveTimeEntry(
                         inputRef2.value,
                         project.id_project,
-                        project.end_date,
                         action.id_action,
                         formatApiDate(toLuxonDate(day.date)),
                         inputRef2,
