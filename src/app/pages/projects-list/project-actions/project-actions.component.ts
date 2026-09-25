@@ -1,5 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -162,12 +163,11 @@ export class ProjectActionsComponent implements OnInit {
       if (result) {
         this.projectActionsService.deleteActionById(idAaction).subscribe({
           next: () => {
-            this.showToast(`Projet supprimé avec succès ✅`);
+            this.showSuccess(`✅ Action supprimée avec succès`);
             this.fetchProjectActions();
           },
-          error: (error) => {
-            console.error('Erreur lors de la suppression du projet', error);
-            this.showToast(`Erreur : ${error.message || 'Suppression impossible'} ❌`, true);
+          error: (response: HttpErrorResponse) => {
+            this.showError(`❌ Erreur : ${response.error.message || 'Suppression impossible'}`);
           },
         });
       }
@@ -213,7 +213,15 @@ export class ProjectActionsComponent implements OnInit {
     });
   }
 
-  showToast(message: string, isError = false) {
+  private showSuccess(message: string) {
+    this.showToast(message, false);
+  }
+
+  private showError(message: string) {
+    this.showToast(message, true);
+  }
+
+  private showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: isError ? 'error-toast' : 'success-toast',

@@ -3,7 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { of } from 'rxjs';
+
+
+import { of, throwError } from 'rxjs';
 
 import { ProjectActionsService } from 'src/app/core/services/project-actions/project-actions.service';
 import { ProjectsService } from 'src/app/core/services/projects/projects.service';
@@ -26,6 +28,7 @@ describe('ProjectActionsComponent', () => {
     deleteActionById: jasmine.createSpy('deleteActionById'),
   };
   const mockDialog = {
+    open: jasmine.createSpy('open'),
     close: jasmine.createSpy('close'),
   };
   const mockSnackBar = {
@@ -33,6 +36,17 @@ describe('ProjectActionsComponent', () => {
   };
 
   beforeEach(async () => {
+    mockUserActionService.createUserAction.calls.reset();
+    mockUserActionService.deleteUserAction.calls.reset();
+    mockProjectService.getProjectById.calls.reset();
+    mockProjectActionService.getUserProjects.calls.reset();
+    mockDialog.open.calls.reset();
+    mockProjectService.getProjectById.and.returnValue(of({ id_project: 1, list_action: [] }));
+    mockProjectActionService.getUserProjects.and.returnValue(of([]));
+    mockDialog.open.and.returnValue({
+      afterClosed: () => of(true),
+    });
+
     await TestBed.configureTestingModule({
       imports: [ProjectActionsComponent],
       providers: [
@@ -52,5 +66,41 @@ describe('ProjectActionsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('deleteActionById()', () => {
+    beforeEach(() => {
+      mockProjectActionService.deleteActionById.calls.reset();
+      mockDialog.open.calls.reset();
+      mockSnackBar.open.calls.reset();
+    });
+
+    it('should confirm and delete the action when user confirms', () => {
+      const deleteSpy = mockProjectActionService.deleteActionById.and.returnValue(of(undefined));
+
+      component.deleteActionById('Tester l’action', 42);
+
+      expect(mockDialog.open).toHaveBeenCalled();
+      expect(deleteSpy).toHaveBeenCalledWith(42);
+      expect(mockSnackBar.open).toHaveBeenCalledWith(
+        '✅ Action supprimée avec succès',
+        '',
+        jasmine.any(Object)
+      );
+    });
+
+    it('should show an error toast when deletion fails', () => {
+      mockProjectActionService.deleteActionById.and.returnValue(
+        throwError(() => ({ error: { message: 'Suppression impossible' } }))
+      );
+
+      component.deleteActionById('Tester l’action', 42);
+
+      expect(mockSnackBar.open).toHaveBeenCalledWith(
+        '❌ Erreur : Suppression impossible',
+        '',
+        jasmine.any(Object)
+      );
+    });
   });
 });
