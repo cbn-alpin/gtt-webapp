@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-29
+
 ### Added
 
 - Handle working hours limit by project. ([#57](https://github.com/cbn-alpin/gtt-webapp/issues/57))
@@ -24,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Switch all components and the application to the standalone version.
 - Replace Moment with Luxon to reduce the number of third-party libraries.
 - Use a setter for pagination and sorting with `@ViewChild` instead of a timer.
+- Use the French format for decimal numbers (duration of the actions) in the project exports.
+- Improve the text of success and error messages when deleting actions and projects.
+- The login button is now enabled by default to ensure consistency with the browser's autofill of username and password.
+
 
 ### Fixed
 
@@ -38,6 +44,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Record time entry even if hour limit exceeded.
 - Correct and simplify calendar component. ([#62](https://github.com/cbn-alpin/gtt-webapp/issues/62), [#60](https://github.com/cbn-alpin/gtt-webapp/issues/60))
 - Correctly handle first and last week of each year. ([#55](https://github.com/cbn-alpin/gtt-webapp/issues/55))
+- In the timesheet, load the project information at each change of week.
+- Prevent Google Chrome from translating part of the application page by specifying French as the default language for the HTML page.
+- Align action buttons in confirmation dialog box correctly.
+- Avoid adding time before and after the start and end dates of projects.
+- Force the systematic display of Google Auth.
 
 ## [1.2.0] - 2026-02-12
 
