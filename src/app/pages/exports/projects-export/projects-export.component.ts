@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -34,7 +34,19 @@ import { ProjectsService } from 'src/app/core/services/projects/projects.service
     MatTooltipModule,
   ],
 })
-export class ProjectsExportComponent implements OnInit, AfterViewInit {
+export class ProjectsExportComponent implements OnInit {
+  paginator!: MatPaginator;
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.dataSource.paginator = mp;
+  }
+
+  sort!: MatSort;
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.dataSource.sort = ms;
+  }
+
   private selectionState = new BehaviorSubject<boolean>(false);
   isButtonDisabled$ = this.selectionState.asObservable();
   displayedColumns: string[] = ['selection', 'code', 'name'];
@@ -45,20 +57,12 @@ export class ProjectsExportComponent implements OnInit, AfterViewInit {
   isLoadingResults = false;
   isError = false;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
   private readonly projectService = inject(ProjectsService);
   private readonly downloadServivce = inject(DownloadService);
   private readonly snackBar = inject(MatSnackBar);
 
   ngOnInit(): void {
     this.fetchProjects();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   toggleSelection(row: Project): void {
@@ -74,37 +78,6 @@ export class ProjectsExportComponent implements OnInit, AfterViewInit {
       this.selectedProjectCode = row.code;
       this.selectionState.next(true);
     }
-  }
-
-  fetchProjects(): void {
-    this.isLoadingResults = true;
-    this.isError = false;
-
-    this.projectService.getAllProjects().subscribe({
-      next: (projects) => {
-        setTimeout(() => {
-          const filteredProjects = projects
-            .filter((p: Project) => p.id_project !== 0)
-            .sort((a: Project, b: Project) => {
-              const codeA = Number(a.code) || 0;
-              const codeB = Number(b.code) || 0;
-              return codeB - codeA;
-            });
-
-          this.dataSource.data = filteredProjects;
-          this.isLoadingResults = false;
-
-          setTimeout(() => {
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
-          }, 100);
-        }, 1000);
-      },
-      error: () => {
-        this.isLoadingResults = false;
-        this.isError = true;
-      },
-    });
   }
 
   applyFilter(event: Event) {
@@ -129,7 +102,31 @@ export class ProjectsExportComponent implements OnInit, AfterViewInit {
     });
   }
 
-  formatProjectActionsForCSV(data: any[]): any[] {
+  private fetchProjects(): void {
+    this.isLoadingResults = true;
+    this.isError = false;
+
+    this.projectService.getAllProjects().subscribe({
+      next: (projects) => {
+        const filteredProjects = projects
+          .filter((p: Project) => p.id_project !== 0)
+          .sort((a: Project, b: Project) => {
+            const codeA = Number(a.code) || 0;
+            const codeB = Number(b.code) || 0;
+            return codeB - codeA;
+          });
+
+        this.dataSource.data = filteredProjects;
+        this.isLoadingResults = false;
+      },
+      error: () => {
+        this.isLoadingResults = false;
+        this.isError = true;
+      },
+    });
+  }
+
+  private formatProjectActionsForCSV(data: any[]): any[] {
     if (!data) {
       this.showToast(`Aucune saisie de temps sur ce project.`);
       return [];
@@ -148,7 +145,7 @@ export class ProjectsExportComponent implements OnInit, AfterViewInit {
     }
   }
 
-  showToast(message: string, isError = false) {
+  private showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: [isError ? 'error-toast' : 'success-toast'],

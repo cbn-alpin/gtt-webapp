@@ -1,13 +1,13 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSortModule } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -36,7 +36,19 @@ import { UserService } from 'src/app/core/services/user/user.service';
     MatTooltipModule,
   ],
 })
-export class ExpensesExportComponent implements OnInit, AfterViewInit {
+export class ExpensesExportComponent implements OnInit {
+  paginator!: MatPaginator;
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    this.paginator = mp;
+    this.dataSource.paginator = mp;
+  }
+
+  sort!: MatSort;
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    this.sort = ms;
+    this.dataSource.sort = ms;
+  }
+
   private selectionState = new BehaviorSubject<boolean>(false);
   isButtonDisabled$ = this.selectionState.asObservable();
   displayedColumns: string[] = ['selection', 'nom', 'prenom'];
@@ -51,8 +63,6 @@ export class ExpensesExportComponent implements OnInit, AfterViewInit {
   endDateFilter = '';
   userId: any;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
   private readonly userService = inject(UserService);
   private readonly downloadService = inject(DownloadService);
   private readonly expensesService = inject(ExpensesService);
@@ -65,10 +75,6 @@ export class ExpensesExportComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.fetchUsers();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
   }
 
   toggleSelection(row: UserInfos): void {
@@ -86,26 +92,6 @@ export class ExpensesExportComponent implements OnInit, AfterViewInit {
       this.selectedUserFirstName = row.first_name;
       this.selectionState.next(true);
     }
-  }
-
-  fetchUsers(): void {
-    this.isLoadingResults = true;
-    this.isError = false;
-    this.userService.getAllUsers().subscribe({
-      next: (users) => {
-        setTimeout(() => {
-          this.dataSource.data = users;
-          this.isLoadingResults = false;
-          setTimeout(() => {
-            this.dataSource.paginator = this.paginator;
-          }, 100);
-        }, 1000);
-      },
-      error: () => {
-        this.isLoadingResults = false;
-        this.isError = true;
-      },
-    });
   }
 
   applyFilter(event: Event) {
@@ -149,7 +135,40 @@ export class ExpensesExportComponent implements OnInit, AfterViewInit {
       });
   }
 
-  updateTravelStatus(travelId: number, userId: number, travelData: any): void {
+  onStartDateChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.value) {
+      this.startDateFilter = this.shareDateService.formatDate(input.value);
+    } else {
+      this.startDateFilter = '';
+    }
+  }
+
+  onEndDateChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.value) {
+      this.endDateFilter = this.shareDateService.formatDate(input.value);
+    } else {
+      this.endDateFilter = '';
+    }
+  }
+
+  private fetchUsers(): void {
+    this.isLoadingResults = true;
+    this.isError = false;
+    this.userService.getAllUsers().subscribe({
+      next: (users) => {
+        this.dataSource.data = users;
+        this.isLoadingResults = false;
+      },
+      error: () => {
+        this.isLoadingResults = false;
+        this.isError = true;
+      },
+    });
+  }
+
+  private updateTravelStatus(travelId: number, userId: number, travelData: any): void {
     if (!travelId || !userId) return;
 
     this.expensesService.updateUserTravelExpense(travelId, userId, travelData).subscribe({
@@ -162,7 +181,7 @@ export class ExpensesExportComponent implements OnInit, AfterViewInit {
     });
   }
 
-  formatUserExpensesForCSV(data: any[]): any[] {
+  private formatUserExpensesForCSV(data: any[]): any[] {
     if (!data) {
       this.showToast(`Aucun frais de déplacement trouvé pour cet agent.`);
       return [];
@@ -212,25 +231,7 @@ export class ExpensesExportComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onStartDateChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.value) {
-      this.startDateFilter = this.shareDateService.formatDate(input.value);
-    } else {
-      this.startDateFilter = '';
-    }
-  }
-
-  onEndDateChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.value) {
-      this.endDateFilter = this.shareDateService.formatDate(input.value);
-    } else {
-      this.endDateFilter = '';
-    }
-  }
-
-  showToast(message: string, isError = false) {
+  private showToast(message: string, isError = false) {
     this.snackBar.open(message, '', {
       duration: 5000,
       panelClass: [isError ? 'error-toast' : 'success-toast'],
