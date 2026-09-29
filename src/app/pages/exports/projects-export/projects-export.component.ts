@@ -139,7 +139,11 @@ export class ProjectsExportComponent implements OnInit, AfterViewInit {
         NOM: row.last_name,
         Date: row.date,
         Actions: `${row.numero_action}——${row.name_action}`,
-        'Nombre d’heures réalisés': row.duration.toFixed(2),
+        'Nombre d’heures réalisés': new Intl.NumberFormat('fr-FR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+          useGrouping: false,
+        }).format(row.duration),
       }));
     }
   }
